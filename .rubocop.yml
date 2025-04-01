@@ -26,11 +26,11 @@ Metrics/MethodLength:
 Metrics/BlockLength:
   Enabled: false
 
-Style/Proc:
-  Enabled: false
-
-Lint/SuppressedException:
-  Enabled: false
-
 Metrics/CyclomaticComplexity:
+  Enabled: false
+
+Style/Alias:
+  EnforcedStyle: prefer_alias_method
+
+Lint/MissingSuper:
   Enabled: false

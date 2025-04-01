@@ -31,16 +31,10 @@ module Mongory
         nin: '$nin',
         elem_match: '$elemMatch'
       }.freeze
-      OPERATOR_TO_METHOD_MAPPING = METHOD_TO_OPERATOR_MAPPING.invert.freeze
 
       def convert_to_operator(method_symbol)
         check_validity!(METHOD_TO_OPERATOR_MAPPING, method_symbol)
         METHOD_TO_OPERATOR_MAPPING[method_symbol]
-      end
-
-      def convert_to_method(operator)
-        check_validity!(OPERATOR_TO_METHOD_MAPPING, operator)
-        OPERATOR_TO_METHOD_MAPPING[operator]
       end
 
       def check_validity!(mapping, target)
