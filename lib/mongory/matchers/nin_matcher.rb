@@ -8,7 +8,7 @@ module Mongory
     # Temp Description
     class NinMatcher < BaseMatcher
       def match?(record)
-        Mongory::Utils.blank?(@condition & Array(normalize_key(record)))
+        blank?(@condition & Array(normalize_key(record)))
       end
 
       def check_validity!(condition)

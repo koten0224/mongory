@@ -8,7 +8,7 @@ module Mongory
     # Temp Description
     class InMatcher < BaseMatcher
       def match?(record)
-        Mongory::Utils.present?(@condition & Array(normalize_key(record)))
+        present?(@condition & Array(normalize_key(record)))
       end
 
       def check_validity!(condition)
