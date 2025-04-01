@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'mongory/matchers/and_matcher'
-require 'mongory/matchers/base_matcher'
 require 'mongory/matchers/elem_match_matcher'
 require 'mongory/matchers/eq_matcher'
 require 'mongory/matchers/exists_matcher'
@@ -13,7 +12,6 @@ require 'mongory/matchers/key_value_matcher'
 require 'mongory/matchers/lt_matcher'
 require 'mongory/matchers/lte_matcher'
 require 'mongory/matchers/main_matcher'
-require 'mongory/matchers/multi_matcher'
 require 'mongory/matchers/ne_matcher'
 require 'mongory/matchers/nin_matcher'
 require 'mongory/matchers/not_matcher'
@@ -42,7 +40,7 @@ module Mongory
       '$elemMatch' => :ElemMatchMatcher
     }.freeze
 
-    def self.operator_lookup(key)
+    def self.lookup(key)
       return unless OPERATOR_TO_CLASS_MAPPING.include?(key)
 
       const_get(OPERATOR_TO_CLASS_MAPPING[key])

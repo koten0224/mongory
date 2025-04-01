@@ -1,14 +1,18 @@
 # frozen_string_literal: true
 
-require 'mongory/matchers/eq_matcher'
+require 'mongory/matchers/abstract_safe_matcher'
 
 module Mongory
   # Temp Description
   module Matchers
     # Temp Description
-    class ExistsMatcher < EqMatcher
-      def preprocess(data)
-        data != KEY_NOT_FOUND
+    class ExistsMatcher < AbstractSafeMatcher
+      def preprocess(record)
+        record != KEY_NOT_FOUND
+      end
+
+      def operator
+        :==
       end
 
       def check_validity!(condition)

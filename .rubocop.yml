@@ -1,4 +1,5 @@
 AllCops:
+  NewCops: enable
   TargetRubyVersion: 2.6
 
 Style/StringLiterals:
@@ -33,4 +34,7 @@ Style/Alias:
   EnforcedStyle: prefer_alias_method
 
 Lint/MissingSuper:
+  Enabled: false
+
+Style/SelectByRegexp:
   Enabled: false

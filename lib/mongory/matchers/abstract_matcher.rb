@@ -6,7 +6,7 @@ module Mongory
   # Temp Description
   module Matchers
     # Abstract class
-    class BaseMatcher
+    class AbstractMatcher
       include Mongory::Utils
 
       KEY_NOT_FOUND = Object.new
@@ -16,26 +16,12 @@ module Mongory
         @condition = condition
       end
 
-      def match?(*)
-        true
-      end
+      def match?(*); end
+      def check_validity!(*); end
 
-      def normalize_key(record)
+      def normalize(record)
         record == KEY_NOT_FOUND ? nil : record
       end
-
-      def fetch_value(record, key)
-        case record
-        when Hash
-          record.fetch(key, KEY_NOT_FOUND)
-        when Array
-          return unless key.match?(/^\d+$/)
-
-          record[key.to_i]
-        end
-      end
-
-      def check_validity!(condition); end
     end
   end
 end

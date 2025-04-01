@@ -1,29 +1,27 @@
 # frozen_string_literal: true
 
-require 'mongory/matchers/base_matcher'
+require 'mongory/matchers/abstract_matcher'
 
 module Mongory
   # Temp Description
   module Matchers
     # Abstract class
-    class MultiMatcher < BaseMatcher
-      def match?(data)
-        data = preprocess(data)
+    class AbstractMultiMatcher < AbstractMatcher
+      def match?(record)
+        record = preprocess(record)
         matchers.send(operator) do |matcher|
-          matcher.match?(data)
+          matcher.match?(record)
         end
       end
 
       def matchers
         return @matchers if defined?(@matchers)
 
-        @matchers = @condition.map do |(*sub_condition)|
-          build_sub_matcher(*sub_condition)
-        end
+        @matchers = @condition.map(&method(:build_sub_matcher))
       end
 
-      def preprocess(data)
-        data
+      def preprocess(record)
+        record
       end
 
       def build_sub_matcher(*); end

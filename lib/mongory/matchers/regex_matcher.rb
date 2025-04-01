@@ -1,16 +1,16 @@
 # frozen_string_literal: true
 
-require 'mongory/matchers/base_matcher'
+require 'mongory/matchers/abstract_matcher'
 
 module Mongory
   # Temp Description
   module Matchers
     # Temp Description
-    class RegexMatcher < BaseMatcher
-      def match?(data)
-        return false unless data.is_a?(String)
+    class RegexMatcher < AbstractMatcher
+      def match?(record)
+        return false unless record.is_a?(String)
 
-        data.match?(@condition)
+        record.match?(@condition)
       rescue StandardError
         false
       end

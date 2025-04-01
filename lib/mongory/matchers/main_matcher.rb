@@ -1,19 +1,19 @@
 # frozen_string_literal: true
 
-require 'mongory/matchers/base_matcher'
+require 'mongory/matchers/abstract_matcher'
 
 module Mongory
   # Temp Description
   module Matchers
     # Temp Description
-    class MainMatcher < BaseMatcher
-      def match?(data)
-        if @condition == data
+    class MainMatcher < AbstractMatcher
+      def match?(record)
+        if @condition == record
           true
         elsif @condition.is_a?(Hash)
-          hash_matcher.match?(data)
-        elsif data.is_a?(Array) # and @condition not a hash
-          data.include?(@condition)
+          hash_matcher.match?(record)
+        elsif record.is_a?(Array) # and @condition not a hash
+          record.include?(@condition)
         else
           false
         end

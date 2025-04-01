@@ -6,9 +6,5 @@ unless Object.method_defined?(:__expand_complex__)
     def __expand_complex__
       self
     end
-
-    def __expr_part__(other)
-      { self => other }
-    end
   end
 end

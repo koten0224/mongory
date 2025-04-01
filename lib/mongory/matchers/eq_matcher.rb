@@ -1,25 +1,17 @@
 # frozen_string_literal: true
 
-require 'mongory/matchers/base_matcher'
+require 'mongory/matchers/abstract_safe_matcher'
 
 module Mongory
   # Temp Description
   module Matchers
     # Temp Description
-    class EqMatcher < BaseMatcher
-      BOOLEAN_VALUES = [true, false].freeze
-
-      def match?(data)
-        preprocess(data).send(operator, @condition)
-      rescue StandardError
-        false
-      end
-
+    class EqMatcher < AbstractSafeMatcher
       def operator
         :==
       end
 
-      alias_method :preprocess, :normalize_key
+      alias_method :preprocess, :normalize
     end
   end
 end

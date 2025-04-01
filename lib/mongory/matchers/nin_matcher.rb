@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
-require 'mongory/matchers/base_matcher'
+require 'mongory/matchers/abstract_matcher'
 
 module Mongory
   # Temp Description
   module Matchers
     # Temp Description
-    class NinMatcher < BaseMatcher
-      def match?(data)
-        Mongory::Utils.blank?(@condition & Array(normalize_key(data)))
+    class NinMatcher < AbstractMatcher
+      def match?(record)
+        blank?(@condition & Array(normalize(record)))
       end
 
       def check_validity!(condition)

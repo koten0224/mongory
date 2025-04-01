@@ -7,10 +7,10 @@ module Mongory
   module Matchers
     # Temp Description
     class ElemMatchMatcher < MainMatcher
-      def match?(data)
-        return false unless data.is_a?(Array)
+      def match?(record)
+        return false unless record.is_a?(Array)
 
-        data.any? do |value|
+        record.any? do |value|
           super(value)
         end
       end

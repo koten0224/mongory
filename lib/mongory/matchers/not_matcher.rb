@@ -7,8 +7,8 @@ module Mongory
   module Matchers
     # Temp Description
     class NotMatcher < MainMatcher
-      def match?(data)
-        !super(data)
+      def match?(record)
+        !super(record)
       end
     end
   end
