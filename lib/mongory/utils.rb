@@ -6,6 +6,8 @@ module Mongory
   # Temp Description
   module Utils
     def deep_convert(obj)
+      return obj.as_json if obj.respond_to?(:as_json)
+
       case obj
       when Hash
         obj.each_with_object({}) do |(k, v), result|
