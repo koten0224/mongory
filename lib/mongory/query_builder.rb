@@ -9,27 +9,28 @@ module Mongory
     include Mongory::Utils
 
     def initialize(records)
-      @records = deep_convert(records)
+      @records = records
+      @matchers = []
     end
 
     def each(&block)
-      @records.each(&block)
+      result.each(&block)
     end
 
     def where(condition)
-      filter_and_return_new(condition)
+      condition_chain(condition)
     end
 
     def or(*conditions)
-      filter_and_return_new('$or' => conditions)
+      condition_chain('$or' => conditions)
     end
 
     def and(*conditions)
-      filter_and_return_new('$and' => conditions)
+      condition_chain('$and' => conditions)
     end
 
     def not(condition)
-      filter_and_return_new('$not' => condition)
+      condition_chain('$not' => condition)
     end
 
     def asc(*keys)
@@ -41,14 +42,9 @@ module Mongory
     end
 
     def limit(count)
-      Mongory::QueryBuilder.new(take(count))
-    end
-
-    def only(*fields)
-      trimed = map do |record|
-        record.slice(*fields.map(&:to_s))
+      dup_instance_exec do
+        @limit = count
       end
-      Mongory::QueryBuilder.new(trimed)
     end
 
     def pluck(field, *fields)
@@ -62,16 +58,40 @@ module Mongory
 
     private
 
-    def filter_and_return_new(condition)
-      matcher = Mongory::QueryMatcher.new(condition)
-      matched = select { |r| matcher.match?(r) }
-      Mongory::QueryBuilder.new(matched)
+    def condition_chain(condition)
+      dup_instance_exec do
+        @matchers += [Mongory::QueryMatcher.new(condition).main_matcher]
+      end
     end
 
     def order_by_fields(*keys, direction: :asc)
-      sorted = sort_by { |record| keys.map { |key| record[key.to_s] || nil } }
-      sorted.reverse! if direction == :desc
-      Mongory::QueryBuilder.new(sorted)
+      dup_instance_exec do
+        @sort_keys = keys
+        @sort_direction = direction
+      end
+    end
+
+    def dup_instance_exec(&block)
+      dup.tap do |obj|
+        obj.instance_exec(&block)
+      end
+    end
+
+    def result
+      res = @records.select do |r|
+        r = deep_convert(r)
+        @matchers.all? { |m| m.match?(r) }
+      end
+
+      @matchers.each(&:clear)
+
+      if @sort_keys
+        res.sort_by! { |record| @sort_keys.map { |key| record[key.to_s] || nil } }
+        res.reverse! if @sort_direction == :desc
+      end
+
+      res = res.take(@limit) if @limit
+      res
     end
   end
 end

@@ -18,6 +18,7 @@ module Mongory
 
       def match?(*); end
       def check_validity!(*); end
+      def clear; end
 
       def normalize(record)
         record == KEY_NOT_FOUND ? nil : record

@@ -24,6 +24,10 @@ module Mongory
 
         @hash_matcher = HashMatcher.new(@condition)
       end
+
+      def clear
+        remove_instance_variable(:@hash_matcher)
+      end
     end
   end
 end

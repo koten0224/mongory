@@ -12,15 +12,13 @@ module Mongory
     end
 
     def match?(record)
-      matcher.match?(deep_convert(record))
+      main_matcher.match?(deep_convert(record))
     end
 
-    private
+    def main_matcher
+      return @main_matcher if defined?(@main_matcher)
 
-    def matcher
-      return @matcher if defined?(@matcher)
-
-      @matcher = Mongory::Matchers::MainMatcher.new(@condition)
+      @main_matcher = Mongory::Matchers::MainMatcher.new(@condition)
     end
   end
 end
