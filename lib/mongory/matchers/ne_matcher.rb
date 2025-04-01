@@ -1,15 +1,17 @@
 # frozen_string_literal: true
 
-require 'mongory/matchers/eq_matcher'
+require 'mongory/matchers/abstract_safe_matcher'
 
 module Mongory
   # Temp Description
   module Matchers
     # Temp Description
-    class NeMatcher < EqMatcher
+    class NeMatcher < AbstractSafeMatcher
       def operator
         :!=
       end
+
+      alias_method :preprocess, :normalize
     end
   end
 end

@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-require 'mongory/matchers/base_matcher'
+require 'mongory/matchers/abstract_matcher'
 
 module Mongory
   # Temp Description
   module Matchers
     # Temp Description
-    class MainMatcher < BaseMatcher
+    class MainMatcher < AbstractMatcher
       def match?(record)
         if @condition == record
           true

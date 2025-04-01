@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-require 'mongory/matchers/base_matcher'
+require 'mongory/matchers/abstract_matcher'
 
 module Mongory
   # Temp Description
   module Matchers
     # Abstract class
-    class MultiMatcher < BaseMatcher
+    class AbstractMultiMatcher < AbstractMatcher
       def match?(record)
         record = preprocess(record)
         matchers.send(operator) do |matcher|
