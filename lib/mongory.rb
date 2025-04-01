@@ -2,6 +2,7 @@
 
 require_relative 'mongory/version'
 require_relative 'mongory/utils'
+require_relative 'mongory/matchers'
 require_relative 'mongory/query_matcher'
 require_relative 'mongory/query_builder'
 require_relative 'mongory/query_operator'

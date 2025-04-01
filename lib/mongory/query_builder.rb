@@ -1,12 +1,15 @@
 # frozen_string_literal: true
 
+require 'mongory/utils'
+
 module Mongory
   # Temp Description
   class QueryBuilder
     include ::Enumerable
+    include Mongory::Utils
 
     def initialize(records)
-      @records = Mongory::Utils.deep_convert(records)
+      @records = deep_convert(records)
     end
 
     def each(&block)
