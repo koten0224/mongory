@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module Mongory
+  # Temp Description
   class QueryMatcher
     KEY_NOT_FOUND = Object.new
     BOOLEAN_VALUES = [true, false].freeze

@@ -11,3 +11,26 @@ Style/StringLiteralsInInterpolation:
 
 Layout/LineLength:
   Max: 120
+
+Style/PercentLiteralDelimiters:
+  PreferredDelimiters:
+    default: '[]'
+    '%i':    '()'
+
+Metrics/ClassLength:
+  Enabled: false
+
+Metrics/MethodLength:
+  Enabled: false
+
+Metrics/BlockLength:
+  Enabled: false
+
+Style/Proc:
+  Enabled: false
+
+Lint/SuppressedException:
+  Enabled: false
+
+Metrics/CyclomaticComplexity:
+  Enabled: false

@@ -1,4 +1,6 @@
-require "mongory"
+# frozen_string_literal: true
+
+require 'mongory'
 
 RSpec.describe Mongory::QueryMatcher, type: :model do
   subject { described_class.new(query) }
@@ -604,11 +606,11 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
 
     context 'use operator $elemMatch' do
       shared_examples_for 'elem match behavior' do
-        it { is_expected.to be_match(abilities: [{name: 'attack', power: 10}, {name: 'eat', power: 59}]) }
-        it { is_expected.to be_match(abilities: [{name: 'healing', power: 30}, {name: 'run', power: 40}]) }
-        it { is_expected.to be_match(abilities: [{name: 'cooking', power: 70}, {name: 'drink', power: 10}]) }
-        it { is_expected.not_to be_match(abilities: [{name: 'eat', power: 59}]) }
-        it { is_expected.not_to be_match(abilities: [{name: 'run', power: 40}]) }
+        it { is_expected.to be_match(abilities: [{ name: 'attack', power: 10 }, { name: 'eat', power: 59 }]) }
+        it { is_expected.to be_match(abilities: [{ name: 'healing', power: 30 }, { name: 'run', power: 40 }]) }
+        it { is_expected.to be_match(abilities: [{ name: 'cooking', power: 70 }, { name: 'drink', power: 10 }]) }
+        it { is_expected.not_to be_match(abilities: [{ name: 'eat', power: 59 }]) }
+        it { is_expected.not_to be_match(abilities: [{ name: 'run', power: 40 }]) }
         it { is_expected.not_to be_match(abilities: []) }
         it { is_expected.not_to be_match(abilities: nil) }
         it { is_expected.not_to be_match({}) }
@@ -624,7 +626,7 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
                 '$or': [
                   { name: 'attack' },
                   { name: 'healing' },
-                  { power: {'$gt': 60} }
+                  { power: { '$gt': 60 } }
                 ]
               }
             }

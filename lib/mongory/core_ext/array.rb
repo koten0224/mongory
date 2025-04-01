@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Temp Description
 class Array
   def mongory
     Mongory.build_query(self)
@@ -7,9 +8,7 @@ class Array
 
   unless method_defined?(:__expand_complex__)
     def __expand_complex__
-      map do |v|
-        v.__expand_complex__
-      end
+      map(&:__expand_complex__)
     end
   end
 end

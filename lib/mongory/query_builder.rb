@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module Mongory
+  # Temp Description
   class QueryBuilder
     include ::Enumerable
 
@@ -52,7 +53,7 @@ module Mongory
         map { |record| record[field.to_s] }
       else
         fields.unshift(field)
-        map { |record| fields.map{ |key| record[key.to_s] } }
+        map { |record| fields.map { |key| record[key.to_s] } }
       end
     end
 
@@ -65,7 +66,7 @@ module Mongory
     end
 
     def order_by_fields(*keys, direction: :asc)
-      sorted = sort_by { |record| keys.map { |key| record[key.to_s] || nil }  }
+      sorted = sort_by { |record| keys.map { |key| record[key.to_s] || nil } }
       sorted.reverse! if direction == :desc
       Mongory::QueryBuilder.new(sorted)
     end

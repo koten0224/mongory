@@ -3,7 +3,9 @@
 require 'date'
 
 module Mongory
+  # Temp Description
   module Utils
+    # Temp Description
     module SingletonMethods
       def deep_convert(obj = self)
         case obj

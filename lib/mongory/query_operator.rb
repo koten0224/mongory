@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module Mongory
+  # Temp Description
   class QueryOperator
     def initialize(name, method_symbol)
       @name = name
@@ -11,25 +12,26 @@ module Mongory
       { @name => @operator.__expr_part__(other) }
     end
 
+    # Temp Description
     module SingletonMethods
       METHOD_TO_OPERATOR_MAPPING = {
-        eq: "$eq",
-        ne: "$ne",
-        not: "$not",
-        and: "$and",
-        or: "$or",
-        regex: "$regex",
-        present: "$present",
-        exists: "$exists",
-        gt: "$gt",
-        gte: "$gte",
-        lt: "$lt",
-        lte: "$lte",
-        in: "$in",
-        nin: "$nin",
-        elem_match: "$elemMatch"
-      }
-      OPERATOR_TO_METHOD_MAPPING = METHOD_TO_OPERATOR_MAPPING.invert
+        eq: '$eq',
+        ne: '$ne',
+        not: '$not',
+        and: '$and',
+        or: '$or',
+        regex: '$regex',
+        present: '$present',
+        exists: '$exists',
+        gt: '$gt',
+        gte: '$gte',
+        lt: '$lt',
+        lte: '$lte',
+        in: '$in',
+        nin: '$nin',
+        elem_match: '$elemMatch'
+      }.freeze
+      OPERATOR_TO_METHOD_MAPPING = METHOD_TO_OPERATOR_MAPPING.invert.freeze
 
       def convert_to_operator(method_symbol)
         check_validity!(METHOD_TO_OPERATOR_MAPPING, method_symbol)
