@@ -17,9 +17,7 @@ module Mongory
       def matchers
         return @matchers if defined?(@matchers)
 
-        @matchers = @condition.map do |(*sub_condition)|
-          build_sub_matcher(*sub_condition)
-        end
+        @matchers = @condition.map(&method(:build_sub_matcher))
       end
 
       def preprocess(record)
