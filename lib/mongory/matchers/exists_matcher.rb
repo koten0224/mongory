@@ -7,8 +7,8 @@ module Mongory
   module Matchers
     # Temp Description
     class ExistsMatcher < EqMatcher
-      def preprocess(data)
-        data != KEY_NOT_FOUND
+      def preprocess(record)
+        record != KEY_NOT_FOUND
       end
 
       def check_validity!(condition)

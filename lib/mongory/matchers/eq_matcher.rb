@@ -9,8 +9,8 @@ module Mongory
     class EqMatcher < BaseMatcher
       BOOLEAN_VALUES = [true, false].freeze
 
-      def match?(data)
-        preprocess(data).send(operator, @condition)
+      def match?(record)
+        preprocess(record).send(operator, @condition)
       rescue StandardError
         false
       end

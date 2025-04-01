@@ -3,12 +3,12 @@
 require 'mongory'
 
 RSpec.describe Mongory::QueryMatcher, type: :model do
-  subject { described_class.new(query) }
+  subject { described_class.new(condition) }
 
   context '#match?' do
     context 'basic condition' do
-      context 'match all document when query is empty' do
-        let(:query) { {} }
+      context 'match all document when condition is empty' do
+        let(:condition) { {} }
 
         it { is_expected.to be_match(name: 'Bruno Mars') }
         it { is_expected.to be_match('string') }
@@ -17,7 +17,7 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
       end
 
       context '1 layer match' do
-        let(:query) do
+        let(:condition) do
           {
             name: 'Bruno Mars'
           }
@@ -30,7 +30,7 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
       end
 
       context 'match with different type key' do
-        let(:query) do
+        let(:condition) do
           {
             name: 'Bruno Mars'
           }
@@ -43,7 +43,7 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
       end
 
       context '2 layer match' do
-        let(:query) do
+        let(:condition) do
           {
             profile: {
               age: 18
@@ -58,7 +58,7 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
       end
 
       context 'more layer match' do
-        let(:query) do
+        let(:condition) do
           {
             do: { you: { want: { to: { build: { a: { snow: { man: 'No!' } } } } } } }
           }
@@ -75,7 +75,7 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
       end
 
       context 'match array' do
-        let(:query) do
+        let(:condition) do
           {
             '2': 'target'
           }
@@ -86,7 +86,7 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
       end
 
       context 'match array with non-array' do
-        let(:query) do
+        let(:condition) do
           {
             tags: tags
           }
@@ -125,7 +125,7 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
     end
 
     context 'use operator $present' do
-      let(:query) do
+      let(:condition) do
         {
           profile: {
             address: {
@@ -163,7 +163,7 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
     end
 
     context 'use operator $exists' do
-      let(:query) do
+      let(:condition) do
         { a: 123, b: nil, :c.exists => exists }
       end
 
@@ -183,7 +183,7 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
     end
 
     context 'use operator $or' do
-      let(:query) do
+      let(:condition) do
         {
           profile: {
             '$or': conditions
@@ -219,7 +219,7 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
     end
 
     context 'use operator $and' do
-      let(:query) do
+      let(:condition) do
         {
           profile: {
             '$and': conditions
@@ -255,7 +255,7 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
     end
 
     context 'use operator $regex' do
-      let(:query) do
+      let(:condition) do
         {
           email: {
             '$regex': regex
@@ -287,7 +287,7 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
       end
 
       context 'should match string by regexp as regular regexp' do
-        let(:query) do
+        let(:condition) do
           {
             email: /^[^@]+@shopline(app)?\.com$/
           }
@@ -309,7 +309,7 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
       end
 
       context 'will matched' do
-        let(:query) do
+        let(:condition) do
           {
             name: { '$eq': name }
           }
@@ -319,7 +319,7 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
       end
 
       context 'by built-in symbol mongoid methods will matched' do
-        let(:query) do
+        let(:condition) do
           {
             :name.eq => name
           }
@@ -340,7 +340,7 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
       end
 
       context 'will matched' do
-        let(:query) do
+        let(:condition) do
           {
             name: { '$ne': not_name }
           }
@@ -350,7 +350,7 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
       end
 
       context 'by built-in symbol mongoid methods will matched' do
-        let(:query) do
+        let(:condition) do
           {
             :name.ne => not_name
           }
@@ -373,7 +373,7 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
       end
 
       context 'will matched' do
-        let(:query) do
+        let(:condition) do
           {
             profile: { '$not': reverse_condition }
           }
@@ -383,7 +383,7 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
       end
 
       context 'by built-in symbol mongoid methods will matched' do
-        let(:query) do
+        let(:condition) do
           {
             :profile.not => reverse_condition
           }
@@ -404,7 +404,7 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
       end
 
       context 'will matched' do
-        let(:query) do
+        let(:condition) do
           {
             profile: { age: { '$gt': age } }
           }
@@ -414,7 +414,7 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
       end
 
       context 'by built-in symbol mongoid methods will matched' do
-        let(:query) do
+        let(:condition) do
           {
             profile: { :age.gt => age }
           }
@@ -435,7 +435,7 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
       end
 
       context 'will matched' do
-        let(:query) do
+        let(:condition) do
           {
             profile: { age: { '$gte': age } }
           }
@@ -445,7 +445,7 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
       end
 
       context 'by built-in symbol mongoid methods will matched' do
-        let(:query) do
+        let(:condition) do
           {
             profile: { :age.gte => age }
           }
@@ -466,7 +466,7 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
       end
 
       context 'will matched' do
-        let(:query) do
+        let(:condition) do
           {
             profile: { age: { '$lt': age } }
           }
@@ -476,7 +476,7 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
       end
 
       context 'by built-in symbol mongoid methods will matched' do
-        let(:query) do
+        let(:condition) do
           {
             profile: { :age.lt => age }
           }
@@ -497,7 +497,7 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
       end
 
       context 'will matched' do
-        let(:query) do
+        let(:condition) do
           {
             profile: { age: { '$lte': age } }
           }
@@ -507,7 +507,7 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
       end
 
       context 'by built-in symbol mongoid methods will matched' do
-        let(:query) do
+        let(:condition) do
           {
             profile: { :age.lte => age }
           }
@@ -532,7 +532,7 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
       end
 
       context 'will raise error when use `$in` operator with non-array' do
-        let(:query) do
+        let(:condition) do
           {
             name: { '$in': anything }
           }
@@ -542,7 +542,7 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
       end
 
       context 'will matched' do
-        let(:query) do
+        let(:condition) do
           {
             name: { '$in': collection }
           }
@@ -552,7 +552,7 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
       end
 
       context 'by built-in symbol mongoid methods will matched' do
-        let(:query) do
+        let(:condition) do
           {
             :name.in => collection
           }
@@ -574,7 +574,7 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
       end
 
       context 'will raise error when use `$nin` operator with non-array' do
-        let(:query) do
+        let(:condition) do
           {
             name: { '$nin': anything }
           }
@@ -584,7 +584,7 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
       end
 
       context 'will matched' do
-        let(:query) do
+        let(:condition) do
           {
             name: { '$nin': collection }
           }
@@ -594,7 +594,7 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
       end
 
       context 'by built-in symbol mongoid methods will matched' do
-        let(:query) do
+        let(:condition) do
           {
             :name.nin => collection
           }
@@ -619,7 +619,7 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
       end
 
       context 'will match' do
-        let(:query) do
+        let(:condition) do
           {
             abilities: {
               '$elemMatch': {
@@ -637,7 +637,7 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
       end
 
       context 'by built-in symbol mongoid methods will matched' do
-        let(:query) do
+        let(:condition) do
           {
             :abilities.elem_match => {
               '$or': [

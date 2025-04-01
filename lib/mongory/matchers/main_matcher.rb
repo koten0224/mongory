@@ -7,13 +7,13 @@ module Mongory
   module Matchers
     # Temp Description
     class MainMatcher < BaseMatcher
-      def match?(data)
-        if @condition == data
+      def match?(record)
+        if @condition == record
           true
         elsif @condition.is_a?(Hash)
-          hash_matcher.match?(data)
-        elsif data.is_a?(Array) # and @condition not a hash
-          data.include?(@condition)
+          hash_matcher.match?(record)
+        elsif record.is_a?(Array) # and @condition not a hash
+          record.include?(@condition)
         else
           false
         end

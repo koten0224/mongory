@@ -1,7 +1,7 @@
 # Mongory
 
 A Mongo-like in-memory query DSL for Ruby
-You can filter your in-memory data more way fasion just like mongoid do.
+You can filter your in-memory record more way fasion just like mongoid do.
 
 ## Installation
 
@@ -16,14 +16,14 @@ If bundler is not being used to manage dependencies, install the gem by executin
 ## Usage
 
 ```RUBY
-data = [
+record = [
   { 'name' => 'Jack', 'age' => 18, 'gender' => 'M' },
   { 'name' => 'Jill', 'age' => 15, 'gender' => 'F' },
   { 'name' => 'Bob', 'age' => 21, 'gender' => 'M' },
   { 'name' => 'Mary', 'age' => 18, 'gender' => 'F' }
 ]
 
-result = Mongory::QueryBuilder.new(data)
+result = Mongory::QueryBuilder.new(record)
   .where(:age.gte => 18)
   .or({ :name => /J/ }, { :name.eq => 'Bob' })
   .desc(:age)

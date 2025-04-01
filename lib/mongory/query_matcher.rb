@@ -11,8 +11,8 @@ module Mongory
       @condition = deep_convert(condition.__expand_complex__)
     end
 
-    def match?(data)
-      matcher.match?(deep_convert(data))
+    def match?(record)
+      matcher.match?(deep_convert(record))
     end
 
     private

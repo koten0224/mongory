@@ -7,10 +7,10 @@ module Mongory
   module Matchers
     # Temp Description
     class RegexMatcher < BaseMatcher
-      def match?(data)
-        return false unless data.is_a?(String)
+      def match?(record)
+        return false unless record.is_a?(String)
 
-        data.match?(@condition)
+        record.match?(@condition)
       rescue StandardError
         false
       end

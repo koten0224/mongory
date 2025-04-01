@@ -7,8 +7,8 @@ module Mongory
   module Matchers
     # Temp Description
     class PresentMatcher < EqMatcher
-      def preprocess(data)
-        Mongory::Utils.present?(super(data))
+      def preprocess(record)
+        Mongory::Utils.present?(super(record))
       end
 
       def check_validity!(condition)

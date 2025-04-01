@@ -7,14 +7,14 @@ module Mongory
   module Matchers
     # Temp Description
     class GtMatcher < EqMatcher
-      def match?(data)
-        return false if data == KEY_NOT_FOUND
+      def match?(record)
+        return false if record == KEY_NOT_FOUND
 
         super
       end
 
-      def preprocess(data)
-        data
+      def preprocess(record)
+        record
       end
 
       def operator

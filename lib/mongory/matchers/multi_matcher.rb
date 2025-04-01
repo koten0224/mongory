@@ -7,10 +7,10 @@ module Mongory
   module Matchers
     # Abstract class
     class MultiMatcher < BaseMatcher
-      def match?(data)
-        data = preprocess(data)
+      def match?(record)
+        record = preprocess(record)
         matchers.send(operator) do |matcher|
-          matcher.match?(data)
+          matcher.match?(record)
         end
       end
 
@@ -22,8 +22,8 @@ module Mongory
         end
       end
 
-      def preprocess(data)
-        data
+      def preprocess(record)
+        record
       end
 
       def build_sub_matcher(*); end

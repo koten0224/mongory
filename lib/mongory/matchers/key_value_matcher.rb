@@ -12,13 +12,13 @@ module Mongory
         @match_value = match_value
       end
 
-      def match?(data)
-        return operator_matcher.match?(data) if operator_matcher
+      def match?(record)
+        return operator_matcher.match?(record) if operator_matcher
 
-        sub_value = fetch_value(data, @match_key)
+        sub_value = fetch_value(record, @match_key)
 
-        if data.is_a?(Array) && sub_value.nil?
-          elem_matcher.match?(data)
+        if record.is_a?(Array) && sub_value.nil?
+          elem_matcher.match?(record)
         else
           main_matcher.match?(sub_value)
         end

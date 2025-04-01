@@ -7,8 +7,8 @@ module Mongory
   module Matchers
     # Temp Description
     class NinMatcher < BaseMatcher
-      def match?(data)
-        Mongory::Utils.blank?(@condition & Array(normalize_key(data)))
+      def match?(record)
+        Mongory::Utils.blank?(@condition & Array(normalize_key(record)))
       end
 
       def check_validity!(condition)
