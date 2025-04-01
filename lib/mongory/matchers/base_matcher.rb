@@ -16,9 +16,8 @@ module Mongory
         @condition = condition
       end
 
-      def match?(*)
-        true
-      end
+      def match?(*); end
+      def check_validity!(*); end
 
       def normalize_key(record)
         record == KEY_NOT_FOUND ? nil : record
@@ -29,13 +28,11 @@ module Mongory
         when Hash
           record.fetch(key, KEY_NOT_FOUND)
         when Array
-          return unless key.match?(/^\d+$/)
+          return record[key.to_i] if key.match?(/^\d+$/) && record.length > key.to_i
 
-          record[key.to_i]
+          KEY_NOT_FOUND
         end
       end
-
-      def check_validity!(condition); end
     end
   end
 end

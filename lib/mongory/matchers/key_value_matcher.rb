@@ -17,7 +17,7 @@ module Mongory
 
         sub_value = fetch_value(record, @match_key)
 
-        if record.is_a?(Array) && sub_value.nil?
+        if record.is_a?(Array) && sub_value == KEY_NOT_FOUND
           elem_matcher.match?(record)
         else
           main_matcher.match?(sub_value)
