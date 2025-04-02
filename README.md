@@ -16,18 +16,17 @@ If bundler is not being used to manage dependencies, install the gem by executin
 ## Usage
 
 ```RUBY
-record = [
+records = [
   { 'name' => 'Jack', 'age' => 18, 'gender' => 'M' },
   { 'name' => 'Jill', 'age' => 15, 'gender' => 'F' },
   { 'name' => 'Bob', 'age' => 21, 'gender' => 'M' },
   { 'name' => 'Mary', 'age' => 18, 'gender' => 'F' }
 ]
 
-result = Mongory::QueryBuilder.new(record)
+result = records.mongory
   .where(:age.gte => 18)
   .or({ :name => /J/ }, { :name.eq => 'Bob' })
   .desc(:age)
-  .only(:name, :age)
   .limit(2)
   .to_a
 
