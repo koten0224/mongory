@@ -12,13 +12,17 @@ module Mongory
     end
 
     def match?(record)
-      main_matcher.match?(deep_convert(record))
+      main_matcher.match?(normalize_record(record))
     end
 
-    def main_matcher
-      return @main_matcher if defined?(@main_matcher)
+    def normalize_record(record)
+      return record.as_json if record.respond_to?(:as_json)
 
-      @main_matcher = Mongory::Matchers::MainMatcher.new(@condition)
+      deep_convert(record)
+    end
+
+    define_instance_cache_method(:main_matcher) do
+      Mongory::Matchers::MainMatcher.new(@condition)
     end
   end
 end

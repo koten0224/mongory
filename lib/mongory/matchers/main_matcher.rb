@@ -19,14 +19,8 @@ module Mongory
         end
       end
 
-      def hash_matcher
-        return @hash_matcher if defined?(@hash_matcher)
-
-        @hash_matcher = HashMatcher.new(@condition)
-      end
-
-      def clear
-        remove_instance_variable(:@hash_matcher)
+      define_matcher(:hash) do
+        HashMatcher.new(@condition)
       end
     end
   end

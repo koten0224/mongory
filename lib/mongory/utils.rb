@@ -5,9 +5,12 @@ require 'date'
 module Mongory
   # Temp Description
   module Utils
-    def deep_convert(obj)
-      return obj.as_json if obj.respond_to?(:as_json)
+    def self.included(base)
+      base.extend(ClassMethods)
+      super
+    end
 
+    def deep_convert(obj)
       case obj
       when Hash
         obj.each_with_object({}) do |(k, v), result|
@@ -38,6 +41,18 @@ module Mongory
         obj.empty?
       else
         false
+      end
+    end
+
+    # Temp Description
+    module ClassMethods
+      def define_instance_cache_method(name, &block)
+        instance_key = :"@#{name}"
+        define_method(name) do
+          return instance_variable_get(instance_key) if instance_variable_defined?(instance_key)
+
+          instance_variable_set(instance_key, instance_exec(&block))
+        end
       end
     end
   end

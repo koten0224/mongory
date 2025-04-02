@@ -25,23 +25,19 @@ module Mongory
         end
       end
 
-      def operator_matcher
-        return @operator_matcher if defined?(@operator_matcher)
-
-        @operator_matcher = Matchers.lookup(@match_key)&.new(@match_value)
+      define_matcher(:operator) do
+        Matchers.lookup(@match_key)&.new(@match_value)
       end
 
-      def elem_matcher
-        return @elem_matcher if defined?(@elem_matcher)
-
-        @elem_matcher = ElemMatchMatcher.new(@condition)
+      define_matcher(:elem) do
+        ElemMatchMatcher.new(@condition)
       end
 
-      def main_matcher
-        return @main_matcher if defined?(@main_matcher)
-
-        @main_matcher = MainMatcher.new(@match_value)
+      define_matcher(:main) do
+        MainMatcher.new(@match_value)
       end
+
+      private
 
       def fetch_value(record, key)
         case record
