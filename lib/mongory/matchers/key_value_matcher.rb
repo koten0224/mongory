@@ -44,9 +44,9 @@ module Mongory
         when Hash
           record.fetch(key, KEY_NOT_FOUND)
         when Array
-          return record[key.to_i] if key.match?(/^\d+$/) && record.length > key.to_i
+          return KEY_NOT_FOUND unless key.match?(/^\d+$/)
 
-          KEY_NOT_FOUND
+          record[key.to_i]
         end
       end
     end

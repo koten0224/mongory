@@ -17,3 +17,8 @@
 - Refactor the matcher classes inheritance and update diagram
 - Add rails supporting, allow to configure the way you want to convert data to compare
 - Make query builder more efficient
+
+## [1.3.1] - 2025-04-02
+
+- Adjust the logic of array compare
+- Let query operator could match the regular mongoid usage
