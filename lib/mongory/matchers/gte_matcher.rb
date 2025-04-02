@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-require 'mongory/matchers/abstract_strict_key_matcher'
+require 'mongory/matchers/abstract_operator_matcher'
 
 module Mongory
   # Temp Description
   module Matchers
     # Temp Description
-    class GteMatcher < AbstractStrictKeyMatcher
+    class GteMatcher < AbstractOperatorMatcher
       def operator
         :>=
       end

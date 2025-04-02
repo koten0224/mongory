@@ -424,6 +424,10 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
         it { is_expected.to be_match(profile: { age: 20 }) }
         it { is_expected.not_to be_match(profile: { age: 18 }) }
         it { is_expected.not_to be_match(profile: { age: 17 }) }
+        it { is_expected.not_to be_match(profile: { age: nil }) }
+        it { is_expected.not_to be_match(profile: {}) }
+        it { is_expected.not_to be_match(profile: nil) }
+        it { is_expected.not_to be_match({}) }
         it { is_expected.not_to be_match(anything) }
       end
 
@@ -455,6 +459,10 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
         it { is_expected.to be_match(profile: { age: 20 }) }
         it { is_expected.to be_match(profile: { age: 18 }) }
         it { is_expected.not_to be_match(profile: { age: 17 }) }
+        it { is_expected.not_to be_match(profile: { age: nil }) }
+        it { is_expected.not_to be_match(profile: {}) }
+        it { is_expected.not_to be_match(profile: nil) }
+        it { is_expected.not_to be_match({}) }
         it { is_expected.not_to be_match(anything) }
       end
 
@@ -486,6 +494,10 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
         it { is_expected.to be_match(profile: { age: 17 }) }
         it { is_expected.not_to be_match(profile: { age: 18 }) }
         it { is_expected.not_to be_match(profile: { age: 20 }) }
+        it { is_expected.not_to be_match(profile: { age: nil }) }
+        it { is_expected.not_to be_match(profile: {}) }
+        it { is_expected.not_to be_match(profile: nil) }
+        it { is_expected.not_to be_match({}) }
         it { is_expected.not_to be_match(anything) }
       end
 
@@ -517,6 +529,10 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
         it { is_expected.to be_match(profile: { age: 17 }) }
         it { is_expected.to be_match(profile: { age: 18 }) }
         it { is_expected.not_to be_match(profile: { age: 20 }) }
+        it { is_expected.not_to be_match(profile: { age: nil }) }
+        it { is_expected.not_to be_match(profile: {}) }
+        it { is_expected.not_to be_match(profile: nil) }
+        it { is_expected.not_to be_match({}) }
         it { is_expected.not_to be_match(anything) }
       end
 

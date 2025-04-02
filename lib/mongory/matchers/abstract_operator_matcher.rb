@@ -6,7 +6,7 @@ module Mongory
   # Temp Description
   module Matchers
     # Abstract class
-    class AbstractSafeMatcher < AbstractMatcher
+    class AbstractOperatorMatcher < AbstractMatcher
       BOOLEAN_VALUES = [true, false].freeze
 
       def match?(record)
@@ -16,7 +16,7 @@ module Mongory
       end
 
       def preprocess(record)
-        record
+        normalize(record)
       end
 
       def operator; end

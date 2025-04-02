@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-require 'mongory/matchers/abstract_safe_matcher'
+require 'mongory/matchers/abstract_operator_matcher'
 
 module Mongory
   # Temp Description
   module Matchers
     # Temp Description
-    class ExistsMatcher < AbstractSafeMatcher
+    class ExistsMatcher < AbstractOperatorMatcher
       def preprocess(record)
         record != KEY_NOT_FOUND
       end

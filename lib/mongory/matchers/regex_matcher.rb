@@ -1,18 +1,20 @@
 # frozen_string_literal: true
 
-require 'mongory/matchers/abstract_matcher'
+require 'mongory/matchers/abstract_operator_matcher'
 
 module Mongory
   # Temp Description
   module Matchers
     # Temp Description
-    class RegexMatcher < AbstractMatcher
-      def match?(record)
-        return false unless record.is_a?(String)
+    class RegexMatcher < AbstractOperatorMatcher
+      def operator
+        :match?
+      end
 
-        record.match?(@condition)
-      rescue StandardError
-        false
+      def preprocess(record)
+        return '' unless record.is_a?(String)
+
+        record
       end
 
       def check_validity!(condition)
