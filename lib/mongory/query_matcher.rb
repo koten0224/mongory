@@ -16,13 +16,18 @@ module Mongory
     end
 
     def normalize_record(record)
-      return record.as_json if record.respond_to?(:as_json)
+      return record.send(data_converter) if data_converter.is_a?(Symbol) && record.respond_to?(data_converter)
+      return data_converter.call(record) if data_converter.is_a?(Proc)
 
       deep_convert(record)
     end
 
     define_instance_cache_method(:main_matcher) do
       Mongory::Matchers::MainMatcher.new(@condition)
+    end
+
+    define_instance_cache_method(:data_converter) do
+      Mongory.config.data_converter
     end
   end
 end
