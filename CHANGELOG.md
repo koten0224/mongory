@@ -23,3 +23,5 @@
 - Adjust the logic of array compare
 - Let query operator could match the regular mongoid usage
 - Change check validity behavior
+- Restrictions on the use of normalize
+- Fix problem with compare array by condition
