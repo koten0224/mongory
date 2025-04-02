@@ -10,7 +10,7 @@ module Mongory
 
     def initialize(records)
       @records = records
-      @matchers = []
+      @condition = {}
     end
 
     def each(&block)
@@ -18,19 +18,23 @@ module Mongory
     end
 
     def where(condition)
-      condition_chain(condition)
-    end
-
-    def or(*conditions)
-      condition_chain('$or' => conditions)
+      self.and(condition)
     end
 
     def and(*conditions)
-      condition_chain('$and' => conditions)
+      dup_instance_exec do
+        @condition['$and'] = Array(@condition['$and']) + conditions
+      end
+    end
+
+    def or(*conditions)
+      dup_instance_exec do
+        @condition['$or'] = Array(@condition['$or']) + conditions
+      end
     end
 
     def not(condition)
-      condition_chain('$not' => condition)
+      self.and('$not' => condition)
     end
 
     def asc(*keys)
@@ -58,12 +62,6 @@ module Mongory
 
     private
 
-    def condition_chain(condition)
-      dup_instance_exec do
-        @matchers += [Mongory::QueryMatcher.new(condition).main_matcher]
-      end
-    end
-
     def order_by_fields(*keys, direction: :asc)
       dup_instance_exec do
         @sort_keys = keys
@@ -73,17 +71,18 @@ module Mongory
 
     def dup_instance_exec(&block)
       dup.tap do |obj|
+        obj.instance_exec do
+          @condition = @condition.dup
+        end
         obj.instance_exec(&block)
       end
     end
 
     def result
+      matcher = Mongory::QueryMatcher.new(@condition)
       res = @records.select do |r|
-        r = deep_convert(r)
-        @matchers.all? { |m| m.match?(r) }
+        matcher.match?(r)
       end
-
-      @matchers.each(&:clear)
 
       if @sort_keys
         res.sort_by! { |record| @sort_keys.map { |key| record[key.to_s] || nil } }
