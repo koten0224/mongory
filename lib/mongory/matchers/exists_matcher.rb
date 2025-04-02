@@ -15,8 +15,8 @@ module Mongory
         :==
       end
 
-      def check_validity!(condition)
-        raise TypeError, '$exists needs a boolean' unless BOOLEAN_VALUES.include?(condition)
+      def check_validity!
+        raise TypeError, '$exists needs a boolean' unless BOOLEAN_VALUES.include?(@condition)
       end
     end
   end

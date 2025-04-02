@@ -11,8 +11,8 @@ module Mongory
         present?(@condition & Array(normalize(record)))
       end
 
-      def check_validity!(condition)
-        raise TypeError, '$in needs an array' unless condition.is_a?(Array)
+      def check_validity!
+        raise TypeError, '$in needs an array' unless @condition.is_a?(Array)
       end
     end
   end

@@ -15,8 +15,8 @@ module Mongory
         :any?
       end
 
-      def check_validity!(condition)
-        raise TypeError, '$or needs an array' unless condition.is_a?(Array)
+      def check_validity!
+        raise TypeError, '$or needs an array' unless @condition.is_a?(Array)
       end
 
       alias_method :preprocess, :normalize

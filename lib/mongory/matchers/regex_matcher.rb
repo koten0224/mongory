@@ -17,8 +17,8 @@ module Mongory
         record
       end
 
-      def check_validity!(condition)
-        raise TypeError, '$regex needs a string' unless condition.is_a?(String)
+      def check_validity!
+        raise TypeError, '$regex needs a string' unless @condition.is_a?(String)
       end
     end
   end

@@ -22,3 +22,4 @@
 
 - Adjust the logic of array compare
 - Let query operator could match the regular mongoid usage
+- Change check validity behavior
