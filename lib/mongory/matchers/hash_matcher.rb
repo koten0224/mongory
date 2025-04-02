@@ -7,12 +7,25 @@ module Mongory
   module Matchers
     # Temp Description
     class HashMatcher < AbstractMultiMatcher
-      def build_sub_matcher(match_key, match_value)
-        KeyValueMatcher.new(match_key, match_value)
+      def match?(record)
+        res = super
+        if res.include?(KEY_NOT_FOUND)
+          elem_matcher.match?(record)
+        else
+          res.all?
+        end
+      end
+
+      def build_sub_matcher(key, value)
+        KeyValueMatcher.new(key, value)
+      end
+
+      define_matcher(:elem) do
+        ElemMatchMatcher.new(@condition)
       end
 
       def operator
-        :all?
+        :map
       end
     end
   end
