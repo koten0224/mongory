@@ -23,3 +23,6 @@
 - Adjust the logic of array compare
 - Let query operator could match the regular mongoid usage
 - Change check validity behavior
+
+## [1.3.2] - 2025-04-03
+- Restrictions on the use of normalize

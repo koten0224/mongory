@@ -7,6 +7,17 @@ module Mongory
   module Matchers
     # Temp Description
     class KeyValueMatcher < AbstractMatcher
+      # These classes are not expected to dig value but respond to :[] method
+      CLASSES_NOT_ALLOW_TO_DIG = [
+        ::String,
+        ::Integer,
+        ::Proc,
+        ::Method,
+        ::MatchData,
+        ::Thread,
+        ::Symbol
+      ].freeze
+
       def initialize(match_key, match_value)
         super(match_key => match_value)
         @match_key = match_key
@@ -16,7 +27,7 @@ module Mongory
       def match?(record)
         return operator_matcher.match?(record) if operator_matcher
 
-        sub_value = fetch_value(record, @match_key)
+        sub_value = fetch_value(record)
 
         if record.is_a?(Array) && sub_value == KEY_NOT_FOUND
           elem_matcher.match?(record)
@@ -39,14 +50,20 @@ module Mongory
 
       private
 
-      def fetch_value(record, key)
+      def fetch_value(record)
         case record
         when Hash
-          record.fetch(key, KEY_NOT_FOUND)
+          record.fetch(@match_key, KEY_NOT_FOUND)
         when Array
-          return KEY_NOT_FOUND unless key.match?(/^\d+$/)
+          return KEY_NOT_FOUND unless @match_key.match?(/^\d+$/)
 
-          record[key.to_i]
+          record[@match_key.to_i]
+        when *CLASSES_NOT_ALLOW_TO_DIG
+          KEY_NOT_FOUND
+        else
+          return KEY_NOT_FOUND unless record.respond_to?(:[])
+
+          record[@match_key]
         end
       end
     end

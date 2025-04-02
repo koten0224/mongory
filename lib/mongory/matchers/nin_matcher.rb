@@ -8,7 +8,7 @@ module Mongory
     # Temp Description
     class NinMatcher < AbstractMatcher
       def match?(record)
-        blank?(@condition & Array(normalize(record)))
+        blank?(@condition & Array(record))
       end
 
       def check_validity!

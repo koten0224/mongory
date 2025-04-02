@@ -74,20 +74,49 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
       end
 
       context 'more layer match' do
-        let(:condition) do
-          {
-            do: { you: { want: { to: { build: { a: { snow: { man: 'No!' } } } } } } }
+        context 'with string' do
+          let(:condition) do
+            {
+              do: { you: { want: { to: { build: { a: { snow: { man: 'No!' } } } } } } }
+            }
+          end
+
+          it {
+            is_expected.to be_match(name: anything,
+                                    do: { you: { want: { to: { build: { a: { snow: { man: 'No!' } } } } } } })
           }
+          it {
+            is_expected.not_to be_match(name: anything,
+                                        do: { you: { want: { to: { build: { a: { snow: { man: 'Yes!' } } } } } } })
+          }
+          it { is_expected.not_to be_match(anything) }
         end
 
-        it {
-          is_expected.to be_match(name: anything,
-                                  do: { you: { want: { to: { build: { a: { snow: { man: 'No!' } } } } } } })
-        }
-        it {
-          is_expected.not_to be_match(name: anything,
-                                      do: { you: { want: { to: { build: { a: { snow: { man: 'Yes!' } } } } } } })
-        }
+        context 'with nil' do
+          let(:condition) do
+            {
+              do: { you: { want: { to: { build: { a: { snow: { man: nil } } } } } } }
+            }
+          end
+
+          it {
+            is_expected.to be_match(name: anything,
+                                    do: { you: { want: { to: { build: { a: { snow: { man: nil } } } } } } })
+          }
+
+          it {
+            is_expected.not_to be_match(name: anything,
+                                        do: { you: { want: { to: { build: { a: { snow: { man: anything } } } } } } })
+          }
+
+          it {
+            is_expected.not_to be_match(name: anything,
+                                        do: { you: { want: { to: { build: { a: { snow: {} } } } } } })
+          }
+
+          it { is_expected.not_to be_match(anything) }
+          it { is_expected.not_to be_match(nil) }
+        end
       end
 
       context 'match array' do
