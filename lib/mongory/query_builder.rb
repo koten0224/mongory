@@ -9,27 +9,32 @@ module Mongory
     include Mongory::Utils
 
     def initialize(records)
-      @records = deep_convert(records)
+      @records = records
+      @condition = {}
     end
 
     def each(&block)
-      @records.each(&block)
+      result.each(&block)
     end
 
     def where(condition)
-      filter_and_return_new(condition)
-    end
-
-    def or(*conditions)
-      filter_and_return_new('$or' => conditions)
+      self.and(condition)
     end
 
     def and(*conditions)
-      filter_and_return_new('$and' => conditions)
+      dup_instance_exec do
+        @condition['$and'] = Array(@condition['$and']) + conditions
+      end
+    end
+
+    def or(*conditions)
+      dup_instance_exec do
+        @condition['$or'] = Array(@condition['$or']) + conditions
+      end
     end
 
     def not(condition)
-      filter_and_return_new('$not' => condition)
+      self.and('$not' => condition)
     end
 
     def asc(*keys)
@@ -41,14 +46,9 @@ module Mongory
     end
 
     def limit(count)
-      Mongory::QueryBuilder.new(take(count))
-    end
-
-    def only(*fields)
-      trimed = map do |record|
-        record.slice(*fields.map(&:to_s))
+      dup_instance_exec do
+        @limit = count
       end
-      Mongory::QueryBuilder.new(trimed)
     end
 
     def pluck(field, *fields)
@@ -62,16 +62,35 @@ module Mongory
 
     private
 
-    def filter_and_return_new(condition)
-      matcher = Mongory::QueryMatcher.new(condition)
-      matched = select { |r| matcher.match?(r) }
-      Mongory::QueryBuilder.new(matched)
+    def order_by_fields(*keys, direction: :asc)
+      dup_instance_exec do
+        @sort_keys = keys
+        @sort_direction = direction
+      end
     end
 
-    def order_by_fields(*keys, direction: :asc)
-      sorted = sort_by { |record| keys.map { |key| record[key.to_s] || nil } }
-      sorted.reverse! if direction == :desc
-      Mongory::QueryBuilder.new(sorted)
+    def dup_instance_exec(&block)
+      dup.tap do |obj|
+        obj.instance_exec do
+          @condition = @condition.dup
+        end
+        obj.instance_exec(&block)
+      end
+    end
+
+    def result
+      matcher = Mongory::QueryMatcher.new(@condition)
+      res = @records.select do |r|
+        matcher.match?(r)
+      end
+
+      if @sort_keys
+        res.sort_by! { |record| @sort_keys.map { |key| record[key.to_s] || nil } }
+        res.reverse! if @sort_direction == :desc
+      end
+
+      res = res.take(@limit) if @limit
+      res
     end
   end
 end

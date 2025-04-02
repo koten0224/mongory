@@ -19,10 +19,8 @@ module Mongory
         end
       end
 
-      def hash_matcher
-        return @hash_matcher if defined?(@hash_matcher)
-
-        @hash_matcher = HashMatcher.new(@condition)
+      define_matcher(:hash) do
+        HashMatcher.new(@condition)
       end
     end
   end

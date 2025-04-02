@@ -2,6 +2,18 @@
 
 require 'mongory'
 
+class DummyModel
+  include Mongory::Utils
+
+  def initialize(attributes)
+    @attributes = deep_convert(attributes)
+  end
+
+  def as_json(*)
+    @attributes
+  end
+end
+
 RSpec.describe Mongory::QueryMatcher, type: :model do
   subject { described_class.new(condition) }
 
@@ -25,8 +37,10 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
 
         it { is_expected.to be_match(name: 'Bruno Mars') }
         it { is_expected.to be_match(name: 'Bruno Mars', other: anything) }
+        it { is_expected.to be_match(DummyModel.new(name: 'Bruno Mars', other: anything)) }
         it { is_expected.not_to be_match(name: 'bruno mars') }
         it { is_expected.not_to be_match(name: 'Marco Polo') }
+        it { is_expected.not_to be_match(DummyModel.new(name: 'Marco Polo')) }
       end
 
       context 'match with different type key' do
@@ -38,8 +52,10 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
 
         it { is_expected.to be_match('name' => 'Bruno Mars') }
         it { is_expected.to be_match('name' => 'Bruno Mars', 'other' => anything) }
+        it { is_expected.to be_match(DummyModel.new('name' => 'Bruno Mars', 'other' => anything)) }
         it { is_expected.not_to be_match('name' => 'bruno mars') }
         it { is_expected.not_to be_match('name' => 'Marco Polo') }
+        it { is_expected.not_to be_match(DummyModel.new('name' => 'Marco Polo')) }
       end
 
       context '2 layer match' do
@@ -145,8 +161,10 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
         let(:presence) { true }
 
         it { is_expected.to be_match(profile: { address: { key: anything } }) }
+        it { is_expected.to be_match(DummyModel.new(profile: { address: { key: anything } })) }
         it { is_expected.not_to be_match(profile: { address: {} }) }
         it { is_expected.not_to be_match(profile: {}) }
+        it { is_expected.not_to be_match(DummyModel.new(profile: {})) }
         it { is_expected.not_to be_match({}) }
         it { is_expected.not_to be_match(nil) }
       end
@@ -158,7 +176,9 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
         it { is_expected.to be_match({}) }
         it { is_expected.to be_match(profile: { address: {} }) }
         it { is_expected.to be_match(profile: {}) }
+        it { is_expected.to be_match(DummyModel.new(profile: {})) }
         it { is_expected.not_to be_match(profile: { address: { key: anything } }) }
+        it { is_expected.not_to be_match(DummyModel.new(profile: { address: { key: anything } })) }
       end
     end
 
@@ -171,14 +191,18 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
         let(:exists) { true }
 
         it { is_expected.to be_match(a: 123, b: nil, c: anything) }
+        it { is_expected.to be_match(DummyModel.new(a: 123, b: nil, c: anything)) }
         it { is_expected.not_to be_match(a: 123, b: nil) }
+        it { is_expected.not_to be_match(DummyModel.new(a: 123, b: nil)) }
       end
 
       context 'when not exists' do
         let(:exists) { false }
 
         it { is_expected.to be_match(a: 123, b: nil) }
+        it { is_expected.to be_match(DummyModel.new(a: 123, b: nil)) }
         it { is_expected.not_to be_match(a: 123, b: nil, c: anything) }
+        it { is_expected.not_to be_match(DummyModel.new(a: 123, b: nil, c: anything)) }
       end
     end
 
@@ -400,6 +424,10 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
         it { is_expected.to be_match(profile: { age: 20 }) }
         it { is_expected.not_to be_match(profile: { age: 18 }) }
         it { is_expected.not_to be_match(profile: { age: 17 }) }
+        it { is_expected.not_to be_match(profile: { age: nil }) }
+        it { is_expected.not_to be_match(profile: {}) }
+        it { is_expected.not_to be_match(profile: nil) }
+        it { is_expected.not_to be_match({}) }
         it { is_expected.not_to be_match(anything) }
       end
 
@@ -431,6 +459,10 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
         it { is_expected.to be_match(profile: { age: 20 }) }
         it { is_expected.to be_match(profile: { age: 18 }) }
         it { is_expected.not_to be_match(profile: { age: 17 }) }
+        it { is_expected.not_to be_match(profile: { age: nil }) }
+        it { is_expected.not_to be_match(profile: {}) }
+        it { is_expected.not_to be_match(profile: nil) }
+        it { is_expected.not_to be_match({}) }
         it { is_expected.not_to be_match(anything) }
       end
 
@@ -462,6 +494,10 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
         it { is_expected.to be_match(profile: { age: 17 }) }
         it { is_expected.not_to be_match(profile: { age: 18 }) }
         it { is_expected.not_to be_match(profile: { age: 20 }) }
+        it { is_expected.not_to be_match(profile: { age: nil }) }
+        it { is_expected.not_to be_match(profile: {}) }
+        it { is_expected.not_to be_match(profile: nil) }
+        it { is_expected.not_to be_match({}) }
         it { is_expected.not_to be_match(anything) }
       end
 
@@ -493,6 +529,10 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
         it { is_expected.to be_match(profile: { age: 17 }) }
         it { is_expected.to be_match(profile: { age: 18 }) }
         it { is_expected.not_to be_match(profile: { age: 20 }) }
+        it { is_expected.not_to be_match(profile: { age: nil }) }
+        it { is_expected.not_to be_match(profile: {}) }
+        it { is_expected.not_to be_match(profile: nil) }
+        it { is_expected.not_to be_match({}) }
         it { is_expected.not_to be_match(anything) }
       end
 

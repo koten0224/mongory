@@ -12,15 +12,22 @@ module Mongory
     end
 
     def match?(record)
-      matcher.match?(deep_convert(record))
+      main_matcher.match?(normalize_record(record))
     end
 
-    private
+    def normalize_record(record)
+      return record.send(data_converter) if data_converter.is_a?(Symbol) && record.respond_to?(data_converter)
+      return data_converter.call(record) if data_converter.is_a?(Proc)
 
-    def matcher
-      return @matcher if defined?(@matcher)
+      deep_convert(record)
+    end
 
-      @matcher = Mongory::Matchers::MainMatcher.new(@condition)
+    define_instance_cache_method(:main_matcher) do
+      Mongory::Matchers::MainMatcher.new(@condition)
+    end
+
+    define_instance_cache_method(:data_converter) do
+      Mongory.config.data_converter
     end
   end
 end

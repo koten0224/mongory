@@ -14,10 +14,8 @@ module Mongory
         end
       end
 
-      def matchers
-        return @matchers if defined?(@matchers)
-
-        @matchers = @condition.map(&method(:build_sub_matcher))
+      define_instance_cache_method(:matchers) do
+        @condition.map(&method(:build_sub_matcher))
       end
 
       def preprocess(record)
