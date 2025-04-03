@@ -10,10 +10,10 @@ module Mongory
       def match?(record)
         if @condition == record
           true
+        elsif record.is_a?(Array)
+          collection_matcher.match?(record)
         elsif @condition.is_a?(Hash)
           hash_matcher.match?(record)
-        elsif record.is_a?(Array) # and @condition not a hash
-          record.include?(@condition)
         else
           false
         end
@@ -21,6 +21,10 @@ module Mongory
 
       define_matcher(:hash) do
         HashMatcher.new(@condition)
+      end
+
+      define_matcher(:collection) do
+        CollectionMatcher.new(@condition)
       end
     end
   end

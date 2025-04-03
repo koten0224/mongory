@@ -15,6 +15,8 @@ module Mongory
         define_instance_cache_method(:"#{name}_matcher", &block)
       end
 
+      attr_reader :condition
+
       def initialize(condition)
         @condition = condition
         check_validity!

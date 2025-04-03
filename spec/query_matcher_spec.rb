@@ -182,6 +182,44 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
           it { is_expected.not_to be_match(tags: [{ tag1: 14 }]) }
         end
       end
+
+      context 'match array with condition' do
+        let(:condition) do
+          {
+            name: 'Billy',
+            age: 18
+          }
+        end
+
+        let(:data1) do
+          {
+            name: 'Billy',
+            age: 20
+          }
+        end
+        let(:data2) do
+          {
+            name: 'Mary',
+            age: 18
+          }
+        end
+        let(:data3) do
+          {
+            name: 'Frank',
+            age: 20
+          }
+        end
+        let(:matched_data) do
+          {
+            name: 'Billy',
+            age: 18
+          }
+        end
+
+        it { is_expected.to be_match([data1, data2, matched_data]) }
+        it { is_expected.not_to be_match([data1, data2, data3]) }
+        it { is_expected.not_to be_match([data2, data3]) }
+      end
     end
 
     context 'use operator $present' do
@@ -734,6 +772,17 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
         end
 
         it_behaves_like 'elem match behavior'
+      end
+
+      context 'match straightly with key' do
+        let(:condition) do
+          {
+            :abilities.elem_match => 'attack'
+          }
+        end
+
+        it { is_expected.to be_match([{ abilities: ['attack'] }]) }
+        it { is_expected.not_to be_match([{ abilities: ['defence'] }]) }
       end
     end
   end

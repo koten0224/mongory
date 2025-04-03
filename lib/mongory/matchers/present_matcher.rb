@@ -8,7 +8,7 @@ module Mongory
     # Temp Description
     class PresentMatcher < AbstractOperatorMatcher
       def preprocess(record)
-        present?(normalize(record))
+        present?(super)
       end
 
       def operator

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'mongory/matchers/and_matcher'
+require 'mongory/matchers/collection_matcher'
 require 'mongory/matchers/elem_match_matcher'
 require 'mongory/matchers/eq_matcher'
 require 'mongory/matchers/exists_matcher'
