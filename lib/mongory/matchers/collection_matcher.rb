@@ -20,9 +20,9 @@ module Mongory
       def build_sub_matcher(key, value)
         case key
         when Integer
-          KeyValueMatcher.new(key, value)
+          DigValueMatcher.new(key, value)
         when /^\d+$/
-          KeyValueMatcher.new(key.to_i, value)
+          DigValueMatcher.new(key.to_i, value)
         when *Matchers::OPERATOR_TO_CLASS_MAPPING.keys
           Matchers.lookup(key).new(value)
         else

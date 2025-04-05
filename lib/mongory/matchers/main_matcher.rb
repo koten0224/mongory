@@ -13,18 +13,18 @@ module Mongory
         elsif record.is_a?(Array)
           collection_matcher.match?(record)
         elsif @condition.is_a?(Hash)
-          hash_matcher.match?(record)
+          condition_matcher.match?(record)
         else
           false
         end
       end
 
-      define_matcher(:hash) do
-        HashMatcher.new(@condition)
-      end
-
       define_matcher(:collection) do
         CollectionMatcher.new(@condition)
+      end
+
+      define_matcher(:condition) do
+        ConditionMatcher.new(@condition)
       end
     end
   end
