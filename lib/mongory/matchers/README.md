@@ -39,7 +39,7 @@ graph TD
     T[LteMatcher]
   end
 
-  A --> B[MainMatcher]
+  A --> B[DefaultMatcher]
   A --> U[InMatcher]
   A --> V[NinMatcher]
   A --> C --> MultipleConditions

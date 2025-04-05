@@ -1,13 +1,12 @@
 # frozen_string_literal: true
 
-require_relative 'abstract_matcher'
-
 module Mongory
   # Temp Description
   module Matchers
     # Temp Description
-    class MainMatcher < AbstractMatcher
+    class DefaultMatcher < AbstractMatcher
       def match?(record)
+        record = Mongory.data_converter.convert(record)
         if @condition == record
           true
         elsif record.is_a?(Array)

@@ -1,12 +1,10 @@
 # frozen_string_literal: true
 
-require_relative 'main_matcher'
-
 module Mongory
   # Temp Description
   module Matchers
     # Temp Description
-    class ElemMatchMatcher < MainMatcher
+    class ElemMatchMatcher < DefaultMatcher
       def match?(record)
         return false unless record.is_a?(Array)
 

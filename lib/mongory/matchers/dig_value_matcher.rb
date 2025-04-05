@@ -1,12 +1,10 @@
 # frozen_string_literal: true
 
-require_relative 'main_matcher'
-
 module Mongory
   # Temp Description
   module Matchers
     # Temp Description
-    class DigValueMatcher < MainMatcher
+    class DigValueMatcher < DefaultMatcher
       # These classes are not expected to dig value but respond to :[] method
       CLASSES_NOT_ALLOW_TO_DIG = [
         ::String,
@@ -35,7 +33,7 @@ module Mongory
           record.fetch(@key, KEY_NOT_FOUND)
         when Array
           record[@key]
-        when *CLASSES_NOT_ALLOW_TO_DIG
+        when KEY_NOT_FOUND, *CLASSES_NOT_ALLOW_TO_DIG
           KEY_NOT_FOUND
         else
           return KEY_NOT_FOUND unless record.respond_to?(:[])
