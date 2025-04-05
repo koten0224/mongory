@@ -8,12 +8,16 @@ module Mongory
     include ::Enumerable
     include Mongory::Utils
 
+    attr_reader :condition
+
     def initialize(records)
       @records = records
-      @condition = {}
+      @condition = Hash.new { |h, k| h[k] = [] }
     end
 
     def each(&block)
+      return to_enum(:each) unless block_given?
+
       result.each(&block)
     end
 
@@ -23,13 +27,13 @@ module Mongory
 
     def and(*conditions)
       dup_instance_exec do
-        @condition['$and'] = Array(@condition['$and']) + conditions
+        @condition['$and'] += conditions
       end
     end
 
     def or(*conditions)
       dup_instance_exec do
-        @condition['$or'] = Array(@condition['$or']) + conditions
+        @condition['$or'] += conditions
       end
     end
 
@@ -71,10 +75,15 @@ module Mongory
 
     def dup_instance_exec(&block)
       dup.tap do |obj|
+        obj.instance_exec(&block)
+      end
+    end
+
+    def dup
+      super.tap do |obj|
         obj.instance_exec do
           @condition = @condition.dup
         end
-        obj.instance_exec(&block)
       end
     end
 
@@ -85,7 +94,7 @@ module Mongory
       end
 
       if @sort_keys
-        res.sort_by! { |record| @sort_keys.map { |key| record[key.to_s] || nil } }
+        res.sort_by! { |record| @sort_keys.map { |key| record[key.to_s] } }
         res.reverse! if @sort_direction == :desc
       end
 
