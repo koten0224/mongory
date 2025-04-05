@@ -11,21 +11,6 @@ module Mongory
       super(deep_convert_condition(condition.__expand_complex__))
     end
 
-    def match?(record)
-      super(normalize_record(record))
-    end
-
-    def normalize_record(record)
-      return record.send(data_converter) if data_converter.is_a?(Symbol) && record.respond_to?(data_converter)
-      return data_converter.call(record) if data_converter.is_a?(Proc)
-
-      deep_convert(record)
-    end
-
-    define_instance_cache_method(:data_converter) do
-      Mongory.config.data_converter
-    end
-
     private
 
     def deep_convert_condition(obj)

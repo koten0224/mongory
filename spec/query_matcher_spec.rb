@@ -3,14 +3,18 @@
 require 'mongory'
 
 class DummyModel
-  include Mongory::Utils
-
   def initialize(attributes)
-    @attributes = deep_convert(attributes)
+    @attributes = attributes
   end
 
   def as_json(*)
     @attributes
+  end
+end
+
+Mongory.data_converter.configure do |c|
+  c.register(DummyModel) do |model|
+    c.convert(model.as_json)
   end
 end
 
