@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+require_relative 'matchers/abstract_matcher'
+require_relative 'matchers/abstract_multi_matcher'
+require_relative 'matchers/abstract_operator_matcher'
+require_relative 'matchers/main_matcher'
 require_relative 'matchers/and_matcher'
 require_relative 'matchers/collection_matcher'
 require_relative 'matchers/elem_match_matcher'
@@ -12,7 +16,6 @@ require_relative 'matchers/in_matcher'
 require_relative 'matchers/dig_value_matcher'
 require_relative 'matchers/lt_matcher'
 require_relative 'matchers/lte_matcher'
-require_relative 'matchers/main_matcher'
 require_relative 'matchers/ne_matcher'
 require_relative 'matchers/nin_matcher'
 require_relative 'matchers/not_matcher'
