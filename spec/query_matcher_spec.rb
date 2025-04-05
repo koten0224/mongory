@@ -1,21 +1,16 @@
 # frozen_string_literal: true
 
-require 'mongory'
+require 'spec_helper'
 
-class DummyModel
-  def initialize(attributes)
-    @attributes = attributes
-  end
-
-  def as_json(*)
-    @attributes
-  end
-end
+DummyModel = Struct.new(:as_json)
+FakeBsonId = Struct.new(:to_s)
 
 Mongory.data_converter.configure do |c|
   c.register(DummyModel) do |model|
     c.convert(model.as_json)
   end
+
+  c.register(FakeBsonId, :to_s)
 end
 
 RSpec.describe Mongory::QueryMatcher, type: :model do
@@ -241,6 +236,47 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
         it { is_expected.to be_match([data1, data2, matched_data]) }
         it { is_expected.not_to be_match([data1, data2, data3]) }
         it { is_expected.not_to be_match([data2, data3]) }
+      end
+
+      context 'fake model behavior' do
+        let(:id) { FakeBsonId.new('67d3def21177ff005e59e0a4') }
+        let(:model) { DummyModel.new(id: id, name: 'Frank') }
+
+        context 'will be match eq' do
+          let(:condition) { { id: '67d3def21177ff005e59e0a4' } }
+
+          it { is_expected.to be_match(model) }
+        end
+
+        context 'will be match eq with id object' do
+          let(:condition) { { id: FakeBsonId.new('67d3def21177ff005e59e0a4') } }
+
+          it { is_expected.to be_match(model) }
+        end
+
+        context 'will be match gt' do
+          let(:condition) { { :id.gt => '6760ff3335bacb003bfb43ef' } }
+
+          it { is_expected.to be_match(model) }
+        end
+
+        context 'will be match gt with id object' do
+          let(:condition) { { :id.gt => FakeBsonId.new('6760ff3335bacb003bfb43ef') } }
+
+          it { is_expected.to be_match(model) }
+        end
+
+        context 'will not be match' do
+          let(:condition) { { id: '6760ff3335bacb003bfb43ef' } }
+
+          it { is_expected.not_to be_match(model) }
+        end
+
+        context 'will not be match with id object' do
+          let(:condition) { { id: FakeBsonId.new('6760ff3335bacb003bfb43ef') } }
+
+          it { is_expected.not_to be_match(model) }
+        end
       end
     end
 

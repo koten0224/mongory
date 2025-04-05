@@ -19,14 +19,10 @@ module Mongory
         convert_hash(obj)
       when Array
         obj.map { |v| deep_convert_condition(v) }
-      when Symbol, Date
-        obj.to_s
-      when Time, DateTime
-        obj.iso8601
       when Regexp
         { '$regex' => obj.source }
       else
-        obj
+        DataConverter.convert(obj)
       end
     end
 

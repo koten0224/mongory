@@ -28,7 +28,6 @@ module Mongory
       private
 
       def dig_value(record)
-        record = DataConverter.convert(record)
         case record
         when Hash
           record.fetch(@key, KEY_NOT_FOUND)

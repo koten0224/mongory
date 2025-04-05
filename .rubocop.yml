@@ -50,3 +50,6 @@ Style/SymbolArray:
 
 Layout/FirstArrayElementIndentation:
   Enabled: false
+
+Lint/StructNewOverride:
+  Enabled: false
