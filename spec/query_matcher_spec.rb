@@ -6,8 +6,8 @@ DummyModel = Struct.new(:as_json)
 FakeBsonId = Struct.new(:to_s)
 
 Mongory.data_converter.configure do |c|
-  c.register(DummyModel) do |model|
-    c.convert(model.as_json)
+  c.register(DummyModel) do
+    c.convert(as_json)
   end
 
   c.register(FakeBsonId, :to_s)

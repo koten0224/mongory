@@ -53,3 +53,6 @@ Layout/FirstArrayElementIndentation:
 
 Lint/StructNewOverride:
   Enabled: false
+
+Style/Proc:
+  Enabled: false

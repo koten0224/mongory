@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-RSpec.describe Mongory::DataConverter do
+RSpec.describe Mongory.data_converter do
   subject { described_class }
 
   describe 'interface safety' do
@@ -52,14 +52,14 @@ RSpec.describe Mongory::DataConverter do
     let(:klass) { Struct.new(:val) }
 
     before do
-      subject.register(klass) { |x| "original:#{x.val}" }
+      subject.register(klass) { "original:#{val}" }
     end
 
     it 'uses the most recently registered converter' do
       instance = klass.new('foo')
       expect(subject.convert(instance)).to eq('original:foo')
 
-      subject.register(klass) { |x| "new:#{x.val.upcase}" }
+      subject.register(klass) { "new:#{val.upcase}" }
       expect(subject.convert(instance)).to eq('new:FOO')
     end
   end

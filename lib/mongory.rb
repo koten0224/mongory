@@ -5,11 +5,11 @@ require 'date'
 require_relative 'mongory/version'
 require_relative 'mongory/config'
 require_relative 'mongory/utils'
-require_relative 'mongory/data_converter'
 require_relative 'mongory/matchers'
 require_relative 'mongory/query_matcher'
 require_relative 'mongory/query_builder'
 require_relative 'mongory/query_operator'
+require_relative 'mongory/converters'
 require_relative 'mongory/core_ext'
 
 # Temp Description
@@ -27,7 +27,11 @@ module Mongory
   end
 
   def self.data_converter
-    DataConverter
+    Converters::DataConverter
+  end
+
+  def self.condition_converter
+    Converters::ConditionConverter
   end
 
   class Error < StandardError; end
