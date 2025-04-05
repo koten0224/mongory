@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'mongory/matchers/abstract_operator_matcher'
+require_relative 'abstract_operator_matcher'
 
 module Mongory
   # Temp Description
@@ -8,7 +8,7 @@ module Mongory
     # Temp Description
     class PresentMatcher < AbstractOperatorMatcher
       def preprocess(record)
-        present?(normalize(record))
+        present?(super)
       end
 
       def operator

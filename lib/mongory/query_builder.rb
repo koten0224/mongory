@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'mongory/utils'
+require_relative 'utils'
 
 module Mongory
   # Temp Description

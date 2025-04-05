@@ -24,6 +24,7 @@ graph TD
     F[HashMatcher]
     I[AndMatcher]
     J[OrMatcher]
+    W[CollectionMatcher]
   end
 
   subgraph SimpleCompare
@@ -50,7 +51,7 @@ graph TD
   %% Apply classes
   class A,C,D abstract;
   class B main;
-  class F,I,J multi;
+  class F,I,J,W multi;
   class E,K,L,M,O,Q,R,S,T operator;
   class G,U,V,H,N leaf;
 ```

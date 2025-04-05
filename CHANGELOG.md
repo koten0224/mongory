@@ -26,3 +26,4 @@
 
 ## [1.3.2] - 2025-04-03
 - Restrictions on the use of normalize
+- Add collection matcher to treat array data

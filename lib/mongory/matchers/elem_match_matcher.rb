@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'mongory/matchers/main_matcher'
+require_relative 'main_matcher'
 
 module Mongory
   # Temp Description
