@@ -3,14 +3,18 @@
 require 'mongory'
 
 class DummyModel
-  include Mongory::Utils
-
   def initialize(attributes)
-    @attributes = deep_convert(attributes)
+    @attributes = attributes
   end
 
   def as_json(*)
     @attributes
+  end
+end
+
+Mongory.data_converter.configure do |c|
+  c.register(DummyModel) do |model|
+    c.convert(model.as_json)
   end
 end
 
@@ -78,6 +82,24 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
           let(:condition) do
             {
               do: { you: { want: { to: { build: { a: { snow: { man: 'No!' } } } } } } }
+            }
+          end
+
+          it {
+            is_expected.to be_match(name: anything,
+                                    do: { you: { want: { to: { build: { a: { snow: { man: 'No!' } } } } } } })
+          }
+          it {
+            is_expected.not_to be_match(name: anything,
+                                        do: { you: { want: { to: { build: { a: { snow: { man: 'Yes!' } } } } } } })
+          }
+          it { is_expected.not_to be_match(anything) }
+        end
+
+        context 'with dot key' do
+          let(:condition) do
+            {
+              'do.you.want.to.build.a.snow.man': 'No!'
             }
           end
 

@@ -28,12 +28,13 @@ module Mongory
       private
 
       def dig_value(record)
+        record = DataConverter.convert(record)
         case record
         when Hash
           record.fetch(@key, KEY_NOT_FOUND)
         when Array
           record[@key]
-        when *CLASSES_NOT_ALLOW_TO_DIG
+        when KEY_NOT_FOUND, *CLASSES_NOT_ALLOW_TO_DIG
           KEY_NOT_FOUND
         else
           return KEY_NOT_FOUND unless record.respond_to?(:[])
