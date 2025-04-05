@@ -6,7 +6,7 @@ module Mongory
     # Temp Description
     class OrMatcher < AbstractMultiMatcher
       def build_sub_matcher(condition)
-        MainMatcher.new(condition)
+        DefaultMatcher.new(condition)
       end
 
       def operator

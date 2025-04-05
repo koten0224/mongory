@@ -3,7 +3,7 @@
 require_relative 'matchers/abstract_matcher'
 require_relative 'matchers/abstract_multi_matcher'
 require_relative 'matchers/abstract_operator_matcher'
-require_relative 'matchers/main_matcher'
+require_relative 'matchers/default_matcher'
 require_relative 'matchers/and_matcher'
 require_relative 'matchers/collection_matcher'
 require_relative 'matchers/elem_match_matcher'

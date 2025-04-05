@@ -4,7 +4,7 @@ module Mongory
   # Temp Description
   module Matchers
     # Temp Description
-    class DigValueMatcher < MainMatcher
+    class DigValueMatcher < DefaultMatcher
       # These classes are not expected to dig value but respond to :[] method
       CLASSES_NOT_ALLOW_TO_DIG = [
         ::String,

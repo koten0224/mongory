@@ -4,7 +4,7 @@ module Mongory
   # Temp Description
   module Matchers
     # Temp Description
-    class MainMatcher < AbstractMatcher
+    class DefaultMatcher < AbstractMatcher
       def match?(record)
         if @condition == record
           true
