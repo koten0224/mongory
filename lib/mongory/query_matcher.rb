@@ -12,7 +12,7 @@ module Mongory
     end
 
     def match?(record)
-      main_matcher.match?(normalize_record(record))
+      default_matcher.match?(normalize_record(record))
     end
 
     def normalize_record(record)
@@ -22,8 +22,8 @@ module Mongory
       deep_convert(record)
     end
 
-    define_instance_cache_method(:main_matcher) do
-      Mongory::Matchers::MainMatcher.new(@condition)
+    define_instance_cache_method(:default_matcher) do
+      Mongory::Matchers::DefaultMatcher.new(@condition)
     end
 
     define_instance_cache_method(:data_converter) do
