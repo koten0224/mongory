@@ -8,7 +8,7 @@ module Mongory
     include Mongory::Utils
 
     def initialize(condition)
-      @condition = deep_convert(condition.__expand_complex__)
+      @condition = deep_convert_condition(condition.__expand_complex__)
     end
 
     def match?(record)
@@ -28,6 +28,35 @@ module Mongory
 
     define_instance_cache_method(:data_converter) do
       Mongory.config.data_converter
+    end
+
+    private
+
+    def deep_convert_condition(obj)
+      case obj
+      when Hash
+        convert_hash(obj)
+      when Array
+        obj.map { |v| deep_convert_condition(v) }
+      when Symbol, Date
+        obj.to_s
+      when Time, DateTime
+        obj.iso8601
+      when Regexp
+        { '$regex' => obj.source }
+      else
+        obj
+      end
+    end
+
+    def convert_hash(hash)
+      hash.each_with_object({}) do |(k, v), result|
+        *keys, last_key = k.to_s.split('.')
+        last_hash = keys.reduce(result) do |res, key|
+          res[key] ||= {}
+        end
+        last_hash[last_key] = deep_convert_condition(v)
+      end
     end
   end
 end
