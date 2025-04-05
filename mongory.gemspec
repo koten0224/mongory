@@ -5,8 +5,8 @@ require_relative 'lib/mongory/version'
 Gem::Specification.new do |spec|
   spec.name = 'mongory'
   spec.version = Mongory::VERSION
-  spec.authors = ['frank0224']
-  spec.email = ['frank@shopline.com']
+  spec.authors = ['koten0224']
+  spec.email = ['koten0224@gmail.com']
 
   spec.summary = 'Mongory'
   spec.description = 'A Mongo-like in-memory query DSL for Ruby'

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'mongory/matchers/abstract_operator_matcher'
+require_relative 'abstract_operator_matcher'
 
 module Mongory
   # Temp Description
@@ -17,8 +17,8 @@ module Mongory
         record
       end
 
-      def check_validity!(condition)
-        raise TypeError, '$regex needs a string' unless condition.is_a?(String)
+      def check_validity!
+        raise TypeError, '$regex needs a string' unless @condition.is_a?(String)
       end
     end
   end

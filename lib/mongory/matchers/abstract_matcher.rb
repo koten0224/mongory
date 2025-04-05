@@ -15,16 +15,18 @@ module Mongory
         define_instance_cache_method(:"#{name}_matcher", &block)
       end
 
+      attr_reader :condition
+
       def initialize(condition)
-        check_validity!(condition)
         @condition = condition
+        check_validity!
       end
 
       def match?(*); end
 
       private
 
-      def check_validity!(*); end
+      def check_validity!; end
 
       def normalize(record)
         record == KEY_NOT_FOUND ? nil : record

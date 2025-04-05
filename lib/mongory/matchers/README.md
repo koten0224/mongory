@@ -21,9 +21,10 @@ graph TD
   D[AbstractOperatorMatcher]
 
   subgraph MultipleConditions
-    F[HashMatcher]
+    F[ConditionMatcher]
     I[AndMatcher]
     J[OrMatcher]
+    W[CollectionMatcher]
   end
 
   subgraph SimpleCompare
@@ -39,18 +40,18 @@ graph TD
   end
 
   A --> B[MainMatcher]
-  A --> G[KeyValueMatcher]
   A --> U[InMatcher]
   A --> V[NinMatcher]
   A --> C --> MultipleConditions
   A --> D --> SimpleCompare
+  B --> G[DigValueMatcher]
   B --> H[ElemMatchMatcher]
   B --> N[NotMatcher]
 
   %% Apply classes
   class A,C,D abstract;
   class B main;
-  class F,I,J multi;
+  class F,I,J,W multi;
   class E,K,L,M,O,Q,R,S,T operator;
   class G,U,V,H,N leaf;
 ```

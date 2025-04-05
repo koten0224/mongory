@@ -74,20 +74,49 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
       end
 
       context 'more layer match' do
-        let(:condition) do
-          {
-            do: { you: { want: { to: { build: { a: { snow: { man: 'No!' } } } } } } }
+        context 'with string' do
+          let(:condition) do
+            {
+              do: { you: { want: { to: { build: { a: { snow: { man: 'No!' } } } } } } }
+            }
+          end
+
+          it {
+            is_expected.to be_match(name: anything,
+                                    do: { you: { want: { to: { build: { a: { snow: { man: 'No!' } } } } } } })
           }
+          it {
+            is_expected.not_to be_match(name: anything,
+                                        do: { you: { want: { to: { build: { a: { snow: { man: 'Yes!' } } } } } } })
+          }
+          it { is_expected.not_to be_match(anything) }
         end
 
-        it {
-          is_expected.to be_match(name: anything,
-                                  do: { you: { want: { to: { build: { a: { snow: { man: 'No!' } } } } } } })
-        }
-        it {
-          is_expected.not_to be_match(name: anything,
-                                      do: { you: { want: { to: { build: { a: { snow: { man: 'Yes!' } } } } } } })
-        }
+        context 'with nil' do
+          let(:condition) do
+            {
+              do: { you: { want: { to: { build: { a: { snow: { man: nil } } } } } } }
+            }
+          end
+
+          it {
+            is_expected.to be_match(name: anything,
+                                    do: { you: { want: { to: { build: { a: { snow: { man: nil } } } } } } })
+          }
+
+          it {
+            is_expected.not_to be_match(name: anything,
+                                        do: { you: { want: { to: { build: { a: { snow: { man: anything } } } } } } })
+          }
+
+          it {
+            is_expected.not_to be_match(name: anything,
+                                        do: { you: { want: { to: { build: { a: { snow: {} } } } } } })
+          }
+
+          it { is_expected.not_to be_match(anything) }
+          it { is_expected.not_to be_match(nil) }
+        end
       end
 
       context 'match array' do
@@ -99,6 +128,21 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
 
         it { is_expected.to be_match([anything, anything, 'target']) }
         it { is_expected.not_to be_match([anything, 'target', anything]) }
+        it { is_expected.not_to be_match([anything, 'target']) }
+        it { is_expected.not_to be_match([]) }
+      end
+
+      context 'match array with nil' do
+        let(:condition) do
+          {
+            '2': nil
+          }
+        end
+
+        it { is_expected.to be_match([anything, anything, nil]) }
+        it { is_expected.to be_match([anything, nil]) }
+        it { is_expected.to be_match([]) }
+        it { is_expected.not_to be_match([anything, nil, anything]) }
       end
 
       context 'match array with non-array' do
@@ -137,6 +181,44 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
           it { is_expected.to be_match(tags: [{ tag1: 13 }, { tag2: anything }]) }
           it { is_expected.not_to be_match(tags: [{ tag1: 14 }]) }
         end
+      end
+
+      context 'match array with condition' do
+        let(:condition) do
+          {
+            name: 'Billy',
+            age: 18
+          }
+        end
+
+        let(:data1) do
+          {
+            name: 'Billy',
+            age: 20
+          }
+        end
+        let(:data2) do
+          {
+            name: 'Mary',
+            age: 18
+          }
+        end
+        let(:data3) do
+          {
+            name: 'Frank',
+            age: 20
+          }
+        end
+        let(:matched_data) do
+          {
+            name: 'Billy',
+            age: 18
+          }
+        end
+
+        it { is_expected.to be_match([data1, data2, matched_data]) }
+        it { is_expected.not_to be_match([data1, data2, data3]) }
+        it { is_expected.not_to be_match([data2, data3]) }
       end
     end
 
@@ -288,13 +370,13 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
       end
 
       shared_examples_for 'regex behaviors' do
-        it { is_expected.to be_match(email: 'bruno_mars@shopline.com') }
-        it { is_expected.to be_match(email: 'bruno.mars@shoplineapp.com') }
-        it { is_expected.to be_match(email: 'vocano@shopline.com') }
-        it { is_expected.not_to be_match(email: 'vocano@@shopline.com') }
-        it { is_expected.not_to be_match(email: 'anyone@shoplineppap.com') }
-        it { is_expected.not_to be_match(email: 'anyone@shopline.com.tw') }
-        it { is_expected.not_to be_match(email: 'anyone#shopline.com') }
+        it { is_expected.to be_match(email: 'bruno_mars@mongory.com') }
+        it { is_expected.to be_match(email: 'bruno.mars@mongoryapp.com') }
+        it { is_expected.to be_match(email: 'vocano@mongory.com') }
+        it { is_expected.not_to be_match(email: 'vocano@@mongory.com') }
+        it { is_expected.not_to be_match(email: 'anyone@mongoryppap.com') }
+        it { is_expected.not_to be_match(email: 'anyone@mongory.com.tw') }
+        it { is_expected.not_to be_match(email: 'anyone#mongory.com') }
         it { is_expected.not_to be_match(anything) }
       end
 
@@ -305,7 +387,7 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
       end
 
       context 'should match string by regexp as string' do
-        let(:regex) { '^[^@]+@shopline(app)?\.com$' }
+        let(:regex) { '^[^@]+@mongory(app)?\.com$' }
 
         it_behaves_like 'regex behaviors'
       end
@@ -313,7 +395,7 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
       context 'should match string by regexp as regular regexp' do
         let(:condition) do
           {
-            email: /^[^@]+@shopline(app)?\.com$/
+            email: /^[^@]+@mongory(app)?\.com$/
           }
         end
 
@@ -690,6 +772,17 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
         end
 
         it_behaves_like 'elem match behavior'
+      end
+
+      context 'match straightly with key' do
+        let(:condition) do
+          {
+            :abilities.elem_match => 'attack'
+          }
+        end
+
+        it { is_expected.to be_match([{ abilities: ['attack'] }]) }
+        it { is_expected.not_to be_match([{ abilities: ['defence'] }]) }
       end
     end
   end

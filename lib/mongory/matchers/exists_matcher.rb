@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'mongory/matchers/abstract_operator_matcher'
+require_relative 'abstract_operator_matcher'
 
 module Mongory
   # Temp Description
@@ -15,8 +15,8 @@ module Mongory
         :==
       end
 
-      def check_validity!(condition)
-        raise TypeError, '$exists needs a boolean' unless BOOLEAN_VALUES.include?(condition)
+      def check_validity!
+        raise TypeError, '$exists needs a boolean' unless BOOLEAN_VALUES.include?(@condition)
       end
     end
   end

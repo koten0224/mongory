@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'mongory/matchers/abstract_matcher'
+require_relative 'abstract_matcher'
 
 module Mongory
   # Temp Description
@@ -10,17 +10,21 @@ module Mongory
       def match?(record)
         if @condition == record
           true
+        elsif record.is_a?(Array)
+          collection_matcher.match?(record)
         elsif @condition.is_a?(Hash)
-          hash_matcher.match?(record)
-        elsif record.is_a?(Array) # and @condition not a hash
-          record.include?(@condition)
+          condition_matcher.match?(record)
         else
           false
         end
       end
 
-      define_matcher(:hash) do
-        HashMatcher.new(@condition)
+      define_matcher(:collection) do
+        CollectionMatcher.new(@condition)
+      end
+
+      define_matcher(:condition) do
+        ConditionMatcher.new(@condition)
       end
     end
   end

@@ -26,7 +26,7 @@ module Mongory
       @operator = operator
     end
 
-    def __expr_part__(other)
+    def __expr_part__(other, *)
       { @name => @operator.__expr_part__(other) }
     end
   end
