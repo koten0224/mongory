@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'mongory'
+require 'spec_helper'
 
 RSpec.describe Mongory do
   it 'has a version number' do

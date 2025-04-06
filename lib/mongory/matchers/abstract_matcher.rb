@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'mongory/utils'
-
 module Mongory
   # Temp Description
   module Matchers

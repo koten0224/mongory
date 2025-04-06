@@ -41,3 +41,18 @@ Lint/MissingSuper:
 
 Style/SelectByRegexp:
   Enabled: false
+
+Style/WordArray:
+  Enabled: false
+
+Style/SymbolArray:
+  Enabled: false
+
+Layout/FirstArrayElementIndentation:
+  Enabled: false
+
+Lint/StructNewOverride:
+  Enabled: false
+
+Style/Proc:
+  Enabled: false
