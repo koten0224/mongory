@@ -30,6 +30,13 @@ module Mongory
       def value_converter
         ValueConverter
       end
+
+      def freeze
+        deep_merge_block
+        super
+        key_converter.freeze
+        value_converter.freeze
+      end
     end
   end
 end

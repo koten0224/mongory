@@ -4,37 +4,29 @@ module Mongory
   # Temp Description
   module Converters
     KeyConverter = AbstractConverter.new
-    KeyConverter.instance_eval do
-      def convert(key, value)
-        @registries.each do |registry|
-          next unless key.is_a?(registry.klass)
-
-          return key.instance_exec(value, &registry.exec)
-        end
-
-        { key => value }
+    KeyConverter.instance_eval do |c|
+      fallback do |other|
+        { self => other }
       end
 
-      configure do |c|
-        c.register(String) do |other|
-          ret = {}
-          *keys, last_key = split('.')
-          last_hash = keys.reduce(ret) do |res, key|
-            next_res = res[key] = {}
-            next_res
-          end
-
-          last_hash[last_key] = other
-          ret
+      register(String) do |other|
+        ret = {}
+        *keys, last_key = split('.')
+        last_hash = keys.reduce(ret) do |res, key|
+          next_res = res[key] = {}
+          next_res
         end
 
-        c.register(Symbol) do |other|
-          c.convert(to_s, other)
-        end
+        last_hash[last_key] = other
+        ret
+      end
 
-        c.register(QueryOperator) do |other|
-          { @name => { @operator => other } }
-        end
+      register(Symbol) do |other|
+        c.convert(to_s, other)
+      end
+
+      register(QueryOperator) do |other|
+        { @name => { @operator => other } }
       end
     end
 

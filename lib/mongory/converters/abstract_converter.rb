@@ -12,22 +12,36 @@ module Mongory
         @fallback = Proc.new { NOTHING }
       end
 
-      def convert(data)
+      def convert(target, other = NOTHING)
         @registries.each do |registry|
-          next unless data.is_a?(registry.klass)
+          next unless target.is_a?(registry.klass)
 
-          return data.instance_exec(&registry.exec)
+          return exec_convert(target, other, &registry.exec)
         end
 
-        data.instance_exec(&@fallback)
+        exec_convert(target, other, &@fallback)
+      end
+
+      def exec_convert(target, other, &block)
+        if other == NOTHING
+          target.instance_exec(&block)
+        else
+          target.instance_exec(other, &block)
+        end
       end
 
       def configure
         yield self
+        freeze
       end
 
       def fallback(&block)
         @fallback = block
+      end
+
+      def freeze
+        super
+        @registries.freeze
       end
 
       def register(klass, converter = nil, &block)

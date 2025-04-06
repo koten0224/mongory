@@ -12,4 +12,17 @@ RSpec.configure do |config|
   config.expect_with :rspec do |c|
     c.syntax = :expect
   end
+
+  def converter_deep_dup(converter)
+    converter = converter.dup
+    converter.instance_exec do
+      @registries = @registries.dup
+      @fallback = @fallback.dup
+    end
+    converter
+  end
+
+  def enforce_reset_converter(method, converter)
+    Mongory.define_singleton_method(method) { converter }
+  end
 end

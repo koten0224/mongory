@@ -4,20 +4,20 @@ module Mongory
   # Temp Description
   module Converters
     ValueConverter = AbstractConverter.new
-    ValueConverter.configure do |c|
-      c.fallback do
+    ValueConverter.instance_eval do |c|
+      fallback do
         DataConverter.convert(self)
       end
 
-      c.register(Array) do
+      register(Array) do
         map { |x| c.convert(x) }
       end
 
-      c.register(Hash) do
+      register(Hash) do
         ConditionConverter.convert(self)
       end
 
-      c.register(Regexp) do
+      register(Regexp) do
         { '$regex' => source }
       end
     end
