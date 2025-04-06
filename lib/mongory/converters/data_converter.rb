@@ -5,10 +5,6 @@ module Mongory
   module Converters
     DataConverter = AbstractConverter.new
     DataConverter.instance_eval do
-      fallback do
-        self
-      end
-
       register(Hash) do
         transform_keys(&:to_s)
       end

@@ -5,9 +5,7 @@ module Mongory
   module Converters
     ValueConverter = AbstractConverter.new
     ValueConverter.instance_eval do |c|
-      fallback do
-        DataConverter.convert(self)
-      end
+      @fallback = -> { DataConverter.convert(self) }
 
       register(Array) do
         map { |x| c.convert(x) }

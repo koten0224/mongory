@@ -9,7 +9,7 @@ module Mongory
 
       def initialize
         @registries = []
-        @fallback = Proc.new { NOTHING }
+        @fallback = Proc.new { |*| self }
       end
 
       def convert(target, other = NOTHING)
@@ -35,10 +35,6 @@ module Mongory
         freeze
       end
 
-      def fallback(&block)
-        @fallback = block
-      end
-
       def freeze
         super
         @registries.freeze
@@ -49,7 +45,7 @@ module Mongory
         raise 'A class or module is reuqired.' unless klass.is_a?(Module)
 
         if converter.is_a?(Symbol)
-          register(klass) { send(converter) }
+          register(klass) { |*args, &bl| send(converter, *args, &bl) }
         elsif block.is_a?(Proc)
           @registries.unshift(Registry.new(klass, block))
         else

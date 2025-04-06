@@ -5,9 +5,7 @@ module Mongory
   module Converters
     KeyConverter = AbstractConverter.new
     KeyConverter.instance_eval do |c|
-      fallback do |other|
-        { self => other }
-      end
+      @fallback = ->(x) { { self => x } }
 
       register(String) do |other|
         ret = {}
@@ -25,9 +23,7 @@ module Mongory
         c.convert(to_s, other)
       end
 
-      register(QueryOperator) do |other|
-        { @name => { @operator => other } }
-      end
+      register(QueryOperator, :__expr_part__)
     end
 
     private_constant :KeyConverter
