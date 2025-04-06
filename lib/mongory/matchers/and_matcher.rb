@@ -6,11 +6,15 @@ module Mongory
     # Temp Description
     class AndMatcher < AbstractMultiMatcher
       def build_sub_matcher(condition)
-        DefaultMatcher.new(condition)
+        DefaultMatcher.new(condition, ignore_convert: true)
       end
 
       def operator
         :all?
+      end
+
+      def preprocess(record)
+        Mongory.data_converter.convert(record)
       end
 
       def check_validity!

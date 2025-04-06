@@ -5,11 +5,11 @@ module Mongory
   module Matchers
     # Temp Description
     class ElemMatchMatcher < DefaultMatcher
-      def match?(record)
-        return false unless record.is_a?(Array)
+      def match?(collection)
+        return false unless collection.is_a?(Array)
 
-        record.any? do |value|
-          super(value)
+        collection.any? do |record|
+          super(record)
         end
       end
     end

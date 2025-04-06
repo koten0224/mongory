@@ -5,8 +5,13 @@ module Mongory
   module Matchers
     # Temp Description
     class DefaultMatcher < AbstractMatcher
+      def initialize(condition, ignore_convert: false)
+        super(condition)
+        @ignore_convert = ignore_convert
+      end
+
       def match?(record)
-        record = Mongory.data_converter.convert(record)
+        record = Mongory.data_converter.convert(record) unless @ignore_convert
         if @condition == record
           true
         elsif record.is_a?(Array)
