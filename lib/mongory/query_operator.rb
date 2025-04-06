@@ -25,9 +25,5 @@ module Mongory
       @name = name
       @operator = operator
     end
-
-    def mongory_expression_part(other, *)
-      { @name => { @operator => other } }
-    end
   end
 end
