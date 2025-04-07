@@ -6,7 +6,7 @@ module Mongory
   # Temp Description
   class QueryBuilder
     include ::Enumerable
-    include Mongory::Utils
+    include Utils
 
     attr_reader :condition
 

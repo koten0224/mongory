@@ -5,9 +5,9 @@ module Mongory
   module Matchers
     # Abstract class
     class AbstractMatcher
-      include Mongory::Utils
+      include Utils
 
-      KEY_NOT_FOUND = Object.new
+      KEY_NOT_FOUND = SingletonMarker.new('KEY_NOT_FOUND')
 
       def self.define_matcher(name, &block)
         define_instance_cache_method(:"#{name}_matcher", &block)

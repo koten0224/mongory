@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'date'
+require_relative 'utils/singleton_marker'
 
 module Mongory
   # Temp Description
@@ -37,4 +38,6 @@ module Mongory
       end
     end
   end
+
+  private_constant :Utils
 end

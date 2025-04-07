@@ -4,8 +4,10 @@ module Mongory
   module Converters
     # Temp Description
     class AbstractConverter
+      include Utils
+
       Registry = Struct.new(:klass, :exec)
-      NOTHING = Object.new
+      NOTHING = SingletonMarker.new('NOTHING')
 
       def initialize
         @registries = []
