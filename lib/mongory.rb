@@ -3,7 +3,6 @@
 require 'time'
 require 'date'
 require_relative 'mongory/version'
-require_relative 'mongory/config'
 require_relative 'mongory/utils'
 require_relative 'mongory/matchers'
 require_relative 'mongory/query_matcher'
@@ -19,11 +18,7 @@ module Mongory
   end
 
   def self.configure
-    yield config
-  end
-
-  def self.config
-    Config
+    yield self
   end
 
   def self.data_converter
