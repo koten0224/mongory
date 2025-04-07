@@ -832,6 +832,25 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
         it_behaves_like 'elem match behavior'
       end
 
+      context 'symbol key match' do
+        let(:condition) do
+          {
+            :abilities.elem_match => { name: 'attack' }
+          }
+        end
+
+        it { is_expected.to be_match(abilities: [{ name: 'attack', power: 10 }, { name: 'eat', power: 59 }]) }
+        it { is_expected.not_to be_match(abilities: [{ name: 'healing', power: 30 }, { name: 'run', power: 40 }]) }
+        it { is_expected.not_to be_match(abilities: [{ name: 'cooking', power: 70 }, { name: 'drink', power: 10 }]) }
+        it { is_expected.not_to be_match(abilities: [{ name: 'eat', power: 59 }]) }
+        it { is_expected.not_to be_match(abilities: [{ name: 'run', power: 40 }]) }
+        it { is_expected.not_to be_match(abilities: []) }
+        it { is_expected.not_to be_match(abilities: nil) }
+        it { is_expected.not_to be_match({}) }
+        it { is_expected.not_to be_match([]) }
+        it { is_expected.not_to be_match(nil) }
+      end
+
       context 'match straightly with key' do
         let(:condition) do
           {

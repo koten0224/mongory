@@ -15,8 +15,10 @@ module Mongory
 
       attr_reader :condition
 
-      def initialize(condition)
+      def initialize(condition, ignore_convert: false)
         @condition = condition
+        @ignore_convert = ignore_convert
+
         check_validity!
       end
 

@@ -14,6 +14,8 @@ module Mongory
       end
 
       def preprocess(record)
+        return record if @ignore_convert
+
         Mongory.data_converter.convert(record)
       end
 

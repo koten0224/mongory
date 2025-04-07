@@ -8,7 +8,7 @@ module Mongory
       def build_sub_matcher(key, value)
         case key
         when *Matchers::OPERATOR_TO_CLASS_MAPPING.keys
-          Matchers.lookup(key).new(value)
+          Matchers.lookup(key).new(value, ignore_convert: @ignore_convert)
         else
           DigValueMatcher.new(key, value)
         end
