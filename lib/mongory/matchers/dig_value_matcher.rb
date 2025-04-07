@@ -46,8 +46,8 @@ module Mongory
         "#{self.class} => " \
           "result: #{result}, " \
           "condition: #{@condition.inspect}, " \
-          "key: #{@key.inspect}, " \
-          "record: #{record.inspect}"
+          "\e[30;47mkey: #{@key.inspect}\e[0m, " \
+          "record: #{record.inspect.gsub(@key.inspect, "\e[30;47m#{@key.inspect}\e[0m")}"
       end
     end
   end
