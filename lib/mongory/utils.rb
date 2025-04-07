@@ -2,6 +2,7 @@
 
 require 'date'
 require_relative 'utils/singleton_marker'
+require_relative 'utils/debugger'
 
 module Mongory
   # Temp Description

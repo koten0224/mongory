@@ -5,7 +5,7 @@ module Mongory
   module Matchers
     # Temp Description
     class CollectionMatcher < AbstractMultiMatcher
-      def match?(collection)
+      def match(collection)
         return super if @condition.is_a?(Hash)
 
         collection.include?(@condition)

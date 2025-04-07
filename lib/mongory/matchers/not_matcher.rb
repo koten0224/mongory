@@ -5,7 +5,7 @@ module Mongory
   module Matchers
     # Temp Description
     class NotMatcher < DefaultMatcher
-      def match?(record)
+      def match(record)
         !super(record)
       end
     end

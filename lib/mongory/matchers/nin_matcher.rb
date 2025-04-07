@@ -5,7 +5,7 @@ module Mongory
   module Matchers
     # Temp Description
     class NinMatcher < AbstractMatcher
-      def match?(record)
+      def match(record)
         blank?(@condition & Array(record))
       end
 

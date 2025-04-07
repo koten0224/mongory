@@ -56,3 +56,6 @@ Lint/StructNewOverride:
 
 Style/Proc:
   Enabled: false
+
+Lint/RescueException:
+  Enabled: false
