@@ -29,5 +29,9 @@ module Mongory
     Converters::ConditionConverter
   end
 
+  def self.debugger
+    Utils::Debugger
+  end
+
   class Error < StandardError; end
 end

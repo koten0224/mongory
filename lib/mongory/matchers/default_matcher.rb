@@ -5,7 +5,7 @@ module Mongory
   module Matchers
     # Temp Description
     class DefaultMatcher < AbstractMatcher
-      def match?(record)
+      def match(record)
         record = Mongory.data_converter.convert(record) unless @ignore_convert
         if @condition == record
           true

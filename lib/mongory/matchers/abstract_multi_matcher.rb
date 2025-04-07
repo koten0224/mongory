@@ -5,7 +5,7 @@ module Mongory
   module Matchers
     # Abstract class
     class AbstractMultiMatcher < AbstractMatcher
-      def match?(record)
+      def match(record)
         record = preprocess(record)
         matchers.send(operator) do |matcher|
           matcher.match?(record)

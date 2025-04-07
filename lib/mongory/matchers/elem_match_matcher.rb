@@ -5,7 +5,7 @@ module Mongory
   module Matchers
     # Temp Description
     class ElemMatchMatcher < DefaultMatcher
-      def match?(collection)
+      def match(collection)
         return false unless collection.is_a?(Array)
 
         collection.any? do |record|

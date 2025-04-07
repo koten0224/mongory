@@ -21,7 +21,7 @@ module Mongory
         @key = key
       end
 
-      def match?(record)
+      def match(record)
         super(dig_value(record))
       end
 
@@ -40,6 +40,16 @@ module Mongory
 
           record[@key]
         end
+      end
+
+      def display(record, result)
+        result = result ? "\e[30;42mMatched\e[0m" : "\e[30;41mDismatch\e[0m"
+
+        "#{self.class} => " \
+          "result: #{result}, " \
+          "condition: #{@condition.inspect}, " \
+          "key: #{@key.inspect}, " \
+          "record: #{record.inspect}"
       end
     end
   end

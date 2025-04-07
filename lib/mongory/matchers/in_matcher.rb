@@ -5,7 +5,7 @@ module Mongory
   module Matchers
     # Temp Description
     class InMatcher < AbstractMatcher
-      def match?(record)
+      def match(record)
         present?(@condition & Array(record))
       end
 

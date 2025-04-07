@@ -7,7 +7,7 @@ module Mongory
     class AbstractOperatorMatcher < AbstractMatcher
       BOOLEAN_VALUES = [true, false].freeze
 
-      def match?(record)
+      def match(record)
         preprocess(record).send(operator, @condition)
       rescue StandardError
         false
