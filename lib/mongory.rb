@@ -19,6 +19,8 @@ module Mongory
 
   def self.configure
     yield self
+    data_converter.freeze
+    condition_converter.freeze
   end
 
   def self.data_converter
