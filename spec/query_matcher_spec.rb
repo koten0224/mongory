@@ -157,8 +157,8 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
         end
 
         it { is_expected.to be_match([anything, anything, nil]) }
-        it { is_expected.to be_match([anything, nil]) }
-        it { is_expected.to be_match([]) }
+        it { is_expected.not_to be_match([anything, nil]) }
+        it { is_expected.not_to be_match([]) }
         it { is_expected.not_to be_match([anything, nil, anything]) }
       end
 

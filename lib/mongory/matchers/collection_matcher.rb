@@ -19,7 +19,7 @@ module Mongory
         case key
         when Integer
           DigValueMatcher.new(key, value)
-        when /^\d+$/
+        when /^-?\d+$/
           DigValueMatcher.new(key.to_i, value)
         when *Matchers::OPERATOR_TO_CLASS_MAPPING.keys
           Matchers.lookup(key).new(value)

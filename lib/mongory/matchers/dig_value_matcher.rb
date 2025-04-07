@@ -29,10 +29,8 @@ module Mongory
 
       def dig_value(record)
         case record
-        when Hash
+        when Hash, Array
           record.fetch(@key, KEY_NOT_FOUND)
-        when Array
-          record[@key]
         when KEY_NOT_FOUND, *CLASSES_NOT_ALLOW_TO_DIG
           KEY_NOT_FOUND
         else
