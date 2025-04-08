@@ -1,24 +1,57 @@
 # frozen_string_literal: true
 
 module Mongory
-  # Temp Description
   module Matchers
-    # Temp Description
+    # AndMatcher implements the `$and` logical operator.
+    # It receives an array of subconditions and matches only if *all* of them succeed.
+    # Each subcondition is dispatched through a DefaultMatcher, with conversion disabled
+    # to avoid redundant processing.
+    #
+    # This matcher inherits the multi-condition matching logic from AbstractMultiMatcher
+    # and defines its own strategy (`:all?`) and matcher construction.
+    #
+    # @example
+    #   matcher = AndMatcher.new([
+    #     { age: { :$gte => 18 } },
+    #     { status: "active" }
+    #   ])
+    #   matcher.match?(record) #=> true only if both conditions match
+    #
+    # @see AbstractMultiMatcher
+    # @see DefaultMatcher
     class AndMatcher < AbstractMultiMatcher
+      # Constructs a DefaultMatcher for each subcondition.
+      # Conversion is disabled to avoid double-processing.
+      #
+      # @param condition [Object] the raw subcondition
+      # @return [DefaultMatcher] the matcher instance for the condition
       def build_sub_matcher(condition)
         DefaultMatcher.new(condition, ignore_convert: true)
       end
 
+      # Uses the `:all?` operator to ensure all subconditions must match.
+      #
+      # @return [Symbol] the combining operator
       def operator
         :all?
       end
 
+      # Optionally preprocesses the input record using the data converter,
+      # unless `@ignore_convert` is explicitly set.
+      #
+      # @param record [Object] the original input record
+      # @return [Object] the preprocessed record
       def preprocess(record)
         return record if @ignore_convert
 
         Mongory.data_converter.convert(record)
       end
 
+      # Validates that the condition is an Array.
+      # Raises a TypeError if the input is malformed.
+      #
+      # @raise [TypeError] if condition is not an Array
+      # @return [void]
       def check_validity!
         raise TypeError, '$and needs an array' unless @condition.is_a?(Array)
       end
