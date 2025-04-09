@@ -3,8 +3,7 @@
 module Mongory
   # Temp Description
   module Converters
-    DataConverter = AbstractConverter.new
-    DataConverter.instance_eval do
+    DataConverter = ConverterBuilder.new do
       register(Hash) do
         transform_keys(&:to_s)
       end

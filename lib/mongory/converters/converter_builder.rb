@@ -3,15 +3,16 @@
 module Mongory
   module Converters
     # Temp Description
-    class AbstractConverter
+    class ConverterBuilder
       include Utils
 
       Registry = Struct.new(:klass, :exec)
       NOTHING = SingletonMarker.new('NOTHING')
 
-      def initialize
+      def initialize(&block)
         @registries = []
         @fallback = Proc.new { |*| self }
+        instance_eval(&block) if block_given?
       end
 
       def convert(target, other = NOTHING)
@@ -56,6 +57,6 @@ module Mongory
       end
     end
 
-    private_constant :AbstractConverter
+    private_constant :ConverterBuilder
   end
 end

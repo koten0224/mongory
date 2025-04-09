@@ -3,8 +3,7 @@
 module Mongory
   # Temp Description
   module Converters
-    ValueConverter = AbstractConverter.new
-    ValueConverter.instance_eval do |c|
+    ValueConverter = ConverterBuilder.new do |c|
       @fallback = -> { DataConverter.convert(self) }
 
       register(Array) do

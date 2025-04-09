@@ -3,8 +3,7 @@
 module Mongory
   # Temp Description
   module Converters
-    KeyConverter = AbstractConverter.new
-    KeyConverter.instance_eval do |c|
+    KeyConverter = ConverterBuilder.new do |c|
       @fallback = ->(x) { { self => x } }
 
       register(String) do |other|
