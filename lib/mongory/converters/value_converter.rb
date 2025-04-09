@@ -1,43 +1,37 @@
 # frozen_string_literal: true
 
 module Mongory
-  # Temp Description
+  # Converts query values into normalized matcher-friendly format.
+  #
+  # Used by ConditionConverter to prepare values in nested queries.
+  #
+  # - Arrays are recursively converted
+  # - Hashes are interpreted as nested conditions
+  # - Regex becomes a Mongo-style `$regex` hash
+  # - Strings and Integers are passed through
+  # - Everything else falls back to DataConverter
   module Converters
-    ValueConverter = AbstractConverter.new
-    ValueConverter.instance_eval do
-      def convert_hash(hash)
-        deep_merge_block = Proc.new do |_, this_val, other_val|
-          if this_val.is_a?(Hash) && other_val.is_a?(Hash)
-            this_val.merge(other_val, &deep_merge_block)
-          else
-            other_val
-          end
-        end
+    ValueConverter = ConverterBuilder.new do |c|
+      # fallback for unrecognized types
+      @fallback = -> { DataConverter.convert(self) }
 
-        hash.each_with_object({}) do |(k, v), result|
-          result.merge!(KeyConverter.convert(k, convert(v)), &deep_merge_block)
-        end
+      register(Array) do
+        map { |x| c.convert(x) }
       end
 
-      configure do |c|
-        c.fallback do
-          Mongory.data_converter.convert(self)
-        end
+      register(Hash) do
+        ConditionConverter.convert(self)
+      end
 
-        c.register(Array) do
-          map { |x| c.convert(x) }
-        end
+      register(Regexp) do
+        { '$regex' => source }
+      end
 
-        c.register(Hash) do
-          c.convert_hash(self)
-        end
-
-        c.register(Regexp) do
-          { '$regex' => source }
-        end
+      [String, Integer].each do |klass|
+        register(klass) { self }
       end
     end
 
-    private_constant :ValueConverter
+    private_constant set_constant_display :ValueConverter
   end
 end

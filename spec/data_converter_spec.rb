@@ -2,8 +2,21 @@
 
 require 'spec_helper'
 
-RSpec.describe Mongory.data_converter do
-  subject { described_class }
+RSpec.describe 'Mongory.data_converter' do
+  subject { Mongory.data_converter }
+
+  before(:all) do
+    enforce_reset_converter(
+      :data_converter,
+      converter_deep_dup(Mongory.data_converter)
+    )
+  end
+
+  around(:each) do |example|
+    converter = converter_deep_dup(Mongory.data_converter)
+    example.run
+    enforce_reset_converter(:data_converter, converter)
+  end
 
   describe 'interface safety' do
     it 'cannot be instantiated with .new' do

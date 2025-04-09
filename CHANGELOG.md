@@ -33,3 +33,18 @@
 - KeyValueMatcher is removed and replaced with DigValueMatcher, now focused solely on record key traversal.
 - Moved matcher dispatch logic into ConditionMatcher.
 - DigValueMatcher now inherits MainMatcher for simpler reuse of match? behavior.
+
+## [1.4.0] - 2025-04-09
+
+### Added
+- **YARD Documentation**: Added `.yardopts` configuration file for generating documentation.
+- **Converters Module**: Introduced `Mongory::Converters` module with `DataConverter` and `ConditionConverter` classes for better data and condition normalization.
+- **Debugger**: Exposed `Utils::Debugger` for better debug control and query tracing.
+
+### Changed
+- **QueryBuilder Refactor**: Simplified `build_query` method to use `QueryBuilder` directly without namespace.
+- **Data and Condition Converters**: Directly exposed `data_converter` and `condition_converter` via `Mongory` module for easier access and configuration.
+- **Removed Config Class**: Removed `Config` class and replaced with direct configuration in `Mongory`.
+
+### Fixed
+- **Bug Fixes**: Corrected issues with array comparisons and query operator behaviors.
