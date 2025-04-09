@@ -1,9 +1,16 @@
 # frozen_string_literal: true
 
 module Mongory
-  # Temp Description
+  # Converts dotted keys like `"foo.bar"` or `:"foo.bar"` into nested hashes.
+  #
+  # Used by ConditionConverter to build query structures from flat input.
+  #
+  # - `"a.b.c" => v` becomes `{ "a" => { "b" => { "c" => v } } }`
+  # - Symbols are stringified and delegated to String logic
+  # - QueryOperator dispatches to internal DSL hook
   module Converters
     KeyConverter = ConverterBuilder.new do |c|
+      # fallback if key type is unknown — returns { self => value }
       @fallback = ->(x) { { self => x } }
 
       register(String) do |other|
@@ -13,7 +20,6 @@ module Mongory
           next_res = res[key] = {}
           next_res
         end
-
         last_hash[last_key] = other
         ret
       end
