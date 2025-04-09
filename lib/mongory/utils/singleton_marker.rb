@@ -2,16 +2,26 @@
 
 module Mongory
   module Utils
-    # Temp Description
+    # A singleton placeholder object used to represent special sentinel values.
+    #
+    # Used in situations where `nil` is a valid value and cannot be used as a marker.
+    # Typically used for internal constants like `NOTHING` or `KEY_NOT_FOUND`.
+    #
+    # @example
+    #   NOTHING = SingletonMarker.new('NOTHING')
+    #   value == NOTHING  # => true if placeholder
     class SingletonMarker
+      # @param label [String] a human-readable label for the marker
       def initialize(label)
         @label = label
       end
 
+      # @return [String] formatted label
       def inspect
         "#<#{@label}>"
       end
 
+      # @return [String] formatted label
       def to_s
         "#<#{@label}>"
       end
