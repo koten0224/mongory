@@ -18,7 +18,8 @@ module Mongory
       lte: '$lte',
       in: '$in',
       nin: '$nin',
-      elem_match: '$elemMatch'
+      elem_match: '$elemMatch',
+      every: '$every'
     }.freeze
 
     def initialize(name, operator)

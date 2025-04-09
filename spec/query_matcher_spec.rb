@@ -851,5 +851,53 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
         it { is_expected.not_to be_match(nil) }
       end
     end
+
+    context 'use operator $every' do
+      shared_examples_for 'every behavior' do
+        it { is_expected.to be_match(abilities: [{ name: 'attack', power: 10 }, { name: 'attack', power: 59 }]) }
+        it { is_expected.to be_match(abilities: []) }
+        it { is_expected.not_to be_match(abilities: [{ name: 'attack', power: 10 }, { name: 'eat', power: 59 }]) }
+        it { is_expected.not_to be_match(abilities: [{ name: 'eat', power: 59 }]) }
+        it { is_expected.not_to be_match(abilities: [{ name: 'run', power: 40 }]) }
+        it { is_expected.not_to be_match(abilities: nil) }
+        it { is_expected.not_to be_match({}) }
+        it { is_expected.not_to be_match([]) }
+        it { is_expected.not_to be_match(nil) }
+      end
+
+      context 'will match' do
+        let(:condition) do
+          {
+            abilities: {
+              '$every': { name: 'attack' }
+            }
+          }
+        end
+
+        it_behaves_like 'every behavior'
+      end
+
+      context 'by built-in symbol mongoid methods will matched' do
+        let(:condition) do
+          {
+            :abilities.every => { name: 'attack' }
+          }
+        end
+
+        it_behaves_like 'every behavior'
+      end
+
+      context 'not match empty array via conbinding present operator' do
+        let(:condition) do
+          {
+            :abilities.every => { name: 'attack' },
+            :abilities.present => true
+          }
+        end
+
+        it { is_expected.to be_match(abilities: [{ name: 'attack', power: 10 }, { name: 'attack', power: 59 }]) }
+        it { is_expected.not_to be_match(abilities: []) }
+      end
+    end
   end
 end
