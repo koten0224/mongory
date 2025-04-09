@@ -18,11 +18,11 @@ module Mongory
     #   matcher.match?(record) #=> true only if both conditions match
     #
     # @see AbstractMultiMatcher
-    # @see DefaultMatcher
     class AndMatcher < AbstractMultiMatcher
       # Constructs a DefaultMatcher for each subcondition.
       # Conversion is disabled to avoid double-processing.
       #
+      # @see DefaultMatcher
       # @param condition [Object] the raw subcondition
       # @return [DefaultMatcher] the matcher instance for the condition
       def build_sub_matcher(condition)

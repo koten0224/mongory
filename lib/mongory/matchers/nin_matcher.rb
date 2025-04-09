@@ -15,7 +15,6 @@ module Mongory
     #   matcher.match?([4, 5])   #=> true
     #   matcher.match?([2, 4])   #=> false
     #
-    # @see InMatcher
     # @see AbstractMatcher
     class NinMatcher < AbstractMatcher
       # Matches true if the record has no elements in common with the condition array.

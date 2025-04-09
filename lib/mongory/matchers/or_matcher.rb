@@ -20,11 +20,11 @@ module Mongory
     #   matcher.match?(record) #=> true if either condition matches
     #
     # @see AbstractMultiMatcher
-    # @see DefaultMatcher
     class OrMatcher < AbstractMultiMatcher
       # Constructs a DefaultMatcher for each subcondition.
       # Conversion is disabled to avoid double-processing.
       #
+      # @see DefaultMatcher
       # @param condition [Object] a subcondition to be wrapped
       # @return [DefaultMatcher] a matcher for this condition
       def build_sub_matcher(condition)

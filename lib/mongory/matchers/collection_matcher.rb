@@ -17,8 +17,6 @@ module Mongory
     #   matcher.match?([10, { status: "active" }]) #=> true if all conditions are satisfied
     #
     # @see AbstractMultiMatcher
-    # @see ElemMatchMatcher
-    # @see DigValueMatcher
     class CollectionMatcher < AbstractMultiMatcher
       # Custom matching logic: if condition is not a hash, do inclusion check.
       # Otherwise, fallback to the parent AbstractMultiMatcher#match logic.
@@ -33,7 +31,9 @@ module Mongory
 
       # Lazily builds a shared ElemMatchMatcher used for complex field matching.
       #
+      # @see ElemMatchMatcher
       # @return [ElemMatchMatcher] shared matcher instance for field conditions
+      # @!method elem_matcher
       define_matcher(:elem) do
         ElemMatchMatcher.new({})
       end
@@ -43,6 +43,9 @@ module Mongory
       #   - Operator: resolved via Matchers.lookup
       #   - Else: merged into ElemMatchMatcher condition
       #
+      # @see ElemMatchMatcher
+      # @see DigValueMatcher
+      # @see Matchers.lookup
       # @param key [Object] the key from the condition hash
       # @param value [Object] the associated condition value
       # @return [AbstractMatcher] matcher instance for this field/operator

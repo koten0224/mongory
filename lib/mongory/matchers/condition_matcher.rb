@@ -17,13 +17,13 @@ module Mongory
     #   matcher.match?(record) #=> true only if all subconditions match
     #
     # @see AbstractMultiMatcher
-    # @see DigValueMatcher
-    # @see Matchers.lookup
     class ConditionMatcher < AbstractMultiMatcher
       # Constructs the appropriate submatcher for a key-value pair.
       # If the key is a registered operator, dispatches to the corresponding matcher.
       # Otherwise, assumes the key is a field path and uses DigValueMatcher.
       #
+      # @see DigValueMatcher
+      # @see Matchers.lookup
       # @param key [String] the condition key (either an operator or field name)
       # @param value [Object] the condition value
       # @return [AbstractMatcher] a matcher instance

@@ -19,8 +19,7 @@ module Mongory
     #   matcher = DefaultMatcher.new({ age: { :$gte => 30 } })
     #   matcher.match(record) #=> true or false
     #
-    # @see CollectionMatcher
-    # @see ConditionMatcher
+    # @see AbstractMatcher
     class DefaultMatcher < AbstractMatcher
       # Matches the given record against the stored condition.
       # The logic dynamically chooses the appropriate sub-matcher.
@@ -43,7 +42,9 @@ module Mongory
 
       # Lazily defines the collection matcher for array records.
       #
+      # @see CollectionMatcher
       # @return [CollectionMatcher] the matcher used to match array-type records
+      # @!method collection_matcher
       define_matcher(:collection) do
         CollectionMatcher.new(@condition)
       end
@@ -51,7 +52,9 @@ module Mongory
       # Lazily defines the condition matcher for hash conditions.
       # Conversion is disabled here to avoid redundant processing.
       #
+      # @see ConditionMatcher
       # @return [ConditionMatcher] the matcher used for hash-based logic
+      # @!method condition_matcher
       define_matcher(:condition) do
         ConditionMatcher.new(@condition, ignore_convert: true)
       end
