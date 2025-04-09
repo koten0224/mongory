@@ -4,7 +4,7 @@ module Mongory
   module Matchers
     # AndMatcher implements the `$and` logical operator.
     # It receives an array of subconditions and matches only if *all* of them succeed.
-    # Each subcondition is dispatched through a DefaultMatcher, with conversion disabled
+    # Each subcondition is dispatched through a ConditionMatcher, with conversion disabled
     # to avoid redundant processing.
     #
     # This matcher inherits the multi-condition matching logic from AbstractMultiMatcher
@@ -19,14 +19,14 @@ module Mongory
     #
     # @see AbstractMultiMatcher
     class AndMatcher < AbstractMultiMatcher
-      # Constructs a DefaultMatcher for each subcondition.
+      # Constructs a ConditionMatcher for each subcondition.
       # Conversion is disabled to avoid double-processing.
       #
-      # @see DefaultMatcher
+      # @see ConditionMatcher
       # @param condition [Object] the raw subcondition
-      # @return [DefaultMatcher] the matcher instance for the condition
+      # @return [ConditionMatcher] the matcher instance for the condition
       def build_sub_matcher(condition)
-        DefaultMatcher.new(condition, ignore_convert: true)
+        ConditionMatcher.new(condition)
       end
 
       # Uses the `:all?` operator to ensure all subconditions must match.
@@ -54,6 +54,10 @@ module Mongory
       # @return [void]
       def check_validity!
         raise TypeError, '$and needs an array' unless @condition.is_a?(Array)
+
+        @condition.each do |sub_condition|
+          raise TypeError, '$and needs an array of hash' unless sub_condition.is_a?(Hash)
+        end
       end
     end
   end

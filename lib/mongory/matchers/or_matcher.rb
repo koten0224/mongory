@@ -6,7 +6,7 @@ module Mongory
     # It evaluates an array of subconditions and returns true
     # if *any one* of them matches.
     #
-    # Each subcondition is handled by a DefaultMatcher with conversion disabled,
+    # Each subcondition is handled by a ConditionMatcher with conversion disabled,
     # since the parent matcher already manages data conversion.
     #
     # This matcher inherits submatcher dispatch and evaluation logic
@@ -21,14 +21,14 @@ module Mongory
     #
     # @see AbstractMultiMatcher
     class OrMatcher < AbstractMultiMatcher
-      # Constructs a DefaultMatcher for each subcondition.
+      # Constructs a ConditionMatcher for each subcondition.
       # Conversion is disabled to avoid double-processing.
       #
-      # @see DefaultMatcher
+      # @see ConditionMatcher
       # @param condition [Object] a subcondition to be wrapped
-      # @return [DefaultMatcher] a matcher for this condition
+      # @return [ConditionMatcher] a matcher for this condition
       def build_sub_matcher(condition)
-        DefaultMatcher.new(condition, ignore_convert: true)
+        ConditionMatcher.new(condition, ignore_convert: true)
       end
 
       # Uses `:any?` to return true if any submatcher passes.
@@ -54,6 +54,10 @@ module Mongory
       # @return [void]
       def check_validity!
         raise TypeError, '$or needs an array' unless @condition.is_a?(Array)
+
+        @condition.each do |sub_condition|
+          raise TypeError, '$or needs an array of hash' unless sub_condition.is_a?(Hash)
+        end
       end
     end
   end
