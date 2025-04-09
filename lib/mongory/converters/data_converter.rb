@@ -20,5 +20,7 @@ module Mongory
         register(klass) { self }
       end
     end
+
+    set_constant_display :DataConverter
   end
 end

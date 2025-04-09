@@ -23,6 +23,6 @@ module Mongory
       end
     end
 
-    private_constant :ValueConverter
+    private_constant set_constant_display :ValueConverter
   end
 end

@@ -41,5 +41,7 @@ module Mongory
         value_converter.freeze
       end
     end
+
+    set_constant_display :ConditionConverter
   end
 end

@@ -25,6 +25,6 @@ module Mongory
       register(QueryOperator, :__expr_part__)
     end
 
-    private_constant :KeyConverter
+    private_constant set_constant_display :KeyConverter
   end
 end
