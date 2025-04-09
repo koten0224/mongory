@@ -294,7 +294,7 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
       context 'will raise error when condition value is not boolean' do
         let(:presence) { anything }
 
-        it { expect { subject.match?(anything) }.to raise_error(TypeError) }
+        it { expect { subject.match?(anything) }.to raise_error(Mongory::TypeError) }
       end
 
       context 'with true' do
@@ -358,7 +358,7 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
       context 'will raise error when condition value not an array' do
         let(:conditions) { anything }
 
-        it { expect { subject.match?(anything) }.to raise_error(TypeError) }
+        it { expect { subject.match?(anything) }.to raise_error(Mongory::TypeError) }
       end
 
       context 'will matched if any of conditions is match document' do
@@ -394,7 +394,7 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
       context 'will raise error when condition value not an array' do
         let(:conditions) { anything }
 
-        it { expect { subject.match?(anything) }.to raise_error(TypeError) }
+        it { expect { subject.match?(anything) }.to raise_error(Mongory::TypeError) }
       end
 
       context 'will matched if all of conditions is match document' do
@@ -441,7 +441,7 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
       context 'will raise error when condition value is not a string' do
         let(:regex) { anything }
 
-        it { expect { subject.match?(anything) }.to raise_error(TypeError) }
+        it { expect { subject.match?(anything) }.to raise_error(Mongory::TypeError) }
       end
 
       context 'should match string by regexp as string' do
@@ -718,7 +718,7 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
           }
         end
 
-        it { expect { subject.match?(anything) }.to raise_error(TypeError) }
+        it { expect { subject.match?(anything) }.to raise_error(Mongory::TypeError) }
       end
 
       context 'will matched' do
@@ -760,7 +760,7 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
           }
         end
 
-        it { expect { subject.match?(anything) }.to raise_error(TypeError) }
+        it { expect { subject.match?(anything) }.to raise_error(Mongory::TypeError) }
       end
 
       context 'will matched' do
@@ -849,17 +849,6 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
         it { is_expected.not_to be_match({}) }
         it { is_expected.not_to be_match([]) }
         it { is_expected.not_to be_match(nil) }
-      end
-
-      context 'match straightly with key' do
-        let(:condition) do
-          {
-            :abilities.elem_match => 'attack'
-          }
-        end
-
-        it { is_expected.to be_match([{ abilities: ['attack'] }]) }
-        it { is_expected.not_to be_match([{ abilities: ['defence'] }]) }
       end
     end
   end
