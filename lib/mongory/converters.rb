@@ -1,8 +1,23 @@
 # frozen_string_literal: true
 
 module Mongory
-  # Temp Description
+  # The Converters module provides a collection of tools to
+  # transform query keys and values into a normalized internal form.
+  #
+  # These converters are used during query compilation to ensure that
+  # all conditions are structured and typed consistently.
+  #
+  # Included converters:
+  # - {ConverterBuilder} - base class for building converters
+  # - {DataConverter} - normalizes raw values (e.g. dates, symbols)
+  # - {KeyConverter} - expands dotted keys into nested hashes
+  # - {ValueConverter} - transforms values into matcher-friendly structures
+  # - {ConditionConverter} - orchestrates key+value conversion into final tree
   module Converters
+    # Injects custom display string for constant (used in IRB/YARD).
+    #
+    # @param constant [Symbol] the constant name to patch
+    # @return [Object] the constant itself
     def self.set_constant_display(constant)
       target = const_get(constant)
       display = "#<Mongory::Converters::#{constant}>"
