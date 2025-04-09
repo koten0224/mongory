@@ -34,7 +34,7 @@
 - Moved matcher dispatch logic into ConditionMatcher.
 - DigValueMatcher now inherits MainMatcher for simpler reuse of match? behavior.
 
-## [1.4.0] - 2025-04-09
+## [1.5.0] - 2025-04-09
 
 ### Added
 - **YARD Documentation**: Added `.yardopts` configuration file for generating documentation.
