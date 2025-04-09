@@ -24,8 +24,14 @@ require_relative 'matchers/present_matcher'
 require_relative 'matchers/regex_matcher'
 
 module Mongory
-  # Temp Description
+  # Matcher lookup and operator dispatch mapping.
+  #
+  # This module contains the `$operator => MatcherClass` mapping used
+  # by `ConditionMatcher` to find the correct matcher for a condition.
+  #
+  # Matchers are loaded from the `matchers/` directory.
   module Matchers
+    # Maps Mongo-style operators to internal matcher class names.
     OPERATOR_TO_CLASS_MAPPING = {
       '$eq' => :EqMatcher,
       '$ne' => :NeMatcher,
@@ -44,6 +50,10 @@ module Mongory
       '$elemMatch' => :ElemMatchMatcher
     }.freeze
 
+    # Returns the matcher class for the given operator.
+    #
+    # @param key [String] a Mongo-style operator (e.g., `$eq`)
+    # @return [Class, nil] matcher class or nil if not found
     def self.lookup(key)
       return unless OPERATOR_TO_CLASS_MAPPING.include?(key)
 
