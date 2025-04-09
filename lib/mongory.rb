@@ -72,4 +72,5 @@ module Mongory
 
   # Base class for all Mongory errors.
   class Error < StandardError; end
+  class TypeError < Error; end
 end
