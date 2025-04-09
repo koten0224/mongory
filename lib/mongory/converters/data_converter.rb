@@ -1,7 +1,15 @@
 # frozen_string_literal: true
 
 module Mongory
-  # Temp Description
+  # Provides a default converter that normalizes input data types
+  # for internal query processing.
+  #
+  # - Hash keys are stringified
+  # - Symbols and Dates are converted to string
+  # - Time and DateTime objects are ISO8601-encoded
+  # - Strings and Integers are passed through as-is
+  #
+  # This converter is typically applied to raw query values.
   module Converters
     DataConverter = ConverterBuilder.new do
       register(Hash) do
