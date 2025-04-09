@@ -14,7 +14,7 @@ module Mongory
       include Utils
 
       # Sentinel value used to represent missing keys when traversing nested hashes.
-      KEY_NOT_FOUND = SingletonMarker.new('KEY_NOT_FOUND')
+      KEY_NOT_FOUND = SingletonBuilder.new('KEY_NOT_FOUND')
 
       # Defines a lazily-evaluated matcher accessor with instance-level caching.
       #

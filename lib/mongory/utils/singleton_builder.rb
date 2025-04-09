@@ -8,12 +8,13 @@ module Mongory
     # Typically used for internal constants like `NOTHING` or `KEY_NOT_FOUND`.
     #
     # @example
-    #   NOTHING = SingletonMarker.new('NOTHING')
+    #   NOTHING = SingletonBuilder.new('NOTHING')
     #   value == NOTHING  # => true if placeholder
-    class SingletonMarker
+    class SingletonBuilder
       # @param label [String] a human-readable label for the marker
-      def initialize(label)
+      def initialize(label, &block)
         @label = label
+        instance_eval(&block) if block_given?
       end
 
       # @return [String] formatted label
@@ -26,7 +27,5 @@ module Mongory
         "#<#{@label}>"
       end
     end
-
-    private_constant :SingletonMarker
   end
 end

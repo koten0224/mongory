@@ -1,19 +1,18 @@
 # frozen_string_literal: true
 
 module Mongory
-  # Converts flat query conditions into nested hash structure.
-  #
-  # Used by QueryBuilder to normalize condition input for internal matching.
-  #
-  # Combines key transformation (via KeyConverter) and
-  # value normalization (via ValueConverter), and merges overlapping keys.
-  #
-  # @example
-  #   ConditionConverter.convert({ "foo.bar" => 1, "foo.baz" => 2 })
-  #   # => { "foo" => { "bar" => 1, "baz" => 2 } }
   module Converters
-    ConditionConverter = Object.new
-    ConditionConverter.instance_eval do
+    # Converts flat query conditions into nested hash structure.
+    #
+    # Used by QueryBuilder to normalize condition input for internal matching.
+    #
+    # Combines key transformation (via KeyConverter) and
+    # value normalization (via ValueConverter), and merges overlapping keys.
+    #
+    # @example
+    #   ConditionConverter.convert({ "foo.bar" => 1, "foo.baz" => 2 })
+    #   # => { "foo" => { "bar" => 1, "baz" => 2 } }
+    ConditionConverter = Utils::SingletonBuilder.new('ConditionConverter') do
       # Converts a flat condition hash into a nested structure.
       #
       # @param condition [Hash]
@@ -65,7 +64,5 @@ module Mongory
         value_converter.freeze
       end
     end
-
-    set_constant_display :ConditionConverter
   end
 end
