@@ -28,7 +28,7 @@ module Mongory
     end
 
     def __expr_part__(other, *)
-      { @name => { @operator => other } }
+      Converters::KeyConverter.convert(@name, @operator => other)
     end
   end
 end

@@ -13,6 +13,7 @@ module Mongory
       # fallback if key type is unknown — returns { self => value }
       @fallback = ->(x) { { self => x } }
 
+      # - `"a.b.c" => v` becomes `{ "a" => { "b" => { "c" => v } } }`
       register(String) do |other|
         ret = {}
         *keys, last_key = split('.')
@@ -24,10 +25,12 @@ module Mongory
         ret
       end
 
+      # - `:"a.b.c" => v` becomes `{ "a" => { "b" => { "c" => v } } }`
       register(Symbol) do |other|
         c.convert(to_s, other)
       end
 
+      # - `:"a.b.c".present => true` becomes `{ "a" => { "b" => { "c" => { "$present" => true } } } }`
       register(QueryOperator, :__expr_part__)
     end
   end
