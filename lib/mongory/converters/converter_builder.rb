@@ -22,7 +22,10 @@ module Mongory
       # @private
       NOTHING = SingletonBuilder.new('NOTHING')
 
-      # @param block [Proc] optional DSL configuration block
+      # Initializes the builder with a label and optional configuration block.
+      #
+      # @param label [String] a name for the converter
+      # @yield [block] optional configuration block
       def initialize(label, &block)
         @registries = []
         @fallback = Proc.new { |*| self }
@@ -32,8 +35,8 @@ module Mongory
       # Applies the registered conversion to the given target object.
       #
       # @param target [Object] the object to convert
-      # @param other [Object] optional secondary argument
-      # @return [Object] the result of the conversion
+      # @param other [Object] optional secondary value
+      # @return [Object] converted result
       def convert(target, other = NOTHING)
         @registries.each do |registry|
           next unless target.is_a?(registry.klass)
@@ -44,11 +47,11 @@ module Mongory
         exec_convert(target, other, &@fallback)
       end
 
-      # Executes the conversion block with the appropriate arguments.
+      # Internal dispatch logic to apply a matching converter.
       #
-      # @param target [Object]
-      # @param other [Object]
-      # @yield the conversion block
+      # @param target [Object] the object to match
+      # @param other [Object] optional extra data
+      # @yield fallback block if no converter is found
       # @return [Object]
       def exec_convert(target, other, &block)
         if other == NOTHING
@@ -58,18 +61,18 @@ module Mongory
         end
       end
 
-      # Yields self to a block for configuration, then freezes the builder.
+      # Opens a configuration block to register more converters.
       #
-      # @yield [ConverterBuilder]
-      # @return [ConverterBuilder] the frozen builder
+      # @yield DSL block to configure more rules
+      # @return [void]
       def configure
         yield self
         freeze
       end
 
-      # Freezes internal registry state as well.
+      # Freezes all internal registries.
       #
-      # @return [ConverterBuilder]
+      # @return [void]
       def freeze
         super
         @registries.freeze
