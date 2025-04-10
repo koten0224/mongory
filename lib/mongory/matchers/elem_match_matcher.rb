@@ -19,7 +19,6 @@ module Mongory
     class ElemMatchMatcher < ConditionMatcher
       # Matches true if any element in the array satisfies the condition.
       # Falls back to false if the input is not an array.
-      singleton_class.alias_method :build, :new
 
       # @param collection [Object] the input to be tested
       # @return [Boolean] whether any element matches

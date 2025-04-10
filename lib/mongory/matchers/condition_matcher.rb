@@ -21,7 +21,7 @@ module Mongory
       # Constructs the appropriate submatcher for a key-value pair.
       # If the key is a registered operator, dispatches to the corresponding matcher.
       # Otherwise, assumes the key is a field path and uses DigValueMatcher.
-      singleton_class.alias_method :build, :dispatch
+      dispatch!
 
       # @see DigValueMatcher
       # @see Matchers.lookup

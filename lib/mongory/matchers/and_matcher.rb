@@ -21,7 +21,7 @@ module Mongory
     class AndMatcher < AbstractMultiMatcher
       # Constructs a ConditionMatcher for each subcondition.
       # Conversion is disabled to avoid double-processing.
-      singleton_class.alias_method :build, :dispatch
+      dispatch!
 
       # @see ConditionMatcher
       # @param condition [Object] the raw subcondition

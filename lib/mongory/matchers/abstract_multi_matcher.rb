@@ -18,8 +18,15 @@ module Mongory
     class AbstractMultiMatcher < AbstractMatcher
       # Performs matching over all sub-matchers using the specified operator.
       # The input record may be preprocessed first (e.g., for normalization).
+      def self.dispatch!
+        @dispatch = true
+        singleton_class.alias_method :build, :dispatch
+      end
+
       def self.dispatch(*args)
         matcher = new(*args)
+        return matcher unless @dispatch
+
         matcher = matcher.matchers.first if matcher.matchers.count == 1
         matcher
       end
