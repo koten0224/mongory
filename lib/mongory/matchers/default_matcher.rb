@@ -12,8 +12,7 @@ module Mongory
     #   - If the condition is a Hash, delegate to ConditionMatcher.
     #   - Otherwise, return false.
     #
-    # Conversion via Mongory.data_converter is applied to the record
-    # unless `@ignore_convert` is set to true.
+    
     #
     # @example
     #   matcher = DefaultMatcher.build({ age: { :$gte => 30 } })
@@ -31,8 +30,6 @@ module Mongory
       # @param record [Object] the record to be matched
       # @return [Boolean] whether the record satisfies the condition
       def match(record)
-        record = Mongory.data_converter.convert(record) unless @ignore_convert
-
         if @condition == record
           true
         elsif record.is_a?(Array)
@@ -60,7 +57,7 @@ module Mongory
       # @return [ConditionMatcher] the matcher used for hash-based logic
       # @!method condition_matcher
       define_matcher(:condition) do
-        ConditionMatcher.build(@condition, ignore_convert: true)
+        ConditionMatcher.build(@condition)
       end
 
       def deep_check_validity!

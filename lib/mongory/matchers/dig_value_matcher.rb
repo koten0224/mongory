@@ -41,7 +41,7 @@ module Mongory
       # @param record [Object] the record to match
       # @return [Boolean] whether the extracted value matches the condition
       def match(record)
-        super(dig_value(record))
+        super(Mongory.data_converter.convert(dig_value(record)))
       end
 
       private

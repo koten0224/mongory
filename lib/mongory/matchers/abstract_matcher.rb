@@ -32,10 +32,8 @@ module Mongory
       # Initializes the matcher with a condition and optional conversion control.
       #
       # @param condition [Object] the condition to match against
-      # @param ignore_convert [Boolean] whether to skip data conversion (default: false)
-      def initialize(condition, ignore_convert: false)
+      def initialize(condition)
         @condition = condition
-        @ignore_convert = ignore_convert
 
         check_validity!
       end

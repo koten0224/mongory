@@ -29,7 +29,7 @@ module Mongory
       # @param condition [Object] a subcondition to be wrapped
       # @return [ConditionMatcher] a matcher for this condition
       def build_sub_matcher(condition)
-        ConditionMatcher.build(condition, ignore_convert: true)
+        ConditionMatcher.build(condition)
       end
 
       # Uses `:any?` to return true if any submatcher passes.
@@ -37,16 +37,6 @@ module Mongory
       # @return [Symbol] the combining operator
       def operator
         :any?
-      end
-
-      # Optionally applies preprocessing unless disabled.
-      #
-      # @param record [Object] the record to be matched
-      # @return [Object] the converted or raw record
-      def preprocess(record)
-        return record if @ignore_convert
-
-        Mongory.data_converter.convert(record)
       end
 
       # Ensures the condition is an array of subconditions.

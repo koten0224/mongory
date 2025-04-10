@@ -37,17 +37,6 @@ module Mongory
         :all?
       end
 
-      # Optionally preprocesses the input record using the data converter,
-      # unless `@ignore_convert` is explicitly set.
-      #
-      # @param record [Object] the original input record
-      # @return [Object] the preprocessed record
-      def preprocess(record)
-        return record if @ignore_convert
-
-        Mongory.data_converter.convert(record)
-      end
-
       # Validates that the condition is an Array.
       # Raises a TypeError if the input is malformed.
       #
