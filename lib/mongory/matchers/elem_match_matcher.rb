@@ -30,6 +30,10 @@ module Mongory
         end
       end
 
+      # Ensures the condition is a Hash.
+      #
+      # @raise [Mongory::TypeError] if the condition is not a Hash
+      # @return [void]
       def check_validity!
         raise TypeError, '$elemMatch needs a Hash.' unless @condition.is_a?(Hash)
       end
