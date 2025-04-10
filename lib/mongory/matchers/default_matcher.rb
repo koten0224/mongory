@@ -12,7 +12,7 @@ module Mongory
     #   - If the condition is a Hash, delegate to ConditionMatcher.
     #   - Otherwise, return false.
     #
-    
+
     #
     # @example
     #   matcher = DefaultMatcher.build({ age: { :$gte => 30 } })

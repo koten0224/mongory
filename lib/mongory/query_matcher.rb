@@ -11,7 +11,7 @@ module Mongory
   # Typically used internally by `QueryBuilder`.
   #
   # Conversion via Mongory.data_converter is applied to the record
-  # 
+  #
   # @example
   #   matcher = QueryMatcher.build({ :age.gte => 18 })
   #   matcher.match?(record)
