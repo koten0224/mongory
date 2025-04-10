@@ -18,15 +18,19 @@ module Mongory
     #
     # @see AbstractMultiMatcher
     class CollectionMatcher < AbstractMultiMatcher
-      # Custom matching logic: if condition is not a hash, do inclusion check.
-      # Otherwise, fallback to the parent AbstractMultiMatcher#match logic.
+      # Initializes the collection matcher with a condition.
+      #
+      # @param condition [Object] the condition to match
       def initialize(condition, *)
         @condition_is_hash = condition.is_a?(Hash)
         super
       end
 
-      # @param collection [Object] the collection to be tested (usually an Array)
-      # @return [Boolean] whether the condition matches the collection
+      # Matches the input collection.
+      # Falls back to include? check unless condition is a Hash.
+      #
+      # @param collection [Object]
+      # @return [Boolean]
       def match(collection)
         return super if @condition_is_hash
 
@@ -67,13 +71,16 @@ module Mongory
         end
       end
 
-      # Uses `:all?` to ensure all sub-matchers must match.
+      # Combines results using `:all?` for multi-match logic.
       #
-      # @return [Symbol] the combining operator
+      # @return [Symbol]
       def operator
         :all?
       end
 
+      # Performs recursive validity checks on nested matchers if condition is a Hash.
+      #
+      # @return [void]
       def deep_check_validity!
         super if @condition_is_hash
       end
