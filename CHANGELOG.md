@@ -1,38 +1,34 @@
 ## [Unreleased]
 
-## [1.0.1] - 2025-04-01
+...
 
-- Initial release
+## [1.6.0] - 2025-04-11
 
-## [1.1.0] - 2025-04-01
+### Added
+- **Custom Operator: `$every`**  
+  Added support for `$every`, a new matcher that succeeds only if *all* elements in an array satisfy the condition.
+- **Custom Error Class: `Mongory::TypeError`**  
+  Replaces Ruby's `TypeError` for internal validation, enabling cleaner and safer error handling.
+- **Internal API: `SingletonBuilder`**  
+  Introduced a unified abstraction for building singleton converters and utilities (used by `Debugger`, all Converters, etc.).
 
-- Refactor with OOP
+### Changed
+- **Unified Matcher Construction**  
+  All matchers now use `.build(...)` instead of `.new(...)` for consistent instantiation.
+- **Simplified Matcher Dispatch**  
+  Multi-matchers (`$and`, `$or`, etc.) now unwrap themselves when only one submatcher is present.
+- **Centralized Matcher Responsibility**  
+  `ConditionMatcher` replaces `DefaultMatcher` as the default dispatcher for query conditions.
+- **Consistent Data Conversion**  
+  All nested matchers (e.g. `DigValueMatcher`, `ElemMatchMatcher`) now apply `data_converter` at match-time.
 
-## [1.2.0] - 2025-04-02
+### Fixed
+- **Validation Improvements**  
+  Introduced `deep_check_validity!` to ensure all nested matchers are properly verified.
+- **Edge Case Consistency**  
+  Cleaner fallback handling and key traversal behavior under complex or mixed-type query structures.
 
-- Refactor the matcher classes inheritance and add diagram
-
-## [1.3.0] - 2025-04-02
-
-- Refactor the matcher classes inheritance and update diagram
-- Add rails supporting, allow to configure the way you want to convert data to compare
-- Make query builder more efficient
-
-## [1.3.1] - 2025-04-02
-
-- Adjust the logic of array compare
-- Let query operator could match the regular mongoid usage
-- Change check validity behavior
-
-## [1.3.2] - 2025-04-03
-- Restrictions on the use of normalize
-- Add collection matcher to treat array data
-
-## [1.3.3] - 2025-04-05
-- Replaced HashMatcher with ConditionMatcher as the field matcher dispatcher.
-- KeyValueMatcher is removed and replaced with DigValueMatcher, now focused solely on record key traversal.
-- Moved matcher dispatch logic into ConditionMatcher.
-- DigValueMatcher now inherits MainMatcher for simpler reuse of match? behavior.
+---
 
 ## [1.5.0] - 2025-04-09
 
@@ -48,3 +44,11 @@
 
 ### Fixed
 - **Bug Fixes**: Corrected issues with array comparisons and query operator behaviors.
+
+---
+
+## [Prior Versions Summary]
+
+- `1.0.1`: Initial release
+- `1.1.0 ~ 1.3.3`: Refactored matcher architecture, added class inheritance structure, separated key/value matcher logic.
+- `1.4.x`: Skipped
