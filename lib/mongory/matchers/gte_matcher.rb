@@ -8,7 +8,7 @@ module Mongory
     # Inherits comparison logic and error safety from AbstractOperatorMatcher.
     #
     # @example
-    #   matcher = GteMatcher.new(10)
+    #   matcher = GteMatcher.build(10)
     #   matcher.match?(10)  #=> true
     #   matcher.match?(11)  #=> true
     #   matcher.match?(9)   #=> false

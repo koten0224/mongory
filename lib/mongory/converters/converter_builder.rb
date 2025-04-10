@@ -9,24 +9,24 @@ module Mongory
     # with optional fallback behavior.
     #
     # @example Basic usage
-    #   builder = ConverterBuilder.new do
+    #   converter = ConverterBuilder.new do
     #     register(String) { |v| v.upcase }
     #   end
-    #   builder.convert("hello") #=> "HELLO"
-    class ConverterBuilder
+    #   converter.convert("hello") #=> "HELLO"
+    class ConverterBuilder < Utils::SingletonBuilder
       include Utils
 
       # @private
       Registry = Struct.new(:klass, :exec)
 
       # @private
-      NOTHING = SingletonMarker.new('NOTHING')
+      NOTHING = SingletonBuilder.new('NOTHING')
 
       # @param block [Proc] optional DSL configuration block
-      def initialize(&block)
+      def initialize(label, &block)
         @registries = []
         @fallback = Proc.new { |*| self }
-        instance_eval(&block) if block_given?
+        super
       end
 
       # Applies the registered conversion to the given target object.
@@ -95,7 +95,5 @@ module Mongory
         end
       end
     end
-
-    private_constant :ConverterBuilder
   end
 end

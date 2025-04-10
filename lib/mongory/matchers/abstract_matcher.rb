@@ -13,8 +13,9 @@ module Mongory
     class AbstractMatcher
       include Utils
 
+      singleton_class.alias_method :build, :new
       # Sentinel value used to represent missing keys when traversing nested hashes.
-      KEY_NOT_FOUND = SingletonMarker.new('KEY_NOT_FOUND')
+      KEY_NOT_FOUND = SingletonBuilder.new('KEY_NOT_FOUND')
 
       # Defines a lazily-evaluated matcher accessor with instance-level caching.
       #
@@ -31,10 +32,8 @@ module Mongory
       # Initializes the matcher with a condition and optional conversion control.
       #
       # @param condition [Object] the condition to match against
-      # @param ignore_convert [Boolean] whether to skip data conversion (default: false)
-      def initialize(condition, ignore_convert: false)
+      def initialize(condition)
         @condition = condition
-        @ignore_convert = ignore_convert
 
         check_validity!
       end
@@ -81,6 +80,10 @@ module Mongory
       #
       # @return [void]
       def check_validity!; end
+
+      def deep_check_validity!
+        check_validity!
+      end
 
       # Normalizes a potentially missing record value.
       # Converts sentinel `KEY_NOT_FOUND` to nil.

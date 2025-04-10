@@ -4,14 +4,15 @@ require_relative 'matchers/abstract_matcher'
 require_relative 'matchers/abstract_multi_matcher'
 require_relative 'matchers/abstract_operator_matcher'
 require_relative 'matchers/default_matcher'
+require_relative 'matchers/condition_matcher'
 require_relative 'matchers/and_matcher'
 require_relative 'matchers/collection_matcher'
 require_relative 'matchers/elem_match_matcher'
+require_relative 'matchers/every_matcher'
 require_relative 'matchers/eq_matcher'
 require_relative 'matchers/exists_matcher'
 require_relative 'matchers/gt_matcher'
 require_relative 'matchers/gte_matcher'
-require_relative 'matchers/condition_matcher'
 require_relative 'matchers/in_matcher'
 require_relative 'matchers/dig_value_matcher'
 require_relative 'matchers/lt_matcher'
@@ -47,7 +48,8 @@ module Mongory
       '$lte' => :LteMatcher,
       '$in' => :InMatcher,
       '$nin' => :NinMatcher,
-      '$elemMatch' => :ElemMatchMatcher
+      '$elemMatch' => :ElemMatchMatcher,
+      '$every' => :EveryMatcher
     }.freeze
 
     # Returns the matcher class for the given operator.

@@ -25,4 +25,7 @@ RSpec.configure do |config|
   def enforce_reset_converter(method, converter)
     Mongory.define_singleton_method(method) { converter }
   end
+
+  Mongory.enable_symbol_snippets!
+  Mongory.register(Array)
 end

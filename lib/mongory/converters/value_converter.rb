@@ -1,17 +1,17 @@
 # frozen_string_literal: true
 
 module Mongory
-  # Converts query values into normalized matcher-friendly format.
-  #
-  # Used by ConditionConverter to prepare values in nested queries.
-  #
-  # - Arrays are recursively converted
-  # - Hashes are interpreted as nested conditions
-  # - Regex becomes a Mongo-style `$regex` hash
-  # - Strings and Integers are passed through
-  # - Everything else falls back to DataConverter
   module Converters
-    ValueConverter = ConverterBuilder.new do |c|
+    # Converts query values into normalized matcher-friendly format.
+    #
+    # Used by ConditionConverter to prepare values in nested queries.
+    #
+    # - Arrays are recursively converted
+    # - Hashes are interpreted as nested conditions
+    # - Regex becomes a Mongo-style `$regex` hash
+    # - Strings and Integers are passed through
+    # - Everything else falls back to DataConverter
+    ValueConverter = ConverterBuilder.new('ValueConverter') do |c|
       # fallback for unrecognized types
       @fallback = -> { DataConverter.convert(self) }
 
@@ -31,7 +31,5 @@ module Mongory
         register(klass) { self }
       end
     end
-
-    private_constant set_constant_display :ValueConverter
   end
 end

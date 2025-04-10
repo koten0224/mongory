@@ -18,7 +18,8 @@ module Mongory
       lte: '$lte',
       in: '$in',
       nin: '$nin',
-      elem_match: '$elemMatch'
+      elem_match: '$elemMatch',
+      every: '$every'
     }.freeze
 
     def initialize(name, operator)
@@ -27,7 +28,7 @@ module Mongory
     end
 
     def __expr_part__(other, *)
-      { @name => { @operator => other } }
+      Converters::KeyConverter.convert(@name, @operator => other)
     end
   end
 end

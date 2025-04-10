@@ -10,8 +10,10 @@ module Mongory
   #
   # Typically used internally by `QueryBuilder`.
   #
+  # Conversion via Mongory.data_converter is applied to the record
+  #
   # @example
-  #   matcher = QueryMatcher.new({ :age.gte => 18 })
+  #   matcher = QueryMatcher.build({ :age.gte => 18 })
   #   matcher.match?(record)
   #
   # @see Matchers::DefaultMatcher
@@ -20,6 +22,10 @@ module Mongory
     # @param condition [Hash] the raw user query
     def initialize(condition)
       super(Mongory.condition_converter.convert(condition))
+    end
+
+    def match(record)
+      super(Mongory.data_converter.convert(record))
     end
   end
 end

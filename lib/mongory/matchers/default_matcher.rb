@@ -12,28 +12,29 @@ module Mongory
     #   - If the condition is a Hash, delegate to ConditionMatcher.
     #   - Otherwise, return false.
     #
-    # Conversion via Mongory.data_converter is applied to the record
-    # unless `@ignore_convert` is set to true.
+
     #
     # @example
-    #   matcher = DefaultMatcher.new({ age: { :$gte => 30 } })
+    #   matcher = DefaultMatcher.build({ age: { :$gte => 30 } })
     #   matcher.match(record) #=> true or false
     #
     # @see AbstractMatcher
     class DefaultMatcher < AbstractMatcher
       # Matches the given record against the stored condition.
       # The logic dynamically chooses the appropriate sub-matcher.
-      #
+      def initialize(condition, *)
+        @condition_is_hash = condition.is_a?(Hash)
+        super
+      end
+
       # @param record [Object] the record to be matched
       # @return [Boolean] whether the record satisfies the condition
       def match(record)
-        record = Mongory.data_converter.convert(record) unless @ignore_convert
-
         if @condition == record
           true
         elsif record.is_a?(Array)
           collection_matcher.match?(record)
-        elsif @condition.is_a?(Hash)
+        elsif @condition_is_hash
           condition_matcher.match?(record)
         else
           false
@@ -46,7 +47,7 @@ module Mongory
       # @return [CollectionMatcher] the matcher used to match array-type records
       # @!method collection_matcher
       define_matcher(:collection) do
-        CollectionMatcher.new(@condition)
+        CollectionMatcher.build(@condition)
       end
 
       # Lazily defines the condition matcher for hash conditions.
@@ -56,7 +57,11 @@ module Mongory
       # @return [ConditionMatcher] the matcher used for hash-based logic
       # @!method condition_matcher
       define_matcher(:condition) do
-        ConditionMatcher.new(@condition, ignore_convert: true)
+        ConditionMatcher.build(@condition)
+      end
+
+      def deep_check_validity!
+        condition_matcher.deep_check_validity! if @condition_is_hash
       end
     end
   end

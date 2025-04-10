@@ -73,16 +73,20 @@ You can configure custom conversion rules for keys or values:
 
 ```ruby
 Mongory.configure do |mc|
+  # Can use symbol to determine which method to use on convert
   mc.data_converter.configure do |dc|
-    dc.register(MyDateLikeObject) { iso8601_format(self) }
+    dc.register(MyDateLikeObject, :attributes_with_string_key)
   end
 
+  # Or can give a block to define how to convert
   mc.condition_converter.key_converter.configure do |kc|
-    kc.register(Symbol) { |value| { to_s => value } }
+    # Key converter expected to provide a method or block that receive one parameter to construct key value pair
+    kc.register(MyOperatorKey) { |value| { transformed_key => value } }
   end
 
+  # Also support recursively convert
   mc.condition_converter.value_converter.configure do |vc|
-    vc.register(MyType) { normalize(self) }
+    vc.register(MyEnumerable) { map { |v| vc.convert(v) } }
   end
 end
 ```

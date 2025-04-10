@@ -5,29 +5,33 @@ module Mongory
     # ElemMatchMatcher implements the logic for Mongo-style `$elemMatch`.
     # It is used to determine if *any* element in an array matches the given condition.
     #
-    # This matcher delegates element-wise comparison to DefaultMatcher,
+    # This matcher delegates element-wise comparison to ConditionMatcher,
     # allowing nested conditions to be applied recursively.
     #
     # Typically used internally by CollectionMatcher when dealing with
     # non-indexed hash-style subconditions.
     #
     # @example
-    #   matcher = ElemMatchMatcher.new({ status: 'active' })
+    #   matcher = ElemMatchMatcher.build({ status: 'active' })
     #   matcher.match?([{ status: 'inactive' }, { status: 'active' }]) #=> true
     #
-    # @see DefaultMatcher
-    class ElemMatchMatcher < DefaultMatcher
+    # @see ConditionMatcher
+    class ElemMatchMatcher < ConditionMatcher
       # Matches true if any element in the array satisfies the condition.
       # Falls back to false if the input is not an array.
-      #
+
       # @param collection [Object] the input to be tested
       # @return [Boolean] whether any element matches
       def match(collection)
         return false unless collection.is_a?(Array)
 
         collection.any? do |record|
-          super(record)
+          super(Mongory.data_converter.convert(record))
         end
+      end
+
+      def check_validity!
+        raise TypeError, '$elemMatch needs a Hash.' unless @condition.is_a?(Hash)
       end
     end
   end

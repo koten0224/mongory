@@ -9,7 +9,6 @@ require_relative 'mongory/query_matcher'
 require_relative 'mongory/query_builder'
 require_relative 'mongory/query_operator'
 require_relative 'mongory/converters'
-require_relative 'mongory/core_ext'
 
 # Main namespace for Mongory DSL and configuration.
 #
@@ -49,6 +48,24 @@ module Mongory
     condition_converter.freeze
   end
 
+  # @params klass [Class] the class that you want to add `#mongory` method.
+  # @return [void]
+  def self.register(klass)
+    klass.include(ClassExtention)
+  end
+  # Implement Symbol snippets like `:name.regex`
+
+  # @return [void]
+  def self.enable_symbol_snippets!
+    Mongory::QueryOperator::METHOD_TO_OPERATOR_MAPPING.each do |key, operator|
+      next if ::Symbol.method_defined?(key)
+
+      ::Symbol.define_method(key) do
+        Mongory::QueryOperator.new(to_s, operator)
+      end
+    end
+  end
+
   # Returns the data converter instance.
   #
   # @return [Converters::DataConverter]
@@ -72,4 +89,12 @@ module Mongory
 
   # Base class for all Mongory errors.
   class Error < StandardError; end
+  class TypeError < Error; end
+
+  # Temp description
+  module ClassExtention
+    def mongory
+      Mongory::QueryBuilder.new(self)
+    end
+  end
 end

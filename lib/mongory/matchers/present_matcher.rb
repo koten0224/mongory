@@ -11,12 +11,12 @@ module Mongory
     # of the value instead of mere existence.
     #
     # @example
-    #   matcher = PresentMatcher.new(true)
+    #   matcher = PresentMatcher.build(true)
     #   matcher.match?('hello')     #=> true
     #   matcher.match?(nil)         #=> false
     #   matcher.match?([])          #=> false
     #
-    #   matcher = PresentMatcher.new(false)
+    #   matcher = PresentMatcher.build(false)
     #   matcher.match?(nil)         #=> true
     #
     # @see AbstractOperatorMatcher

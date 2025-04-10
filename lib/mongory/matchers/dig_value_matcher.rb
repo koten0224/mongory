@@ -12,7 +12,7 @@ module Mongory
     # like `{ age: { :$gte => 18 } }` where `:age` is passed as the dig key.
     #
     # @example
-    #   matcher = DigValueMatcher.new(:age, { :$gte => 18 })
+    #   matcher = DigValueMatcher.build(:age, { :$gte => 18 })
     #   matcher.match?({ age: 20 }) #=> true
     #
     # @see DefaultMatcher
@@ -32,8 +32,8 @@ module Mongory
       # @param key [Object] the key (or index) used to dig into the record
       # @param condition [Object] the condition to match against the extracted value
       def initialize(key, condition)
-        super(condition)
         @key = key
+        super(condition)
       end
 
       # Extracts the target value using the key and delegates to DefaultMatcher.
@@ -41,7 +41,7 @@ module Mongory
       # @param record [Object] the record to match
       # @return [Boolean] whether the extracted value matches the condition
       def match(record)
-        super(dig_value(record))
+        super(Mongory.data_converter.convert(dig_value(record)))
       end
 
       private
