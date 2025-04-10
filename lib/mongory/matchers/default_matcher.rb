@@ -23,7 +23,11 @@ module Mongory
     class DefaultMatcher < AbstractMatcher
       # Matches the given record against the stored condition.
       # The logic dynamically chooses the appropriate sub-matcher.
-      #
+      def initialize(*)
+        super
+        @condition_is_hash = @condition.is_a?(Hash)
+      end
+
       # @param record [Object] the record to be matched
       # @return [Boolean] whether the record satisfies the condition
       def match(record)
@@ -33,7 +37,7 @@ module Mongory
           true
         elsif record.is_a?(Array)
           collection_matcher.match?(record)
-        elsif @condition.is_a?(Hash)
+        elsif @condition_is_hash
           condition_matcher.match?(record)
         else
           false

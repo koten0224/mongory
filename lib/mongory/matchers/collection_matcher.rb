@@ -20,11 +20,15 @@ module Mongory
     class CollectionMatcher < AbstractMultiMatcher
       # Custom matching logic: if condition is not a hash, do inclusion check.
       # Otherwise, fallback to the parent AbstractMultiMatcher#match logic.
-      #
+      def initialize(*)
+        super
+        @condition_is_hash = @condition.is_a?(Hash)
+      end
+
       # @param collection [Object] the collection to be tested (usually an Array)
       # @return [Boolean] whether the condition matches the collection
       def match(collection)
-        return super if @condition.is_a?(Hash)
+        return super if @condition_is_hash
 
         collection.include?(@condition)
       end
