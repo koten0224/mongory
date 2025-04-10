@@ -60,7 +60,7 @@ module Mongory
         when /^-?\d+$/
           DigValueMatcher.build(key.to_i, value)
         when *Matchers::OPERATOR_TO_CLASS_MAPPING.keys
-          Matchers.lookup(key).new(value)
+          Matchers.lookup(key).build(value)
         else
           elem_matcher.condition.merge!(key => value)
           elem_matcher
@@ -72,6 +72,14 @@ module Mongory
       # @return [Symbol] the combining operator
       def operator
         :all?
+      end
+
+      def check_validity!
+        super
+      rescue Mongory::TypeError
+        raise
+      rescue StandardError
+        nil
       end
     end
   end

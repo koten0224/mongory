@@ -42,6 +42,8 @@ module Mongory
         @condition.map(&method(:build_sub_matcher)).uniq(&:condition)
       end
 
+      alias_method :check_validity!, :matchers
+
       # Optional hook for subclasses to transform the input record before matching.
       # Default implementation returns the record unchanged.
       #
