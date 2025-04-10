@@ -10,11 +10,11 @@ module Mongory
     # This matcher ensures the condition is strictly a boolean (`true` or `false`).
     #
     # @example
-    #   matcher = ExistsMatcher.new(true)
+    #   matcher = ExistsMatcher.build(true)
     #   matcher.match?(42)              #=> true
     #   matcher.match?(KEY_NOT_FOUND)   #=> false
     #
-    #   matcher = ExistsMatcher.new(false)
+    #   matcher = ExistsMatcher.build(false)
     #   matcher.match?(KEY_NOT_FOUND)   #=> true
     #
     # @see AbstractOperatorMatcher

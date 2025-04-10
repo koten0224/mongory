@@ -13,7 +13,7 @@ module Mongory
     # to the appropriate field or operator matcher.
     #
     # @example
-    #   matcher = ConditionMatcher.new({ age: { :$gt => 30 }, active: true })
+    #   matcher = ConditionMatcher.build({ age: { :$gt => 30 }, active: true })
     #   matcher.match?(record) #=> true only if all subconditions match
     #
     # @see AbstractMultiMatcher
@@ -32,7 +32,7 @@ module Mongory
         when *Matchers::OPERATOR_TO_CLASS_MAPPING.keys
           Matchers.lookup(key).new(value, ignore_convert: @ignore_convert)
         else
-          DigValueMatcher.new(key, value)
+          DigValueMatcher.build(key, value)
         end
       end
 

@@ -12,7 +12,7 @@ module Mongory
     # This matcher ensures the record is a String before attempting the match.
     #
     # @example
-    #   matcher = RegexMatcher.new('^foo')
+    #   matcher = RegexMatcher.build('^foo')
     #   matcher.match?('foobar')   #=> true
     #   matcher.match?('barfoo')   #=> false
     #

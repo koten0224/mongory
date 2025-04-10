@@ -11,7 +11,7 @@ module Mongory
     # and defines its own strategy (`:all?`) and matcher construction.
     #
     # @example
-    #   matcher = AndMatcher.new([
+    #   matcher = AndMatcher.build([
     #     { age: { :$gte => 18 } },
     #     { status: "active" }
     #   ])
@@ -26,7 +26,7 @@ module Mongory
       # @param condition [Object] the raw subcondition
       # @return [ConditionMatcher] the matcher instance for the condition
       def build_sub_matcher(condition)
-        ConditionMatcher.new(condition)
+        ConditionMatcher.build(condition)
       end
 
       # Uses the `:all?` operator to ensure all subconditions must match.

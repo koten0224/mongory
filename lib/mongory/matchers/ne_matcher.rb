@@ -9,7 +9,7 @@ module Mongory
     # and uses Ruby's `!=` operator for comparison.
     #
     # @example
-    #   matcher = NeMatcher.new(42)
+    #   matcher = NeMatcher.build(42)
     #   matcher.match?(41)  #=> true
     #   matcher.match?(42)  #=> false
     #

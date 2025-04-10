@@ -9,7 +9,7 @@ module Mongory
     # This matcher is the logical opposite of InMatcher.
     #
     # @example
-    #   matcher = NinMatcher.new([1, 2, 3])
+    #   matcher = NinMatcher.build([1, 2, 3])
     #   matcher.match?(4)        #=> true
     #   matcher.match?(2)        #=> false
     #   matcher.match?([4, 5])   #=> true

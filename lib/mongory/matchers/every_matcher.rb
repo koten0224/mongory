@@ -9,7 +9,7 @@ module Mongory
     # allowing nested conditions to be applied recursively.
     #
     # @example
-    #   matcher = EveryMatcher.new({ status: 'active' })
+    #   matcher = EveryMatcher.build({ status: 'active' })
     #   matcher.match?([{ status: 'inactive' }, { status: 'active' }]) #=> false
     #
     # @see ConditionMatcher

@@ -11,7 +11,7 @@ module Mongory
   # Typically used internally by `QueryBuilder`.
   #
   # @example
-  #   matcher = QueryMatcher.new({ :age.gte => 18 })
+  #   matcher = QueryMatcher.build({ :age.gte => 18 })
   #   matcher.match?(record)
   #
   # @see Matchers::DefaultMatcher

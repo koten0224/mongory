@@ -13,7 +13,7 @@ module Mongory
     # from AbstractMultiMatcher.
     #
     # @example
-    #   matcher = OrMatcher.new([
+    #   matcher = OrMatcher.build([
     #     { age: { :$lt => 18 } },
     #     { admin: true }
     #   ])
@@ -28,7 +28,7 @@ module Mongory
       # @param condition [Object] a subcondition to be wrapped
       # @return [ConditionMatcher] a matcher for this condition
       def build_sub_matcher(condition)
-        ConditionMatcher.new(condition, ignore_convert: true)
+        ConditionMatcher.build(condition, ignore_convert: true)
       end
 
       # Uses `:any?` to return true if any submatcher passes.

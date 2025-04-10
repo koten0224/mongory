@@ -12,7 +12,7 @@ module Mongory
     # like `{ age: { :$gte => 18 } }` where `:age` is passed as the dig key.
     #
     # @example
-    #   matcher = DigValueMatcher.new(:age, { :$gte => 18 })
+    #   matcher = DigValueMatcher.build(:age, { :$gte => 18 })
     #   matcher.match?({ age: 20 }) #=> true
     #
     # @see DefaultMatcher

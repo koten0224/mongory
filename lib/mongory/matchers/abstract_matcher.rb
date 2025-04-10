@@ -13,6 +13,7 @@ module Mongory
     class AbstractMatcher
       include Utils
 
+      singleton_class.alias_method :build, :new
       # Sentinel value used to represent missing keys when traversing nested hashes.
       KEY_NOT_FOUND = SingletonBuilder.new('KEY_NOT_FOUND')
 

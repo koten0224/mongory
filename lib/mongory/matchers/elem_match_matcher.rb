@@ -12,7 +12,7 @@ module Mongory
     # non-indexed hash-style subconditions.
     #
     # @example
-    #   matcher = ElemMatchMatcher.new({ status: 'active' })
+    #   matcher = ElemMatchMatcher.build({ status: 'active' })
     #   matcher.match?([{ status: 'inactive' }, { status: 'active' }]) #=> true
     #
     # @see ConditionMatcher
