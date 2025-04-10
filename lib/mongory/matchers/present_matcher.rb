@@ -27,7 +27,7 @@ module Mongory
       # @param record [Object] the original value
       # @return [Boolean] whether the value is present
       def preprocess(record)
-        present?(super)
+        is_present?(super)
       end
 
       # Uses Ruby `==` to compare the presence result to the expected boolean.

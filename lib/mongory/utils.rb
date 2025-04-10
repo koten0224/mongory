@@ -3,6 +3,7 @@
 require 'date'
 require_relative 'utils/singleton_builder'
 require_relative 'utils/debugger'
+require_relative 'utils/rails_patch' if defined?(Rails)
 
 module Mongory
   # Utility helpers shared across Mongory internals.
@@ -19,12 +20,12 @@ module Mongory
     end
 
     # Checks if an object is "present".
-    # Inverse of {#blank?}.
+    # Inverse of {#is_blank?}.
     #
     # @param obj [Object]
     # @return [Boolean]
-    def present?(obj)
-      !blank?(obj)
+    def is_present?(obj)
+      !is_blank?(obj)
     end
 
     # Determines whether an object is considered "blank".
@@ -32,7 +33,7 @@ module Mongory
     #
     # @param obj [Object]
     # @return [Boolean]
-    def blank?(obj)
+    def is_blank?(obj)
       case obj
       when false, nil
         true

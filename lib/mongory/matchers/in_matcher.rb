@@ -23,7 +23,7 @@ module Mongory
       # @param record [Object] the record value to test
       # @return [Boolean] whether any values intersect
       def match(record)
-        present?(@condition & Array(record))
+        is_present?(@condition & Array(record))
       end
 
       # Ensures the condition is an array.
