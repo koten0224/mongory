@@ -13,7 +13,7 @@ module Mongory
     # to the appropriate field or operator matcher.
     #
     # @example
-    #   matcher = ConditionMatcher.new({ age: { :$gt => 30 }, active: true })
+    #   matcher = ConditionMatcher.build({ age: { :$gt => 30 }, active: true })
     #   matcher.match?(record) #=> true only if all subconditions match
     #
     # @see AbstractMultiMatcher
@@ -21,7 +21,8 @@ module Mongory
       # Constructs the appropriate submatcher for a key-value pair.
       # If the key is a registered operator, dispatches to the corresponding matcher.
       # Otherwise, assumes the key is a field path and uses DigValueMatcher.
-      #
+      singleton_class.alias_method :build, :dispatch
+
       # @see DigValueMatcher
       # @see Matchers.lookup
       # @param key [String] the condition key (either an operator or field name)
@@ -32,7 +33,7 @@ module Mongory
         when *Matchers::OPERATOR_TO_CLASS_MAPPING.keys
           Matchers.lookup(key).new(value, ignore_convert: @ignore_convert)
         else
-          DigValueMatcher.new(key, value)
+          DigValueMatcher.build(key, value)
         end
       end
 

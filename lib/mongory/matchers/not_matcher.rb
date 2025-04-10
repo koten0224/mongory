@@ -11,7 +11,7 @@ module Mongory
     #   { age: { :$not => { :$gte => 30 } } }
     #
     # @example
-    #   matcher = NotMatcher.new({ :$gte => 10 })
+    #   matcher = NotMatcher.build({ :$gte => 10 })
     #   matcher.match?(5)    #=> true
     #   matcher.match?(15)   #=> false
     #

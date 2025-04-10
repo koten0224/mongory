@@ -9,7 +9,7 @@ module Mongory
     # error handling and optional preprocessing.
     #
     # @example
-    #   matcher = GtMatcher.new(10)
+    #   matcher = GtMatcher.build(10)
     #   matcher.match?(15)  #=> true
     #   matcher.match?(10)  #=> false
     #

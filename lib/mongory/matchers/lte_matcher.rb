@@ -8,7 +8,7 @@ module Mongory
     # This matcher inherits from AbstractOperatorMatcher and uses the `<=` operator.
     #
     # @example
-    #   matcher = LteMatcher.new(10)
+    #   matcher = LteMatcher.build(10)
     #   matcher.match?(9)    #=> true
     #   matcher.match?(10)   #=> true
     #   matcher.match?(11)   #=> false

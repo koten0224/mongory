@@ -13,18 +13,22 @@ module Mongory
     # numeric string, operator, or a regular hash field.
     #
     # @example
-    #   matcher = CollectionMatcher.new({ 0 => { :$gt => 5 }, status: "active" })
+    #   matcher = CollectionMatcher.build({ 0 => { :$gt => 5 }, status: "active" })
     #   matcher.match?([10, { status: "active" }]) #=> true if all conditions are satisfied
     #
     # @see AbstractMultiMatcher
     class CollectionMatcher < AbstractMultiMatcher
       # Custom matching logic: if condition is not a hash, do inclusion check.
       # Otherwise, fallback to the parent AbstractMultiMatcher#match logic.
-      #
+      def initialize(*)
+        super
+        @condition_is_hash = @condition.is_a?(Hash)
+      end
+
       # @param collection [Object] the collection to be tested (usually an Array)
       # @return [Boolean] whether the condition matches the collection
       def match(collection)
-        return super if @condition.is_a?(Hash)
+        return super if @condition_is_hash
 
         collection.include?(@condition)
       end
@@ -35,7 +39,7 @@ module Mongory
       # @return [ElemMatchMatcher] shared matcher instance for field conditions
       # @!method elem_matcher
       define_matcher(:elem) do
-        ElemMatchMatcher.new({})
+        ElemMatchMatcher.build({})
       end
 
       # Builds sub-matchers depending on the key:
@@ -52,9 +56,9 @@ module Mongory
       def build_sub_matcher(key, value)
         case key
         when Integer
-          DigValueMatcher.new(key, value)
+          DigValueMatcher.build(key, value)
         when /^-?\d+$/
-          DigValueMatcher.new(key.to_i, value)
+          DigValueMatcher.build(key.to_i, value)
         when *Matchers::OPERATOR_TO_CLASS_MAPPING.keys
           Matchers.lookup(key).new(value)
         else

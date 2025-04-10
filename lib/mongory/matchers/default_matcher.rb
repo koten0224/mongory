@@ -16,14 +16,18 @@ module Mongory
     # unless `@ignore_convert` is set to true.
     #
     # @example
-    #   matcher = DefaultMatcher.new({ age: { :$gte => 30 } })
+    #   matcher = DefaultMatcher.build({ age: { :$gte => 30 } })
     #   matcher.match(record) #=> true or false
     #
     # @see AbstractMatcher
     class DefaultMatcher < AbstractMatcher
       # Matches the given record against the stored condition.
       # The logic dynamically chooses the appropriate sub-matcher.
-      #
+      def initialize(*)
+        super
+        @condition_is_hash = @condition.is_a?(Hash)
+      end
+
       # @param record [Object] the record to be matched
       # @return [Boolean] whether the record satisfies the condition
       def match(record)
@@ -33,7 +37,7 @@ module Mongory
           true
         elsif record.is_a?(Array)
           collection_matcher.match?(record)
-        elsif @condition.is_a?(Hash)
+        elsif @condition_is_hash
           condition_matcher.match?(record)
         else
           false
@@ -46,7 +50,7 @@ module Mongory
       # @return [CollectionMatcher] the matcher used to match array-type records
       # @!method collection_matcher
       define_matcher(:collection) do
-        CollectionMatcher.new(@condition)
+        CollectionMatcher.build(@condition)
       end
 
       # Lazily defines the condition matcher for hash conditions.
@@ -56,7 +60,7 @@ module Mongory
       # @return [ConditionMatcher] the matcher used for hash-based logic
       # @!method condition_matcher
       define_matcher(:condition) do
-        ConditionMatcher.new(@condition, ignore_convert: true)
+        ConditionMatcher.build(@condition, ignore_convert: true)
       end
     end
   end

@@ -10,7 +10,7 @@ module Mongory
     # and the record value (or values).
     #
     # @example
-    #   matcher = InMatcher.new([1, 2, 3])
+    #   matcher = InMatcher.build([1, 2, 3])
     #   matcher.match?(2)        #=> true
     #   matcher.match?([3, 4])   #=> true
     #   matcher.match?(5)        #=> false

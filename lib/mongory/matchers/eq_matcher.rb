@@ -11,7 +11,7 @@ module Mongory
     # This matcher supports any Ruby object that implements `#==`.
     #
     # @example
-    #   matcher = EqMatcher.new(42)
+    #   matcher = EqMatcher.build(42)
     #   matcher.match?(42)        #=> true
     #   matcher.match?("42")      #=> false
     #

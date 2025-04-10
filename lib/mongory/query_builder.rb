@@ -154,7 +154,7 @@ module Mongory
     #
     # @return [Array<Object>] filtered results
     def result
-      matcher = Mongory::QueryMatcher.new(@condition)
+      matcher = Mongory::QueryMatcher.build(@condition)
       res = @records.select { |r| matcher.match?(r) }
 
       if @sort_keys
