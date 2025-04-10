@@ -23,7 +23,8 @@ module Mongory
     class OrMatcher < AbstractMultiMatcher
       # Constructs a ConditionMatcher for each subcondition.
       # Conversion is disabled to avoid double-processing.
-      #
+      singleton_class.alias_method :build, :dispatch
+
       # @see ConditionMatcher
       # @param condition [Object] a subcondition to be wrapped
       # @return [ConditionMatcher] a matcher for this condition

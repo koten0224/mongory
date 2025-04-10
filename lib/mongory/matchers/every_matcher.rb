@@ -16,7 +16,8 @@ module Mongory
     class EveryMatcher < ConditionMatcher
       # Matches true if all element in the array satisfies the condition.
       # Falls back to false if the input is not an array.
-      #
+      singleton_class.alias_method :build, :new
+
       # @param collection [Object] the input to be tested
       # @return [Boolean] whether all element matches
       def match(collection)
