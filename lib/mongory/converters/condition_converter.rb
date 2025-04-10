@@ -16,7 +16,7 @@ module Mongory
       # Converts a flat condition hash into a nested structure.
       #
       # @param condition [Hash]
-      # @return [Hash] nested condition
+      # @return [Hash] the transformed nested condition
       def convert(condition)
         result = {}
         condition.each_pair do |k, v|
@@ -27,7 +27,7 @@ module Mongory
         result
       end
 
-      # Deep merge block used to merge nested hashes
+      # Provides a block that merges values for overlapping keys in a deep way.
       #
       # @return [Proc]
       def deep_merge_block
@@ -40,23 +40,23 @@ module Mongory
         end
       end
 
-      # Returns the key converter
+      # Returns the key converter used to transform condition keys.
       #
       # @return [ConverterBuilder]
       def key_converter
         KeyConverter
       end
 
-      # Returns the value converter
+      # Returns the value converter used to transform condition values.
       #
       # @return [ConverterBuilder]
       def value_converter
         ValueConverter
       end
 
-      # Prepares and freezes all internal components
+      # Freezes internal converters to prevent further modification.
       #
-      # @return [ConditionConverter]
+      # @return [void]
       def freeze
         deep_merge_block
         super
