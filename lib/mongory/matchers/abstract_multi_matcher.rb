@@ -62,6 +62,11 @@ module Mongory
       #
       # @return [Symbol] the operator method to apply over matchers
       def operator; end
+
+      def deep_check_validity!
+        super
+        matchers.each(&:deep_check_validity!)
+      end
     end
   end
 end

@@ -83,6 +83,10 @@ module Mongory
       # @return [void]
       def check_validity!; end
 
+      def deep_check_validity!
+        check_validity!
+      end
+
       # Normalizes a potentially missing record value.
       # Converts sentinel `KEY_NOT_FOUND` to nil.
       #

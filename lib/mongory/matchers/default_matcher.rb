@@ -62,6 +62,10 @@ module Mongory
       define_matcher(:condition) do
         ConditionMatcher.build(@condition, ignore_convert: true)
       end
+
+      def deep_check_validity!
+        condition_matcher.deep_check_validity! if @condition_is_hash
+      end
     end
   end
 end

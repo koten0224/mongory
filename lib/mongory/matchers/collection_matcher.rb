@@ -73,6 +73,10 @@ module Mongory
       def operator
         :all?
       end
+
+      def deep_check_validity!
+        super if @condition_is_hash
+      end
     end
   end
 end
