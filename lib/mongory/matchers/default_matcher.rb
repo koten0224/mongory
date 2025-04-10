@@ -22,11 +22,14 @@ module Mongory
     class DefaultMatcher < AbstractMatcher
       # Matches the given record against the stored condition.
       # The logic dynamically chooses the appropriate sub-matcher.
+      # @param condition [Object] the raw condition
       def initialize(condition, *)
         @condition_is_hash = condition.is_a?(Hash)
         super
       end
 
+      # Matches the given record against the condition.
+      #
       # @param record [Object] the record to be matched
       # @return [Boolean] whether the record satisfies the condition
       def match(record)
@@ -60,6 +63,9 @@ module Mongory
         ConditionMatcher.build(@condition)
       end
 
+      # Validates the nested condition matcher, if applicable.
+      #
+      # @return [void]
       def deep_check_validity!
         condition_matcher.deep_check_validity! if @condition_is_hash
       end
