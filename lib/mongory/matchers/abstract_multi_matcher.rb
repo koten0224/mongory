@@ -58,7 +58,7 @@ module Mongory
         @condition.map(&method(:build_sub_matcher)).uniq(&:condition)
       end
 
-       # Optional hook for subclasses to transform the input record before matching.
+      # Optional hook for subclasses to transform the input record before matching.
       # Default implementation returns the record unchanged.
       #
       # @param record [Object] the input record
