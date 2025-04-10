@@ -24,6 +24,10 @@ require_relative 'matchers/or_matcher'
 require_relative 'matchers/present_matcher'
 require_relative 'matchers/regex_matcher'
 
+# Defines built-in Mongory matchers for query condition evaluation.
+#
+# This file loads and registers all available matcher classes
+# and maps Mongo-style operators (e.g., `$gt`, `$in`) to matcher implementations.
 module Mongory
   # Matcher lookup and operator dispatch mapping.
   #
