@@ -65,6 +65,7 @@ module Mongory
       end
     end
   end
+
   # Returns the data converter instance.
   #
   # @return [Converters::DataConverter]
@@ -90,6 +91,7 @@ module Mongory
   class Error < StandardError; end
   class TypeError < Error; end
 
+  # Temp description
   module ClassExtention
     def mongory
       Mongory::QueryBuilder.new(self)
