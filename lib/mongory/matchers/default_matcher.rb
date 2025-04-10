@@ -23,9 +23,9 @@ module Mongory
     class DefaultMatcher < AbstractMatcher
       # Matches the given record against the stored condition.
       # The logic dynamically chooses the appropriate sub-matcher.
-      def initialize(*)
+      def initialize(condition, *)
+        @condition_is_hash = condition.is_a?(Hash)
         super
-        @condition_is_hash = @condition.is_a?(Hash)
       end
 
       # @param record [Object] the record to be matched

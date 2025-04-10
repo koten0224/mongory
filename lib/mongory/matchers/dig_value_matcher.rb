@@ -32,8 +32,8 @@ module Mongory
       # @param key [Object] the key (or index) used to dig into the record
       # @param condition [Object] the condition to match against the extracted value
       def initialize(key, condition)
-        super(condition)
         @key = key
+        super(condition)
       end
 
       # Extracts the target value using the key and delegates to DefaultMatcher.

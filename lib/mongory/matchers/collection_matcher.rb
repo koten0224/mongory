@@ -20,9 +20,9 @@ module Mongory
     class CollectionMatcher < AbstractMultiMatcher
       # Custom matching logic: if condition is not a hash, do inclusion check.
       # Otherwise, fallback to the parent AbstractMultiMatcher#match logic.
-      def initialize(*)
+      def initialize(condition, *)
+        @condition_is_hash = condition.is_a?(Hash)
         super
-        @condition_is_hash = @condition.is_a?(Hash)
       end
 
       # @param collection [Object] the collection to be tested (usually an Array)
@@ -60,7 +60,7 @@ module Mongory
         when /^-?\d+$/
           DigValueMatcher.build(key.to_i, value)
         when *Matchers::OPERATOR_TO_CLASS_MAPPING.keys
-          Matchers.lookup(key).new(value)
+          Matchers.lookup(key).build(value)
         else
           elem_matcher.condition.merge!(key => value)
           elem_matcher
