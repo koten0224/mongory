@@ -1,6 +1,29 @@
-## [Unreleased]
+## [1.6.1] - 2025-04-11
 
-...
+### Added
+
+- **Rails Integration via Railtie**  
+  Mongory now auto-integrates with Rails if present, using a new `Mongory::Railtie` and `RailsPatch` module.
+
+- **Mongoid Integration Module**  
+  Added `mongory/mongoid` which registers `Mongoid::Criteria::Queryable::Key` for symbolic query operators (e.g. `:age.gt`).
+
+- **Conditional Auto-Require**  
+  `mongory.rb` now conditionally requires `rails` and `mongoid` integration modules when Rails or Mongoid is detected.
+
+- **YARD Documentation**  
+  Improved YARD docstrings for all public APIs, including `QueryOperator`, `InstallGenerator`, and matchers.
+
+### Changed
+
+- **Generator Initializer Cleanup**  
+  Removed direct Mongoid-specific converter registration from generator output. This logic is now encapsulated in `mongory/mongoid.rb`.
+
+- **Improved Symbol DSL Activation**  
+  Symbol snippets (`:age.gt => 30`) are now opt-in, via `Mongory.enable_symbol_snippets!`, and properly isolated from default runtime.
+
+- **Safer Core Patch for present?/blank?**  
+  When in Rails, Mongory will use `Object#present?` and `Object#blank?` instead of internal implementations, for better semantic consistency.
 
 ## [1.6.0] - 2025-04-11
 
