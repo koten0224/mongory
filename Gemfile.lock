@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    mongory (1.6.3)
+    mongory (1.6.4)
 
 GEM
   remote: https://rubygems.org/
