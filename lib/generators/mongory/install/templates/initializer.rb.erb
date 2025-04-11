@@ -63,10 +63,6 @@ Mongory.configure do |mc|
       # You may register condition key converters here.
       # Example:
       # kc.register(MyKeyObject, :trans_to_string_key_pair)
-      <% if @use_mongoid %>
-      # It's Mongoid built-in key operator that born from `:key.gt`
-      kc.register(Mongoid::Criteria::Queryable::Key, :__expr_part__)
-      <% end %>
     end
 
     cc.value_converter.configure do |vc|

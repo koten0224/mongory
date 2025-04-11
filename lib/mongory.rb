@@ -10,6 +10,7 @@ require_relative 'mongory/query_builder'
 require_relative 'mongory/query_operator'
 require_relative 'mongory/converters'
 require_relative 'mongory/rails' if defined?(Rails::Railtie)
+require_relative 'mongory/mongoid' if defined?(Mongoid)
 
 # Main namespace for Mongory DSL and configuration.
 #
