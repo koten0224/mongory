@@ -29,6 +29,8 @@ module Mongory
         ::Symbol
       ].freeze
 
+      # Initializes the matcher with a target key and condition.
+      #
       # @param key [Object] the key (or index) used to dig into the record
       # @param condition [Object] the condition to match against the extracted value
       def initialize(key, condition)
@@ -36,7 +38,7 @@ module Mongory
         super(condition)
       end
 
-      # Extracts the target value using the key and delegates to DefaultMatcher.
+      # Matches the record by extracting the value via key and applying the condition.
       #
       # @param record [Object] the record to match
       # @return [Boolean] whether the extracted value matches the condition

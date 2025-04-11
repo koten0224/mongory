@@ -3,7 +3,9 @@
 module Mongory
   module Matchers
     # NinMatcher implements the `$nin` (not in) operator.
+    #
     # It returns true if *none* of the record's values appear in the condition array.
+    #
     # The record is cast to an array to ensure uniform behavior across types.
     #
     # This matcher is the logical opposite of InMatcher.
@@ -22,7 +24,7 @@ module Mongory
       # @param record [Object] the value to be tested
       # @return [Boolean] whether the record is disjoint from the condition array
       def match(record)
-        blank?(@condition & Array(record))
+        is_blank?(@condition & Array(record))
       end
 
       # Ensures the condition is a valid array.

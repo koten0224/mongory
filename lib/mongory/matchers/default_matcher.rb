@@ -3,6 +3,7 @@
 module Mongory
   module Matchers
     # DefaultMatcher is the main entry point of Mongory's matcher pipeline.
+    #
     # It delegates matching to more specific matchers depending on the shape
     # of the given condition and record.
     #
@@ -11,9 +12,6 @@ module Mongory
     #   - If the record is an Array, delegate to CollectionMatcher.
     #   - If the condition is a Hash, delegate to ConditionMatcher.
     #   - Otherwise, return false.
-    #
-
-    #
     # @example
     #   matcher = DefaultMatcher.build({ age: { :$gte => 30 } })
     #   matcher.match(record) #=> true or false
@@ -22,11 +20,14 @@ module Mongory
     class DefaultMatcher < AbstractMatcher
       # Matches the given record against the stored condition.
       # The logic dynamically chooses the appropriate sub-matcher.
+      # @param condition [Object] the raw condition
       def initialize(condition, *)
         @condition_is_hash = condition.is_a?(Hash)
         super
       end
 
+      # Matches the given record against the condition.
+      #
       # @param record [Object] the record to be matched
       # @return [Boolean] whether the record satisfies the condition
       def match(record)
@@ -60,6 +61,9 @@ module Mongory
         ConditionMatcher.build(@condition)
       end
 
+      # Validates the nested condition matcher, if applicable.
+      #
+      # @return [void]
       def deep_check_validity!
         condition_matcher.deep_check_validity! if @condition_is_hash
       end

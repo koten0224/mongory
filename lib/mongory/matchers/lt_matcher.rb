@@ -3,6 +3,7 @@
 module Mongory
   module Matchers
     # LtMatcher implements the `$lt` (less than) operator.
+    #
     # It returns true if the record is strictly less than the condition value.
     #
     # This matcher inherits from AbstractOperatorMatcher and uses the `<` operator.

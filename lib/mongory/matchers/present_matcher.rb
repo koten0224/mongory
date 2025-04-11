@@ -3,6 +3,7 @@
 module Mongory
   module Matchers
     # PresentMatcher implements the `$present` operator.
+    #
     # It returns true if the record value is considered "present"
     # (i.e., not nil, not empty, not KEY_NOT_FOUND), and matches
     # the expected boolean condition.
@@ -27,7 +28,7 @@ module Mongory
       # @param record [Object] the original value
       # @return [Boolean] whether the value is present
       def preprocess(record)
-        present?(super)
+        is_present?(super)
       end
 
       # Uses Ruby `==` to compare the presence result to the expected boolean.

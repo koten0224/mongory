@@ -3,6 +3,7 @@
 module Mongory
   module Matchers
     # NeMatcher implements the `$ne` (not equal) operator.
+    #
     # It returns true if the record is *not equal* to the condition.
     #
     # This matcher inherits its logic from AbstractOperatorMatcher

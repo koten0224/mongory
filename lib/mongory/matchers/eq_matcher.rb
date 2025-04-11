@@ -3,6 +3,7 @@
 module Mongory
   module Matchers
     # EqMatcher matches values using the equality operator `==`.
+    #
     # It inherits from AbstractOperatorMatcher and defines its operator as `:==`.
     #
     # Used for conditions like:
