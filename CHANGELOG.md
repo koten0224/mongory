@@ -1,3 +1,11 @@
+## [1.6.4] - 2025-04-11
+
+### Fixed
+
+- `MongoidPatch` now references `Mongory::Converters::KeyConverter` directly instead of lazily accessing it through `.condition_converter`.
+- Restored missing `Mongory.configure` method accidentally removed in earlier documentation refactor.
+- Ensured all `.configure` entrypoints are consistently available for all converters.
+
 ## [1.6.1] - 2025-04-11
 
 ### Added
