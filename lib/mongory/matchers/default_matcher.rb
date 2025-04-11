@@ -3,6 +3,7 @@
 module Mongory
   module Matchers
     # DefaultMatcher is the main entry point of Mongory's matcher pipeline.
+    # 
     # It delegates matching to more specific matchers depending on the shape
     # of the given condition and record.
     #
@@ -11,9 +12,6 @@ module Mongory
     #   - If the record is an Array, delegate to CollectionMatcher.
     #   - If the condition is a Hash, delegate to ConditionMatcher.
     #   - Otherwise, return false.
-    #
-
-    #
     # @example
     #   matcher = DefaultMatcher.build({ age: { :$gte => 30 } })
     #   matcher.match(record) #=> true or false

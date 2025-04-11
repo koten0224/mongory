@@ -7,6 +7,7 @@ module Mongory
   #
   # It supports condition chaining (`where`, `or`, `not`),
   # sorting (`asc`, `desc`), limiting, and plucking fields.
+  # 
   # Internally it compiles all conditions and invokes `QueryMatcher`.
   #
   # @example

@@ -3,10 +3,12 @@
 module Mongory
   module Matchers
     # AbstractMatcher is the base class for all matchers in Mongory.
+    # 
     # It defines a common interface (`#match?`) and provides shared behavior
     # such as condition storage, optional conversion handling, and debugging output.
     #
     # Subclasses are expected to implement `#match(record)` to define their matching logic.
+    # 
     # This class also supports caching of lazily-built matchers via `define_matcher`.
     #
     # @abstract

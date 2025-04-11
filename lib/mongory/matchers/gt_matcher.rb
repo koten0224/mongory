@@ -3,6 +3,7 @@
 module Mongory
   module Matchers
     # GtMatcher implements the `$gt` (greater than) operator.
+    # 
     # It returns true if the record is strictly greater than the condition.
     #
     # Inherits core logic from AbstractOperatorMatcher, including

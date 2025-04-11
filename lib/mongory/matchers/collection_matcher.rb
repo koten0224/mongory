@@ -7,6 +7,7 @@ module Mongory
     # more complex nested logic using an `ElemMatchMatcher`.
     #
     # If the condition is not a Hash, it falls back to simple inclusion check (`Array#include?`).
+    # 
     # If the condition is a Hash, each key/value is used to build an appropriate matcher.
     #
     # Submatchers are built dynamically depending on whether the key is an integer index,

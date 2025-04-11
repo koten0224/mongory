@@ -3,6 +3,7 @@
 module Mongory
   module Matchers
     # OrMatcher implements the `$or` logical operator.
+    # 
     # It evaluates an array of subconditions and returns true
     # if *any one* of them matches.
     #

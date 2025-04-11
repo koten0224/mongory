@@ -3,7 +3,9 @@
 module Mongory
   module Matchers
     # NinMatcher implements the `$nin` (not in) operator.
+    # 
     # It returns true if *none* of the record's values appear in the condition array.
+    # 
     # The record is cast to an array to ensure uniform behavior across types.
     #
     # This matcher is the logical opposite of InMatcher.

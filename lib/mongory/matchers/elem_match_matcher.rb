@@ -3,6 +3,7 @@
 module Mongory
   module Matchers
     # ElemMatchMatcher implements the logic for Mongo-style `$elemMatch`.
+    # 
     # It is used to determine if *any* element in an array matches the given condition.
     #
     # This matcher delegates element-wise comparison to ConditionMatcher,

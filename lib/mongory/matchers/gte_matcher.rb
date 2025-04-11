@@ -3,6 +3,7 @@
 module Mongory
   module Matchers
     # GteMatcher implements the `$gte` (greater than or equal) operator.
+    # 
     # It returns true if the record is greater than or equal to the condition value.
     #
     # Inherits comparison logic and error safety from AbstractOperatorMatcher.

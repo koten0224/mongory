@@ -3,6 +3,7 @@
 module Mongory
   module Matchers
     # InMatcher implements the `$in` operator.
+    # 
     # It checks whether the record (converted to an array) has any overlap
     # with the condition array. This supports both scalar and array inputs.
     #
