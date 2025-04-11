@@ -44,12 +44,15 @@ RSpec.describe Mongory::QueryBuilder do
       names = []
       subject.each { |r| names << r['name'] }
       expect(names).to contain_exactly('Alice', 'Carol')
+      expect(names).not_to be_include('Bob')
     end
 
     it 'returns an enumerator when no block given' do
       enumerator = subject.each
       expect(enumerator).to be_a(Enumerator)
-      expect(enumerator.map { |r| r['name'] }).to contain_exactly('Alice', 'Carol')
+      names = enumerator.map { |x| x['name'] }
+      expect(names).to contain_exactly('Alice', 'Carol')
+      expect(names).not_to contain_exactly('Bob')
     end
   end
 
@@ -68,12 +71,14 @@ RSpec.describe Mongory::QueryBuilder do
       let(:condition) { { :age.gt => 28 } }
 
       it { is_expected.to contain_exactly(include('name' => 'Alice'), include('name' => 'Carol')) }
+      it { is_expected.not_to contain_exactly(include('name' => 'Bob')) }
     end
 
     context 'when filtering by equality' do
       let(:condition) { { name: 'Bob' } }
 
       it { is_expected.to contain_exactly(include('name' => 'Bob')) }
+      it { is_expected.not_to contain_exactly(include('name' => 'Alice'), include('name' => 'Carol')) }
     end
 
     context 'when filtering by in operator' do
@@ -220,6 +225,7 @@ RSpec.describe Mongory::QueryBuilder do
           include('name' => 'Carol'),
           include('name' => 'Dave')
         )
+        is_expected.not_to contain_exactly(include('name' => 'Alice'))
       end
     end
 
