@@ -5,27 +5,27 @@
 ## [1.6.0] - 2025-04-11
 
 ### Added
-- **Custom Operator: `$every`**  
+- **Custom Operator: `$every`**
   Added support for `$every`, a new matcher that succeeds only if *all* elements in an array satisfy the condition.
-- **Custom Error Class: `Mongory::TypeError`**  
+- **Custom Error Class: `Mongory::TypeError`**
   Replaces Ruby's `TypeError` for internal validation, enabling cleaner and safer error handling.
-- **Internal API: `SingletonBuilder`**  
+- **Internal API: `SingletonBuilder`**
   Introduced a unified abstraction for building singleton converters and utilities (used by `Debugger`, all Converters, etc.).
 
 ### Changed
-- **Unified Matcher Construction**  
+- **Unified Matcher Construction**
   All matchers now use `.build(...)` instead of `.new(...)` for consistent instantiation.
-- **Simplified Matcher Dispatch**  
+- **Simplified Matcher Dispatch**
   Multi-matchers (`$and`, `$or`, etc.) now unwrap themselves when only one submatcher is present.
-- **Centralized Matcher Responsibility**  
+- **Centralized Matcher Responsibility**
   `ConditionMatcher` replaces `DefaultMatcher` as the default dispatcher for query conditions.
-- **Consistent Data Conversion**  
+- **Consistent Data Conversion**
   All nested matchers (e.g. `DigValueMatcher`, `ElemMatchMatcher`) now apply `data_converter` at match-time.
 
 ### Fixed
-- **Validation Improvements**  
+- **Validation Improvements**
   Introduced `deep_check_validity!` to ensure all nested matchers are properly verified.
-- **Edge Case Consistency**  
+- **Edge Case Consistency**
   Cleaner fallback handling and key traversal behavior under complex or mixed-type query structures.
 
 ---
