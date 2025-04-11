@@ -32,30 +32,30 @@ Mongory.configure do |mc|
   # Here to let you use `some_collection.mongory.where(...)` to build mongory query filter.
   # Or disable it, and use `Mongory.build_query(some_collection).where(...)` instead.
   mc.register(Array)
-  <% if @use_ar %>
+  <% if @use_ar -%>
   mc.register(ActiveRecord::Relation)
-  <% end %>
-  <% if @use_mongoid %>
+  <% end -%>
+  <% if @use_mongoid -%>
   mc.register(Mongoid::Criteria)
-  <% end %>
-  <% if @use_sequel %>
+  <% end -%>
+  <% if @use_sequel -%>
   mc.register(Sequel::Dataset)
-  <% end %>
+  <% end -%>
 
   mc.data_converter.configure do |dc|
     # Here to let you customize how to normalizing your ORM object or custom class into comparable format.
     # Example:
     # dc.register(ActiveRecord::Base, :attributes)
-    <% if @use_ar %>
+    <% if @use_ar -%>
     dc.register(ActiveRecord::Base, :attributes)
-    <% end %>
-    <% if @use_mongoid %>
+    <% end -%>
+    <% if @use_mongoid -%>
     dc.register(Mongoid::Document, :as_document)
     dc.register(BSON::ObjectId, :to_s)
-    <% end %>
-    <% if @use_sequel %>
+    <% end -%>
+    <% if @use_sequel -%>
     dc.register(Sequel::Model) { values.transform_keys(&:to_s) }
-    <% end %>
+    <% end -%>
   end
 
   mc.condition_converter.configure do |cc|
@@ -69,9 +69,9 @@ Mongory.configure do |mc|
       # You may register condition value converters here.
       # Example:
       # vc.register(MyCollectionType) { map { |v| vc.convert(v) } }
-      <% if @use_mongoid %>
+      <% if @use_mongoid -%>
       vc.register(BSON::ObjectId, :to_s)
-      <% end %>
+      <% end -%>
     end
   end
 end
