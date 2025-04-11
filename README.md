@@ -6,6 +6,18 @@ A Mongo-like in-memory query DSL for Ruby.
 Mongory lets you filter and query in-memory collections using syntax and semantics similar to MongoDB. It is designed for expressive chaining, symbolic operators, and composable matchers.
 
 ## Installation
+### Rails Generator
+
+You can install a starter configuration with:
+
+```bash
+rails g mongory:install
+```
+
+This will generate `config/initializers/mongory.rb` and set up:
+- Optional symbol operator snippets (e.g. `:age.gt => 18`)
+- Class registration (e.g. `Array`, `ActiveRecord::Relation`, etc.)
+- Custom value/key converters for your ORM
 
 Add to your Gemfile:
 
@@ -48,7 +60,11 @@ puts result
 | Boolean      | `$and`, `$or`, `$not`               |
 | Pattern      | `$regex`                            |
 | Presence     | `$exists`, `$present`               |
-| Nested Match | `$elemMatch`                        |
+| Nested Match | `$elemMatch`, `$every`                      |
+
+Mongory extension:
+- `$present` - checks if the record is not empty or false, nil
+- `$every` – checks that all elements in an array match the condition
 
 Operators can be chained from symbols:
 
@@ -57,6 +73,17 @@ Operators can be chained from symbols:
 ```
 
 ## Query API Reference
+### Registering Models
+
+To allow calling `.mongory` on collections, use `register`:
+
+```ruby
+Mongory.register(Array)
+Mongory.register(ActiveRecord::Relation)
+User.where(status: 'active').mongory.where(:age.gte => 18, :name.regex => "^S.+")
+```
+
+This injects a `.mongory` method via an internal extension module.
 
 - `.where(cond)` → adds `$and` condition
 - `.or(*conds)` → adds `$or` conditions

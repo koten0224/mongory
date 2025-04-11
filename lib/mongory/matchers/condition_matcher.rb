@@ -3,6 +3,7 @@
 module Mongory
   module Matchers
     # ConditionMatcher is responsible for handling field-level query conditions.
+    #
     # It receives a Hash of key-value pairs and delegates each one to an appropriate matcher
     # based on whether the key is a recognized operator or a data field path.
     #
@@ -18,10 +19,10 @@ module Mongory
     #
     # @see AbstractMultiMatcher
     class ConditionMatcher < AbstractMultiMatcher
+      dispatch!
       # Constructs the appropriate submatcher for a key-value pair.
       # If the key is a registered operator, dispatches to the corresponding matcher.
       # Otherwise, assumes the key is a field path and uses DigValueMatcher.
-      dispatch!
 
       # @see DigValueMatcher
       # @see Matchers.lookup

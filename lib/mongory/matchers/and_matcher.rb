@@ -3,7 +3,9 @@
 module Mongory
   module Matchers
     # AndMatcher implements the `$and` logical operator.
+    #
     # It receives an array of subconditions and matches only if *all* of them succeed.
+    #
     # Each subcondition is dispatched through a ConditionMatcher, with conversion disabled
     # to avoid redundant processing.
     #
@@ -23,24 +25,24 @@ module Mongory
       # Conversion is disabled to avoid double-processing.
       dispatch!
 
-      # @see ConditionMatcher
-      # @param condition [Object] the raw subcondition
-      # @return [ConditionMatcher] the matcher instance for the condition
+      # Builds a matcher for each subcondition using ConditionMatcher.
+      #
+      # @param condition [Hash] subcondition hash
+      # @return [AbstractMatcher]
       def build_sub_matcher(condition)
         ConditionMatcher.build(condition)
       end
 
-      # Uses the `:all?` operator to ensure all subconditions must match.
+      # Combines submatcher results using `:all?`.
       #
-      # @return [Symbol] the combining operator
+      # @return [Symbol]
       def operator
         :all?
       end
 
-      # Validates that the condition is an Array.
-      # Raises a TypeError if the input is malformed.
+      # Ensures the condition is an array of hashes.
       #
-      # @raise [TypeError] if condition is not an Array
+      # @raise [Mongory::TypeError] if not valid
       # @return [void]
       def check_validity!
         raise TypeError, '$and needs an array' unless @condition.is_a?(Array)

@@ -3,6 +3,7 @@
 module Mongory
   module Matchers
     # RegexMatcher implements the `$regex` operator.
+    #
     # It returns true if the record string matches the given pattern string.
     #
     # Although `@condition` is passed as a string (due to ValueConverter converting

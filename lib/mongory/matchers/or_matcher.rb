@@ -3,6 +3,7 @@
 module Mongory
   module Matchers
     # OrMatcher implements the `$or` logical operator.
+    #
     # It evaluates an array of subconditions and returns true
     # if *any one* of them matches.
     #
@@ -21,9 +22,9 @@ module Mongory
     #
     # @see AbstractMultiMatcher
     class OrMatcher < AbstractMultiMatcher
+      dispatch!
       # Constructs a ConditionMatcher for each subcondition.
       # Conversion is disabled to avoid double-processing.
-      dispatch!
 
       # @see ConditionMatcher
       # @param condition [Object] a subcondition to be wrapped
@@ -39,9 +40,9 @@ module Mongory
         :any?
       end
 
-      # Ensures the condition is an array of subconditions.
+      # Ensures the condition is an array of hashes.
       #
-      # @raise [TypeError] if condition is not an array
+      # @raise [Mongory::TypeError] if not valid
       # @return [void]
       def check_validity!
         raise TypeError, '$or needs an array' unless @condition.is_a?(Array)
