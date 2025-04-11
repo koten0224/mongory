@@ -7,7 +7,9 @@ module Mongory
   # @see Utils::RailsPatch
   class Railtie < Rails::Railtie
     initializer 'mongory.patch_utils' do
-      Mongory::Utils.prepend(Mongory::Utils::RailsPatch)
+      [Mongory::Utils, *Mongory::Utils.included_classes].each do |klass|
+        klass.prepend(Mongory::Utils::RailsPatch)
+      end
     end
   end
 end
