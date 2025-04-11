@@ -4,7 +4,7 @@ require 'rails'
 require_relative 'utils/rails_patch'
 
 module Mongory
-  # Temp description
+  # @see Utils::RailsPatch
   class Railtie < Rails::Railtie
     initializer 'mongory.patch_utils' do
       Mongory::Utils.prepend(Mongory::Utils::RailsPatch)
