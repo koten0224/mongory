@@ -3,7 +3,7 @@
 module Mongory
   module Matchers
     # EveryMatcher implements the logic for Mongo-style `$every` which is not really support in MongoDB.
-    # 
+    #
     # It is used to determine if *all* element in an array matches the given condition.
     #
     # This matcher delegates element-wise comparison to ConditionMatcher,

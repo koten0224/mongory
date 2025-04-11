@@ -3,7 +3,7 @@
 module Mongory
   module Matchers
     # DefaultMatcher is the main entry point of Mongory's matcher pipeline.
-    # 
+    #
     # It delegates matching to more specific matchers depending on the shape
     # of the given condition and record.
     #

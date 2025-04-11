@@ -3,7 +3,7 @@
 module Mongory
   module Matchers
     # PresentMatcher implements the `$present` operator.
-    # 
+    #
     # It returns true if the record value is considered "present"
     # (i.e., not nil, not empty, not KEY_NOT_FOUND), and matches
     # the expected boolean condition.

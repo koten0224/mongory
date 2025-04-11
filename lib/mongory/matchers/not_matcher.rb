@@ -3,7 +3,7 @@
 module Mongory
   module Matchers
     # NotMatcher implements the `$not` logical operator.
-    # 
+    #
     # It returns true if the wrapped matcher fails, effectively inverting the result.
     #
     # It delegates to DefaultMatcher and simply negates the outcome.

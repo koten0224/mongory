@@ -35,7 +35,7 @@ module Mongory
     end
 
     # Converts the operator and value into a condition hash.
-    # 
+    #
     # Typically called by the key converter.
     #
     # @param other [Object] the value to match against

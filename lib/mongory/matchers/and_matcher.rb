@@ -3,9 +3,9 @@
 module Mongory
   module Matchers
     # AndMatcher implements the `$and` logical operator.
-    # 
+    #
     # It receives an array of subconditions and matches only if *all* of them succeed.
-    # 
+    #
     # Each subcondition is dispatched through a ConditionMatcher, with conversion disabled
     # to avoid redundant processing.
     #
