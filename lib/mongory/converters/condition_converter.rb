@@ -27,6 +27,15 @@ module Mongory
         result
       end
 
+      # Opens a configuration block to register more converters.
+      #
+      # @yield DSL block to configure more rules
+      # @return [void]
+      def configure
+        yield self
+        freeze
+      end
+
       # Provides a block that merges values for overlapping keys in a deep way.
       #
       # @return [Proc]
