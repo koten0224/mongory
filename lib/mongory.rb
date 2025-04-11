@@ -27,6 +27,31 @@ module Mongory
   class Error < StandardError; end
   class TypeError < Error; end
 
+  # Yields Mongory for configuration and freezes key components.
+  #
+  # @example Configure converters
+  #   Mongory.configure do |mc|
+  #     mc.data_converter.configure do |dc|
+  #       dc.register(MyType) { transform(self) }
+  #     end
+  #
+  #     mc.condition_converter.key_converter.configure do |kc|
+  #       kc.register(MyKeyType) { normalize_key(self) }
+  #     end
+  #
+  #     mc.condition_converter.value_converter.configure do |vc|
+  #       vc.register(MyValueType) { cast_value(self) }
+  #     end
+  #   end
+  #
+  # @yieldparam self [Mongory]
+  # @return [void]
+  def self.configure
+    yield self
+    data_converter.freeze
+    condition_converter.freeze
+  end
+
   # Returns the data converter instance.
   #
   # @return [Converters::DataConverter]
