@@ -3,12 +3,12 @@
 module Mongory
   module Matchers
     # AbstractMatcher is the base class for all matchers in Mongory.
-    # 
+    #
     # It defines a common interface (`#match?`) and provides shared behavior
     # such as condition storage, optional conversion handling, and debugging output.
     #
     # Subclasses are expected to implement `#match(record)` to define their matching logic.
-    # 
+    #
     # This class also supports caching of lazily-built matchers via `define_matcher`.
     #
     # @abstract
@@ -75,8 +75,6 @@ module Mongory
         Debugger.indent_level -= 1
       end
 
-      private
-
       # Validates the condition (no-op by default).
       # Override in subclasses to raise error if invalid.
       #
@@ -89,6 +87,8 @@ module Mongory
       def deep_check_validity!
         check_validity!
       end
+
+      private
 
       # Normalizes a potentially missing record value.
       # Converts sentinel `KEY_NOT_FOUND` to nil.
