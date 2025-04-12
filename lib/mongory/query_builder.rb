@@ -72,9 +72,23 @@ module Mongory
     # @param conditions [Array<Hash>]
     # @return [QueryBuilder]
     def or(*conditions)
+      operator = '$or'
       dup_instance_exec do
-        add_conditions('$or', conditions)
+        if @matcher.condition.each_key.all? { |k| k == operator }
+          add_conditions(operator, conditions)
+        else
+          set_matcher(operator => [@matcher.condition.dup, *conditions])
+        end
       end
+    end
+
+    # Adds a `$or` query combined inside an `$and` block.
+    # This is a semantic alias for `.and('$or' => [...])`
+    #
+    # @param conditions [Array<Hash>]
+    # @return [QueryBuilder]
+    def any_of(*conditions)
+      self.and('$or' => conditions)
     end
 
     # @deprecated Will be removed in v2.0.0. Sort externally instead.

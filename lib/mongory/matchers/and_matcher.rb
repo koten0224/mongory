@@ -30,7 +30,18 @@ module Mongory
       # @param condition [Hash] subcondition hash
       # @return [AbstractMatcher]
       def build_sub_matcher(condition)
-        ConditionMatcher.build(condition)
+        ConditionMatcher.new(condition)
+      end
+
+      # Returns the list of all submatchers, recursively flattened.
+      # Deduplicates matchers using `uniq_key` to avoid redundant evaluation.
+      #
+      # @return [Array<AbstractMatcher>]
+      # @see AbstractMatcher#uniq_key
+      def matchers
+        return @matchers if defined?(@matchers)
+
+        @matchers = super.flat_map(&:matchers).uniq(&:uniq_key)
       end
 
       # Combines submatcher results using `:all?`.

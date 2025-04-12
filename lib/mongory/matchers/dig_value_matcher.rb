@@ -46,6 +46,12 @@ module Mongory
         super(Mongory.data_converter.convert(dig_value(record)))
       end
 
+      # @return [Object] a deduplication key used for matchers inside multi-match constructs
+      # @see AbstractMultiMatcher#matchers
+      def uniq_key
+        { @key => @condition }
+      end
+
       private
 
       def tree_title
