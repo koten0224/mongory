@@ -51,11 +51,11 @@ module Mongory
 
       # Lazily builds and caches the array of sub-matchers.
       # Subclasses provide the implementation of `#build_sub_matcher`.
-      # Duplicate matchers (by condition) are removed to avoid redundancy.
+      # Duplicate matchers (by uniq_key) are removed to avoid redundancy.
       #
       # @return [Array<AbstractMatcher>] list of sub-matchers
       define_instance_cache_method(:matchers) do
-        @condition.map(&method(:build_sub_matcher)).uniq(&:condition)
+        @condition.map(&method(:build_sub_matcher)).uniq(&:uniq_key)
       end
 
       # Optional hook for subclasses to transform the input record before matching.

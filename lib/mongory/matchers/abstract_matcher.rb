@@ -31,6 +31,10 @@ module Mongory
       # @return [Object] the raw condition this matcher was initialized with
       attr_reader :condition
 
+      # @return [Object] a unique key representing this matcher instance, used for deduplication
+      # @see AbstractMultiMatcher#matchers
+      alias_method :uniq_key, :condition
+
       # Initializes the matcher with a raw condition.
       #
       # @param condition [Object] the condition to match against

@@ -9,7 +9,7 @@ RSpec.describe Mongory::QueryBuilder do
         .new(records)
         .where(:tags.in => ['ruby', 'qa'])
         .and(:age.gte => 25)
-        .or({ name: /e/ }, { :tags.present => true })
+        .any_of({ name: /e/ }, { :tags.present => true })
         .asc(:age)
         .limit(3)
         .pluck(:name)
