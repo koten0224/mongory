@@ -67,7 +67,7 @@ module Mongory
         when *Matchers::OPERATOR_TO_CLASS_MAPPING.keys
           Matchers.lookup(key).build(value)
         else
-          elem_matcher.condition.merge!(key => value)
+          elem_matcher.condition[key] = value
           elem_matcher
         end
       end
