@@ -88,7 +88,27 @@ module Mongory
         check_validity!
       end
 
+      # Recursively prints the matcher structure into a formatted tree.
+      # Supports indentation and branching layout using prefix symbols.
+      #
+      # @param pp [PP] the pretty-printer instance
+      # @param prefix [String] tree prefix (indentation + lines)
+      # @param is_last [Boolean] whether this node is the last among siblings
+      # @return [void]
+      def render_tree(pp, prefix = '', is_last: true)
+        pp.text("#{prefix}#{is_last ? '└─ ' : '├─ '}#{tree_title}\n")
+      end
+
       private
+
+      # Returns a single-line string representing this matcher in the tree output.
+      # Format: `<MatcherType>: <condition.inspect>`
+      #
+      # @return [String]
+      def tree_title
+        matcher_name = self.class.name.split('::').last.sub('Matcher', '')
+        "#{matcher_name}: #{@condition.inspect}"
+      end
 
       # Normalizes a potentially missing record value.
       # Converts sentinel `KEY_NOT_FOUND` to nil.

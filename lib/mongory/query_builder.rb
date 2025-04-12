@@ -142,6 +142,18 @@ module Mongory
 
     alias_method :selector, :condition
 
+    # Prints the internal matcher tree structure for the current query.
+    # Uses `PP` to output a human-readable visual tree of matchers.
+    # This is useful for debugging and visualizing complex conditions.
+    #
+    # @return [void]
+    def explain
+      @matcher.match(@records.first)
+      pp = PP.new($stdout)
+      @matcher.render_tree(pp)
+      pp.flush
+    end
+
     private
 
     # @private

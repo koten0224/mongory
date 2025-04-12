@@ -85,6 +85,19 @@ module Mongory
       def deep_check_validity!
         super if @condition_is_hash
       end
+
+      # Outputs the tree representation of this matcher.
+      # Can optionally yield to allow conditional delegation to submatchers.
+      #
+      # @param pp [PP]
+      # @param prefix [String]
+      # @param is_last [Boolean]
+      # @return [void]
+      def render_tree(*)
+        super do
+          return unless @condition_is_hash
+        end
+      end
     end
   end
 end
