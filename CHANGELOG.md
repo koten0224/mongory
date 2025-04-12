@@ -1,3 +1,23 @@
+## [1.7.0] - 2025-04-13
+
+### Added
+
+- `QueryBuilder#explain` prints a tree-structured matcher breakdown using `PP`, useful for debugging.
+- Matchers now support `#render_tree` and `#tree_title`, enabling structured introspection.
+- `QueryBuilder#any_of` added as a semantic alias for `.and('$or' => [...])`.
+
+### Changed
+
+- Filter logic restructured to use immediately-parsed matchers (`set_matcher`) instead of building on `result`.
+- `.each` now directly filters via matcher tree evaluation, removing dependency on an internal condition hash.
+- Removed legacy `.result` method.
+- `.or(...)` now wraps existing conditions intelligently when merging mixed operator states.
+- `.pluck` and `.sort_by_keys` no longer convert keys to strings, fixing inconsistency with native Mongoid behavior.
+
+### Deprecated
+
+- `.asc` and `.desc` now emit deprecation warnings; they will be removed in v2.0.0.
+
 ## [1.6.4] - 2025-04-11
 
 ### Fixed

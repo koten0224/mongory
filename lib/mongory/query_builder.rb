@@ -13,7 +13,7 @@ module Mongory
   # @example
   #   records.mongory
   #     .where(:age.gte => 18)
-  #     .or({ :name => /J/ }, { :name.eq => "Bob" })
+  #     .or({ :name => /J/ }, { :name.eq => 'Bob' })
   #     .desc(:age)
   #     .limit(2)
   #     .to_a
@@ -21,26 +21,27 @@ module Mongory
     include ::Enumerable
     include Utils
 
-    # @return [Hash] the raw compiled condition
-    attr_reader :condition
-
-    # @param records [Enumerable] the in-memory dataset to query
+    # Initializes a new query builder with the given record set.
+    #
+    # @param records [Enumerable] the collection to query against
     def initialize(records)
       @records = records
-      @condition = Hash.new { |h, k| h[k] = [] }
+      set_matcher
     end
 
-    # Enumerates over filtered result set.
+    # Iterates through all records that match the current matcher.
     #
-    # @yieldparam record [Object] an item from the original enumerable
-    # @return [Enumerator, void]
-    def each(&block)
+    # @yieldparam record [Object]
+    # @return [Enumerator]
+    def each
       return to_enum(:each) unless block_given?
 
-      result.each(&block)
+      @records.each do |record|
+        yield record if @matcher.match?(record)
+      end
     end
 
-    # Adds a condition using `$and`.
+    # Adds a condition to filter records using the given condition.
     #
     # @param condition [Hash]
     # @return [QueryBuilder] a new builder instance
@@ -48,27 +49,7 @@ module Mongory
       self.and(condition)
     end
 
-    # Adds multiple `$and` conditions.
-    #
-    # @param conditions [Array<Hash>]
-    # @return [QueryBuilder]
-    def and(*conditions)
-      dup_instance_exec do
-        @condition['$and'] += conditions
-      end
-    end
-
-    # Adds multiple `$or` conditions.
-    #
-    # @param conditions [Array<Hash>]
-    # @return [QueryBuilder]
-    def or(*conditions)
-      dup_instance_exec do
-        @condition['$or'] += conditions
-      end
-    end
-
-    # Adds a `$not` wrapper to a condition.
+    # Adds a negated condition to the current query.
     #
     # @param condition [Hash]
     # @return [QueryBuilder]
@@ -76,63 +57,123 @@ module Mongory
       self.and('$not' => condition)
     end
 
-    # Sorts results by given keys ascendingly.
+    # Adds one or more conditions combined with `$and`.
     #
-    # @param keys [Array<Symbol, String>]
+    # @param conditions [Array<Hash>]
     # @return [QueryBuilder]
-    def asc(*keys)
-      order_by_fields(*keys, direction: :asc)
+    def and(*conditions)
+      dup_instance_exec do
+        add_conditions('$and', conditions)
+      end
     end
 
-    # Sorts results by given keys descendingly.
+    # Adds one or more conditions combined with `$or`.
     #
-    # @param keys [Array<Symbol, String>]
+    # @param conditions [Array<Hash>]
     # @return [QueryBuilder]
-    def desc(*keys)
-      order_by_fields(*keys, direction: :desc)
+    def or(*conditions)
+      operator = '$or'
+      dup_instance_exec do
+        if @matcher.condition.each_key.all? { |k| k == operator }
+          add_conditions(operator, conditions)
+        else
+          set_matcher(operator => [@matcher.condition.dup, *conditions])
+        end
+      end
     end
 
-    # Limits the number of records returned.
+    # Adds a `$or` query combined inside an `$and` block.
+    # This is a semantic alias for `.and('$or' => [...])`
+    #
+    # @param conditions [Array<Hash>]
+    # @return [QueryBuilder]
+    def any_of(*conditions)
+      self.and('$or' => conditions)
+    end
+
+    # @deprecated Will be removed in v2.0.0. Sort externally instead.
+    # Sorts the records by the given keys in ascending order.
+    #
+    # @param sort_keys [Array<Symbol, String>]
+    # @return [QueryBuilder]
+    def asc(*sort_keys)
+      warn '[Mongory] `Mongory::QueryBuilder#asc` is deprecated and will be removed in v2.0.0.' \
+           'Please sort outside Mongory.'
+
+      dup_instance_exec do
+        @records = sort_by_keys(sort_keys) do |a, b|
+          a <=> b
+        end
+      end
+    end
+
+    # @deprecated Will be removed in v2.0.0. Sort externally instead.
+    # Sorts the records by the given keys in descending order.
+    #
+    # @param sort_keys [Array<Symbol, String>]
+    # @return [QueryBuilder]
+    def desc(*sort_keys)
+      warn '[Mongory] `Mongory::QueryBuilder#desc` is deprecated and will be removed in v2.0.0.' \
+           'Please sort outside Mongory.'
+
+      dup_instance_exec do
+        @records = sort_by_keys(sort_keys) do |a, b|
+          b <=> a
+        end
+      end
+    end
+
+    # Limits the number of records returned by the query.
     #
     # @param count [Integer]
     # @return [QueryBuilder]
     def limit(count)
       dup_instance_exec do
-        @limit = count
+        @records = take(count)
       end
     end
 
-    # Extracts specific fields from each record.
+    # Extracts selected fields from matching records.
     #
     # @param field [Symbol, String]
     # @param fields [Array<Symbol, String>]
     # @return [Array<Object>, Array<Array<Object>>]
     def pluck(field, *fields)
       if fields.empty?
-        map { |record| record[field.to_s] }
+        map { |record| record[field] }
       else
         fields.unshift(field)
-        map { |record| fields.map { |key| record[key.to_s] } }
+        map { |record| fields.map { |key| record[key] } }
       end
+    end
+
+    # Returns the raw parsed condition for this query.
+    #
+    # @return [Hash] the raw compiled condition
+    def condition
+      @matcher.condition
+    end
+
+    alias_method :selector, :condition
+
+    # Prints the internal matcher tree structure for the current query.
+    # Uses `PP` to output a human-readable visual tree of matchers.
+    # This is useful for debugging and visualizing complex conditions.
+    #
+    # @return [void]
+    def explain
+      @matcher.match(@records.first)
+      pp = PP.new($stdout)
+      @matcher.render_tree(pp)
+      pp.flush
     end
 
     private
 
-    # Records sorting helper with direction.
+    # @private
+    # Duplicates the query and executes the block in context.
     #
-    # @param keys [Array<String, Symbol>]
-    # @param direction [Symbol] :asc or :desc
-    # @return [void]
-    def order_by_fields(*keys, direction:)
-      dup_instance_exec do
-        @sort_keys = keys
-        @sort_direction = direction
-      end
-    end
-
-    # Duplicates the current instance and runs a block inside it.
-    #
-    # @yield a block executed in the context of the cloned object
+    # @yieldparam dup [QueryBuilder]
     # @return [QueryBuilder]
     def dup_instance_exec(&block)
       dup.tap do |obj|
@@ -140,31 +181,39 @@ module Mongory
       end
     end
 
-    # Performs deep dup of internal state for immutable chaining.
+    # @private
+    # Builds the internal matcher tree from a condition hash.
+    # Used to eagerly parse conditions to improve inspect/debug visibility.
     #
-    # @return [QueryBuilder]
-    def dup
-      super.tap do |obj|
-        obj.instance_exec do
-          @condition = @condition.dup
-        end
-      end
+    # @param condition [Hash]
+    # @return [void]
+    def set_matcher(condition = {})
+      @matcher = QueryMatcher.new(condition)
     end
 
-    # Executes the actual query logic by evaluating the matcher.
+    # @private
+    # Merges additional conditions into the matcher.
     #
-    # @return [Array<Object>] filtered results
-    def result
-      matcher = Mongory::QueryMatcher.build(@condition)
-      res = @records.select { |r| matcher.match?(r) }
+    # @param key [String, Symbol]
+    # @param conditions [Array<Hash>]
+    def add_conditions(key, conditions)
+      condition_dup = @matcher.condition.dup
+      condition_dup[key] ||= []
+      condition_dup[key] += conditions
+      set_matcher(condition_dup)
+    end
 
-      if @sort_keys
-        res.sort_by! { |record| @sort_keys.map { |key| record[key.to_s] } }
-        res.reverse! if @sort_direction == :desc
+    # @private
+    # Sorts a list of records by one or more keys.
+    #
+    # @param sort_keys [Array]
+    # @yield [a, b] comparison block
+    # @return [Array]
+    def sort_by_keys(sort_keys)
+      sort do |a, b|
+        yield sort_keys.map { |key| a[key] },
+              sort_keys.map { |key| b[key] }
       end
-
-      res = res.take(@limit) if @limit
-      res
     end
   end
 end

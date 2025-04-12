@@ -11,11 +11,20 @@ module Mongory
   # and class-level instance method caching.
   module Utils
     # When included, also extends the including class with ClassMethods.
+    # And record which class include this module.
     #
     # @param base [Class, Module]
     def self.included(base)
       base.extend(ClassMethods)
       super
+      included_classes << base
+    end
+
+    # Where to record classes that include Utils.
+    #
+    # @return [Array]
+    def self.included_classes
+      @included_classes ||= []
     end
 
     # Checks if an object is "present".

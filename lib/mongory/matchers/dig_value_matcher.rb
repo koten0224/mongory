@@ -46,7 +46,20 @@ module Mongory
         super(Mongory.data_converter.convert(dig_value(record)))
       end
 
+      # @return [Object] a deduplication key used for matchers inside multi-match constructs
+      # @see AbstractMultiMatcher#matchers
+      def uniq_key
+        { @key => @condition }
+      end
+
       private
+
+      # Returns a single-line summary of the dig matcher including the key and condition.
+      #
+      # @return [String]
+      def tree_title
+        "Dig: #{@key.inspect} to: #{@condition.inspect}"
+      end
 
       # Attempts to extract the value from the given record using @key.
       # Guards against unsupported types and returns KEY_NOT_FOUND if extraction fails.

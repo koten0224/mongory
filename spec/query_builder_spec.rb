@@ -9,7 +9,7 @@ RSpec.describe Mongory::QueryBuilder do
         .new(records)
         .where(:tags.in => ['ruby', 'qa'])
         .and(:age.gte => 25)
-        .or({ name: /e/ }, { :tags.present => true })
+        .any_of({ name: /e/ }, { :tags.present => true })
         .asc(:age)
         .limit(3)
         .pluck(:name)
@@ -17,11 +17,11 @@ RSpec.describe Mongory::QueryBuilder do
 
     let(:records) do
       [
-        { 'name' => 'Alice', 'age' => 30, 'tags' => ['ruby'] },
-        { 'name' => 'Bob', 'age' => 25, 'tags' => ['qa'] },
-        { 'name' => 'Carol', 'age' => 35, 'tags' => ['ruby'] },
-        { 'name' => 'Dave', 'age' => 20, 'tags' => ['js'] },
-        { 'name' => 'Eve', 'age' => 32, 'tags' => ['qa'] }
+        { name: 'Alice', age: 30, tags: ['ruby'] },
+        { name: 'Bob', age: 25, tags: ['qa'] },
+        { name: 'Carol', age: 35, tags: ['ruby'] },
+        { name: 'Dave', age: 20, tags: ['js'] },
+        { name: 'Eve', age: 32, tags: ['qa'] }
       ]
     end
 
@@ -34,22 +34,25 @@ RSpec.describe Mongory::QueryBuilder do
     subject { described_class.new(records).where(:age.gt => 28) }
     let(:records) do
       [
-        { 'name' => 'Alice', 'age' => 30 },
-        { 'name' => 'Bob', 'age' => 25 },
-        { 'name' => 'Carol', 'age' => 35 }
+        { name: 'Alice', age: 30 },
+        { name: 'Bob', age: 25 },
+        { name: 'Carol', age: 35 }
       ]
     end
 
     it 'is enumerable' do
       names = []
-      subject.each { |r| names << r['name'] }
+      subject.each { |r| names << r[:name] }
       expect(names).to contain_exactly('Alice', 'Carol')
+      expect(names).not_to be_include('Bob')
     end
 
     it 'returns an enumerator when no block given' do
       enumerator = subject.each
       expect(enumerator).to be_a(Enumerator)
-      expect(enumerator.map { |r| r['name'] }).to contain_exactly('Alice', 'Carol')
+      names = enumerator.map { |x| x[:name] }
+      expect(names).to contain_exactly('Alice', 'Carol')
+      expect(names).not_to contain_exactly('Bob')
     end
   end
 
@@ -68,12 +71,14 @@ RSpec.describe Mongory::QueryBuilder do
       let(:condition) { { :age.gt => 28 } }
 
       it { is_expected.to contain_exactly(include('name' => 'Alice'), include('name' => 'Carol')) }
+      it { is_expected.not_to contain_exactly(include('name' => 'Bob')) }
     end
 
     context 'when filtering by equality' do
       let(:condition) { { name: 'Bob' } }
 
       it { is_expected.to contain_exactly(include('name' => 'Bob')) }
+      it { is_expected.not_to contain_exactly(include('name' => 'Alice'), include('name' => 'Carol')) }
     end
 
     context 'when filtering by in operator' do
@@ -220,6 +225,7 @@ RSpec.describe Mongory::QueryBuilder do
           include('name' => 'Carol'),
           include('name' => 'Dave')
         )
+        is_expected.not_to contain_exactly(include('name' => 'Alice'))
       end
     end
 
@@ -270,10 +276,10 @@ RSpec.describe Mongory::QueryBuilder do
     subject { described_class.new(records).asc(order_key) }
     let(:records) do
       [
-        { 'name' => 'Alice', 'age' => 30 },
-        { 'name' => 'Bob', 'age' => 25 },
-        { 'name' => 'Carol', 'age' => 35 },
-        { 'name' => 'Dave', 'age' => 20 }
+        { name: 'Alice', age: 30 },
+        { name: 'Bob', age: 25 },
+        { name: 'Carol', age: 35 },
+        { name: 'Dave', age: 20 }
       ]
     end
 
@@ -281,7 +287,7 @@ RSpec.describe Mongory::QueryBuilder do
       let(:order_key) { :age }
 
       it 'sorts records from youngest to oldest' do
-        expect(subject.pluck('name')).to eq(['Dave', 'Bob', 'Alice', 'Carol'])
+        expect(subject.pluck(:name)).to eq(['Dave', 'Bob', 'Alice', 'Carol'])
       end
     end
 
@@ -289,7 +295,7 @@ RSpec.describe Mongory::QueryBuilder do
       let(:order_key) { :name }
 
       it 'sorts records alphabetically' do
-        expect(subject.pluck('name')).to eq(['Alice', 'Bob', 'Carol', 'Dave'])
+        expect(subject.pluck(:name)).to eq(['Alice', 'Bob', 'Carol', 'Dave'])
       end
     end
   end
@@ -298,10 +304,10 @@ RSpec.describe Mongory::QueryBuilder do
     subject { described_class.new(records).desc(order_key) }
     let(:records) do
       [
-        { 'name' => 'Alice', 'age' => 30 },
-        { 'name' => 'Bob', 'age' => 25 },
-        { 'name' => 'Carol', 'age' => 35 },
-        { 'name' => 'Dave', 'age' => 20 }
+        { name: 'Alice', age: 30 },
+        { name: 'Bob', age: 25 },
+        { name: 'Carol', age: 35 },
+        { name: 'Dave', age: 20 }
       ]
     end
 
@@ -309,7 +315,7 @@ RSpec.describe Mongory::QueryBuilder do
       let(:order_key) { :age }
 
       it 'sorts records from oldest to youngest' do
-        expect(subject.pluck('name')).to eq(['Carol', 'Alice', 'Bob', 'Dave'])
+        expect(subject.pluck(:name)).to eq(['Carol', 'Alice', 'Bob', 'Dave'])
       end
     end
 
@@ -317,7 +323,7 @@ RSpec.describe Mongory::QueryBuilder do
       let(:order_key) { :name }
 
       it 'sorts records in reverse alphabetical order' do
-        expect(subject.pluck('name')).to eq(['Dave', 'Carol', 'Bob', 'Alice'])
+        expect(subject.pluck(:name)).to eq(['Dave', 'Carol', 'Bob', 'Alice'])
       end
     end
   end
@@ -362,10 +368,10 @@ RSpec.describe Mongory::QueryBuilder do
     subject { described_class.new(records).pluck(*fields) }
     let(:records) do
       [
-        { 'name' => 'Alice', 'age' => 30 },
-        { 'name' => 'Bob', 'age' => 25 },
-        { 'name' => 'Carol', 'age' => 35 },
-        { 'name' => 'Dave', 'age' => 20 }
+        { name: 'Alice', age: 30 },
+        { name: 'Bob', age: 25 },
+        { name: 'Carol', age: 35 },
+        { name: 'Dave', age: 20 }
       ]
     end
 
@@ -391,9 +397,9 @@ RSpec.describe Mongory::QueryBuilder do
     context 'when field is missing in some records' do
       let(:records) do
         [
-          { 'name' => 'Alice', 'age' => 30 },
-          { 'name' => 'Bob' },
-          { 'name' => 'Carol', 'age' => 35 }
+          { name: 'Alice', age: 30 },
+          { name: 'Bob' },
+          { name: 'Carol', age: 35 }
         ]
       end
 

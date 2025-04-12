@@ -15,8 +15,9 @@ Layout/LineLength:
 
 Style/PercentLiteralDelimiters:
   PreferredDelimiters:
-    default: '[]'
+    default: '()'
     '%i':    '()'
+    '%w':    '()'
 
 Metrics/ClassLength:
   Enabled: false

@@ -67,6 +67,24 @@ module Mongory
       def deep_check_validity!
         condition_matcher.deep_check_validity! if @condition_is_hash
       end
+
+      # Outputs the matcher tree by selecting either collection or condition matcher.
+      # Delegates `render_tree` to whichever submatcher was active.
+      #
+      # @param pp [PP]
+      # @param prefix [String]
+      # @param is_last [Boolean]
+      # @return [void]
+      def render_tree(pp, prefix = '', is_last: true)
+        super
+
+        new_prefix = "#{prefix}#{is_last ? '   ' : '│  '}"
+        if @collection_matcher
+          @collection_matcher.render_tree(pp, new_prefix, is_last: true)
+        elsif @condition_is_hash
+          condition_matcher.render_tree(pp, new_prefix, is_last: true)
+        end
+      end
     end
   end
 end

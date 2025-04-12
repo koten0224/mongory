@@ -170,11 +170,11 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
         end
 
         context 'when compare with array' do
-          let(:tags) { %w[tag1 tag2] }
+          let(:tags) { %w(tag1 tag2) }
 
-          it { is_expected.to be_match(tags: %w[tag1 tag2]) }
+          it { is_expected.to be_match(tags: %w(tag1 tag2)) }
           it { is_expected.not_to be_match(tags: ['tag1']) }
-          it { is_expected.not_to be_match(tags: %w[tag2 tag1]) }
+          it { is_expected.not_to be_match(tags: %w(tag2 tag1)) }
           it { is_expected.not_to be_match(tags: 'tag1') }
         end
 
@@ -182,8 +182,8 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
           let(:tags) { 'tag1' }
 
           it { is_expected.to be_match(tags: ['tag1']) }
-          it { is_expected.to be_match(tags: %w[tag1 tag2]) }
-          it { is_expected.to be_match(tags: %w[tag2 tag1]) }
+          it { is_expected.to be_match(tags: %w(tag1 tag2)) }
+          it { is_expected.to be_match(tags: %w(tag2 tag1)) }
           it { is_expected.not_to be_match(tags: ['tag2']) }
         end
 
@@ -698,14 +698,14 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
     end
 
     context 'use operator $in' do
-      let(:collection) { %w[foo bar] }
+      let(:collection) { %w(foo bar) }
 
       shared_examples_for 'in behaviors' do
         it { is_expected.to be_match(name: 'foo') }
         it { is_expected.to be_match(name: 'bar') }
         it { is_expected.to be_match(name: ['foo']) }
         it { is_expected.to be_match(name: ['bar']) }
-        it { is_expected.to be_match(name: %w[foo bar]) }
+        it { is_expected.to be_match(name: %w(foo bar)) }
         it { is_expected.not_to be_match(name: 'lala') }
         it { is_expected.not_to be_match(name: nil) }
         it { is_expected.not_to be_match(anything) }
@@ -743,7 +743,7 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
     end
 
     context 'use operator $nin' do
-      let(:collection) { %w[foo bar] }
+      let(:collection) { %w(foo bar) }
 
       shared_examples_for 'nin behaviors' do
         it { is_expected.to be_match(name: 'ann') }
