@@ -22,9 +22,9 @@ module Mongory
       dispatch!
       # Constructs the appropriate submatcher for a key-value pair.
       # If the key is a registered operator, dispatches to the corresponding matcher.
-      # Otherwise, assumes the key is a field path and uses DigValueMatcher.
+      # Otherwise, assumes the key is a field path and uses FieldMatcher.
 
-      # @see DigValueMatcher
+      # @see FieldMatcher
       # @see Matchers.lookup
       # @param key [String] the condition key (either an operator or field name)
       # @param value [Object] the condition value
@@ -34,7 +34,7 @@ module Mongory
         when *Matchers::OPERATOR_TO_CLASS_MAPPING.keys
           Matchers.lookup(key).build(value)
         else
-          DigValueMatcher.build(key, value)
+          FieldMatcher.build(key, value)
         end
       end
 

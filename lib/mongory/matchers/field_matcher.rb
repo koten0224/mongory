@@ -2,21 +2,21 @@
 
 module Mongory
   module Matchers
-    # DigValueMatcher is responsible for extracting a value from a record
-    # using a key (or index) and then delegating the match to DefaultMatcher logic.
+    # FieldMatcher is responsible for extracting a value from a record
+    # using a field (or index) and then delegating the match to DefaultMatcher logic.
     #
     # It handles nested access in structures like Hashes or Arrays, and guards
     # against types that should not be dig into (e.g., String, Symbol, Proc).
     #
     # This matcher is typically used when the query refers to a specific field,
-    # like `{ age: { :$gte => 18 } }` where `:age` is passed as the dig key.
+    # like `{ age: { :$gte => 18 } }` where `:age` is passed as the dig field.
     #
     # @example
-    #   matcher = DigValueMatcher.build(:age, { :$gte => 18 })
+    #   matcher = FieldMatcher.build(:age, { :$gte => 18 })
     #   matcher.match?({ age: 20 }) #=> true
     #
     # @see DefaultMatcher
-    class DigValueMatcher < DefaultMatcher
+    class FieldMatcher < DefaultMatcher
       # A list of classes that should never be used for value digging.
       # These typically respond to `#[]` but are semantically invalid for this context.
       CLASSES_NOT_ALLOW_TO_DIG = [
@@ -29,16 +29,16 @@ module Mongory
         ::Symbol
       ].freeze
 
-      # Initializes the matcher with a target key and condition.
+      # Initializes the matcher with a target field and condition.
       #
-      # @param key [Object] the key (or index) used to dig into the record
+      # @param field [Object] the field (or index) used to dig into the record
       # @param condition [Object] the condition to match against the extracted value
-      def initialize(key, condition)
-        @key = key
+      def initialize(field, condition)
+        @field = field
         super(condition)
       end
 
-      # Matches the record by extracting the value via key and applying the condition.
+      # Matches the record by extracting the value via field and applying the condition.
       #
       # @param record [Object] the record to match
       # @return [Boolean] whether the extracted value matches the condition
@@ -46,22 +46,22 @@ module Mongory
         super(Mongory.data_converter.convert(dig_value(record)))
       end
 
-      # @return [Object] a deduplication key used for matchers inside multi-match constructs
+      # @return [Object] a deduplication field used for matchers inside multi-match constructs
       # @see AbstractMultiMatcher#matchers
       def uniq_key
-        { @key => @condition }
+        { @field => @condition }
       end
 
       private
 
-      # Returns a single-line summary of the dig matcher including the key and condition.
+      # Returns a single-line summary of the dig matcher including the field and condition.
       #
       # @return [String]
       def tree_title
-        "Dig: #{@key.inspect} to: #{@condition.inspect}"
+        "Field: #{@field.inspect} to match: #{@condition.inspect}"
       end
 
-      # Attempts to extract the value from the given record using @key.
+      # Attempts to extract the value from the given record using @field.
       # Guards against unsupported types and returns KEY_NOT_FOUND if extraction fails.
       #
       # @param record [Object] the input record
@@ -69,17 +69,17 @@ module Mongory
       def dig_value(record)
         case record
         when Hash, Array
-          record.fetch(@key, KEY_NOT_FOUND)
+          record.fetch(@field, KEY_NOT_FOUND)
         when KEY_NOT_FOUND, *CLASSES_NOT_ALLOW_TO_DIG
           KEY_NOT_FOUND
         else
           return KEY_NOT_FOUND unless record.respond_to?(:[])
 
-          record[@key]
+          record[@field]
         end
       end
 
-      # Custom display logic for debugging, including colored key highlighting.
+      # Custom display logic for debugging, including colored field highlighting.
       #
       # @param record [Object] the input record
       # @param result [Boolean] match result
@@ -90,8 +90,8 @@ module Mongory
         "#{self.class} => " \
           "result: #{result}, " \
           "condition: #{@condition.inspect}, " \
-          "\e[30;47mkey: #{@key.inspect}\e[0m, " \
-          "record: #{record.inspect.gsub(@key.inspect, "\e[30;47m#{@key.inspect}\e[0m")}"
+          "\e[30;47mkey: #{@field.inspect}\e[0m, " \
+          "record: #{record.inspect.gsub(@field.inspect, "\e[30;47m#{@field.inspect}\e[0m")}"
       end
     end
   end

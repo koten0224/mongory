@@ -44,7 +44,7 @@ graph TD
   A --> V[NinMatcher]
   A --> C --> MultipleConditions
   A --> D --> SimpleCompare
-  B --> G[DigValueMatcher]
+  B --> G[FieldMatcher]
   B --> H[ElemMatchMatcher]
   B --> N[NotMatcher]
 
