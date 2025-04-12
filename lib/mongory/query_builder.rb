@@ -142,6 +142,13 @@ module Mongory
 
     alias_method :selector, :condition
 
+    def explain
+      @matcher.match(@records.first)
+      pp = PP.new($stdout)
+      @matcher.render_tree(pp)
+      pp.flush
+    end
+
     private
 
     # @private

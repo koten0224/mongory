@@ -86,6 +86,17 @@ module Mongory
         super
         matchers.each(&:deep_check_validity!)
       end
+
+      def render_tree(pp, prefix = '', is_last: true)
+        super
+        yield if block_given?
+
+        new_prefix = "#{prefix}#{is_last ? '   ' : '│  '}"
+        last_index = matchers.count - 1
+        matchers.each_with_index do |matcher, index|
+          matcher.render_tree(pp, new_prefix, is_last: index == last_index)
+        end
+      end
     end
   end
 end

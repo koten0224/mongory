@@ -85,6 +85,12 @@ module Mongory
       def deep_check_validity!
         super if @condition_is_hash
       end
+
+      def render_tree(*)
+        super do
+          return unless @condition_is_hash
+        end
+      end
     end
   end
 end

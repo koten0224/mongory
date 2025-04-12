@@ -48,6 +48,10 @@ module Mongory
 
       private
 
+      def tree_title
+        "Dig: #{@key.inspect} to: #{@condition.inspect}"
+      end
+
       # Attempts to extract the value from the given record using @key.
       # Guards against unsupported types and returns KEY_NOT_FOUND if extraction fails.
       #

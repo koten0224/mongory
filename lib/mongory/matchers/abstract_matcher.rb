@@ -88,7 +88,16 @@ module Mongory
         check_validity!
       end
 
+      def render_tree(pp, prefix = '', is_last: true)
+        pp.text("#{prefix}#{is_last ? '└─ ' : '├─ '}#{tree_title}\n")
+      end
+
       private
+
+      def tree_title
+        matcher_name = self.class.name.split('::').last.sub('Matcher', '')
+        "#{matcher_name}: #{@condition.inspect}"
+      end
 
       # Normalizes a potentially missing record value.
       # Converts sentinel `KEY_NOT_FOUND` to nil.
