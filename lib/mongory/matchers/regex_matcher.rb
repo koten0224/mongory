@@ -12,6 +12,11 @@ module Mongory
     # If a string is provided instead of a Regexp, it will be converted via `Regexp.new(...)`.
     # This ensures consistent behavior for queries like `:field.regex => "foo"` and `:field.regex => /foo/`.
     #
+    # @example
+    #   matcher = RegexMatcher.build('^foo')
+    #   matcher.match?('foobar')   #=> true
+    #   matcher.match?('barfoo')   #=> false
+    #
     # @example Match with explicit regex
     #   RegexMatcher.build(/admin/i).match?("ADMIN") # => true
     #

@@ -11,11 +11,9 @@ module Mongory
     # - If condition == record, returns true (exact match)
     # - If record is an Array, dispatches to CollectionMatcher
     # - If condition is a Hash, dispatches to ConditionMatcher
-    # - If condition is a Regexp, applies `Regexp#match?` to the record
+    # - If condition is a Regexp, dispatches to RegexMatcher
     # - Otherwise, returns false
     #
-    # This allows support for queries like `{ name: /admin/i }` or `$not => /regex/`
-    # to be handled naturally without needing operator dispatch.
     # @example
     #   matcher = DefaultMatcher.build({ age: { :$gte => 30 } })
     #   matcher.match(record) #=> true or false

@@ -116,11 +116,15 @@ module Mongory
         "#{matcher_name}: #{@condition.inspect}"
       end
 
-      # Normalizes a potentially missing record value.
-      # Converts sentinel `KEY_NOT_FOUND` to nil.
+      # Normalizes the record before matching.
       #
-      # @param record [Object] the input value
-      # @return [Object, nil] the normalized value
+      # If the record is the KEY_NOT_FOUND sentinel (representing a missing field),
+      # it is converted to `nil` so matchers can interpret it consistently.
+      # Other values are returned as-is.
+      #
+      # @param record [Object] the record value to normalize
+      # @return [Object, nil] the normalized record
+      # @see Mongory::KEY_NOT_FOUND
       def normalize(record)
         record == KEY_NOT_FOUND ? nil : record
       end
