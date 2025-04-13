@@ -95,7 +95,7 @@
 - **Centralized Matcher Responsibility**
   `ConditionMatcher` replaces `DefaultMatcher` as the default dispatcher for query conditions.
 - **Consistent Data Conversion**
-  All nested matchers (e.g. `DigValueMatcher`, `ElemMatchMatcher`) now apply `data_converter` at match-time.
+  All nested matchers (e.g. `FieldMatcher`, `ElemMatchMatcher`) now apply `data_converter` at match-time.
 
 ### Fixed
 - **Validation Improvements**
