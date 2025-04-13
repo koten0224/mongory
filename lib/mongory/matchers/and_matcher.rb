@@ -4,20 +4,20 @@ module Mongory
   module Matchers
     # AndMatcher implements the `$and` logical operator.
     #
-    # It receives an array of subconditions and matches only if *all* of them succeed.
+    # It evaluates an array of subconditions and returns true only if *all* of them match.
     #
-    # Each subcondition is dispatched through a ConditionMatcher, with conversion disabled
-    # to avoid redundant processing.
+    # Unlike other matchers, AndMatcher flattens the underlying matcher tree by
+    # delegating each subcondition to a `ConditionMatcher`, and further extracting
+    # all inner matchers. Duplicate matchers are deduplicated by `uniq_key`.
     #
-    # This matcher inherits the multi-condition matching logic from AbstractMultiMatcher
-    # and defines its own strategy (`:all?`) and matcher construction.
+    # This allows the matcher trace (`.explain`) to render as a flat list of independent conditions.
     #
     # @example
     #   matcher = AndMatcher.build([
     #     { age: { :$gte => 18 } },
-    #     { status: "active" }
+    #     { name: /foo/ }
     #   ])
-    #   matcher.match?(record) #=> true only if both conditions match
+    #   matcher.match?(record) #=> true if both match
     #
     # @see AbstractMultiMatcher
     class AndMatcher < AbstractMultiMatcher
@@ -25,23 +25,17 @@ module Mongory
       # Conversion is disabled to avoid double-processing.
       enable_unwrap!
 
-      # Builds a matcher for each subcondition using ConditionMatcher.
+      # Returns the flattened list of all matchers from each subcondition.
       #
-      # @param condition [Hash] subcondition hash
-      # @return [AbstractMatcher]
-      def build_sub_matcher(condition)
-        ConditionMatcher.new(condition)
-      end
-
-      # Returns the list of all submatchers, recursively flattened.
-      # Deduplicates matchers using `uniq_key` to avoid redundant evaluation.
+      # Each condition is passed to a ConditionMatcher, then recursively flattened.
+      # All matchers are then deduplicated using `uniq_key`.
       #
       # @return [Array<AbstractMatcher>]
       # @see AbstractMatcher#uniq_key
-      def matchers
-        return @matchers if defined?(@matchers)
-
-        @matchers = super.flat_map(&:matchers).uniq(&:uniq_key)
+      define_instance_cache_method(:matchers) do
+        @condition.flat_map do |condition|
+          ConditionMatcher.new(condition).matchers
+        end.uniq(&:uniq_key)
       end
 
       # Combines submatcher results using `:all?`.
