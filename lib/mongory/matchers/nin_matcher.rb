@@ -4,18 +4,23 @@ module Mongory
   module Matchers
     # NinMatcher implements the `$nin` (not in) operator.
     #
-    # It returns true if *none* of the record's values appear in the condition array.
+    # It succeeds only if the record does not match any value in the condition array.
+    # If the record is an array, it fails if any element overlaps with the condition.
+    # If the record is a single value (including `nil`), it fails if it is included in the condition.
     #
-    # The record is cast to an array to ensure uniform behavior across types.
-    #
-    # This matcher is the logical opposite of InMatcher.
-    #
-    # @example
+    # @example Match single value
     #   matcher = NinMatcher.build([1, 2, 3])
     #   matcher.match?(4)        #=> true
     #   matcher.match?(2)        #=> false
-    #   matcher.match?([4, 5])   #=> true
-    #   matcher.match?([2, 4])   #=> false
+    #
+    # @example Match nil
+    #   matcher = NinMatcher.build([nil])
+    #   matcher.match?(nil)      #=> false
+    #
+    # @example Match with array
+    #   matcher = NinMatcher.build([2, 4])
+    #   matcher.match?([1, 3, 5])  #=> true
+    #   matcher.match?([4, 5])     #=> false
     #
     # @see AbstractMatcher
     class NinMatcher < AbstractMatcher
@@ -24,7 +29,11 @@ module Mongory
       # @param record [Object] the value to be tested
       # @return [Boolean] whether the record is disjoint from the condition array
       def match(record)
-        is_blank?(@condition & Array(record))
+        if record.is_a?(Array)
+          is_blank?(@condition & record)
+        else
+          !@condition.include?(record)
+        end
       end
 
       # Ensures the condition is a valid array.
