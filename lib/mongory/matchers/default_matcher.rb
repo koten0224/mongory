@@ -43,9 +43,9 @@ module Mongory
         elsif @condition_is_hash
           condition_matcher.match?(record)
         elsif @condition_is_regex
-          return false unless record.is_a?(String)
-
-          @condition.match?(record)
+          # If the condition is a Regexp, delegate to RegexMatcher for consistent matching logic.
+          # This supports features like case-insensitive matching and .explain tracing.
+          regex_matcher.match?(record)
         else
           false
         end
@@ -70,6 +70,19 @@ module Mongory
         ConditionMatcher.build(@condition)
       end
 
+      # Lazily defines the regex matcher for Regexp conditions.
+      # Used to delegate matching logic to RegexMatcher when @condition is a Regexp.
+      #
+      # This allows `DefaultMatcher` to handle queries like `{ field: /abc/i }`
+      # by dispatching to a proper matcher class that supports explain and trace output.
+      #
+      # @see RegexMatcher
+      # @return [RegexMatcher] the matcher used for regular expression comparison
+      # @!method regex_matcher
+      define_matcher(:regex) do
+        RegexMatcher.build(@condition)
+      end
+
       # Validates the nested condition matcher, if applicable.
       #
       # @return [void]
@@ -92,6 +105,8 @@ module Mongory
           @collection_matcher.render_tree(pp, new_prefix, is_last: true)
         elsif @condition_is_hash
           condition_matcher.render_tree(pp, new_prefix, is_last: true)
+        elsif @condition_is_regex
+          regex_matcher.render_tree(pp, new_prefix, is_last: true)
         end
       end
     end

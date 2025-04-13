@@ -2,25 +2,24 @@
 
 module Mongory
   module Matchers
-    # RegexMatcher implements the `$regex` operator.
+    # RegexMatcher implements the `$regex` operator and also handles raw Regexp values.
     #
-    # It matches the given string against a regular expression pattern.
-    # The condition may be a String or a Regexp.
-    # If given a String, it is converted to a Regexp via `Regexp.new`.
+    # This matcher checks whether a string record matches a regular expression.
+    # It supports both:
+    # - Explicit queries using `:field.regex => /pattern/i`
+    # - Implicit literal Regexp values like `{ field: /pattern/i }`
     #
-    # This allows both case-sensitive and case-insensitive usage:
+    # If a string is provided instead of a Regexp, it will be converted via `Regexp.new(...)`.
+    # This ensures consistent behavior for queries like `:field.regex => "foo"` and `:field.regex => /foo/`.
     #
-    # @example Case-sensitive
-    #   matcher = RegexMatcher.build("foo")
-    #   matcher.match?("foobar")   #=> true
-    #   matcher.match?("FOOBAR")   #=> false
+    # @example Match with explicit regex
+    #   RegexMatcher.build(/admin/i).match?("ADMIN") # => true
     #
-    # @example Case-insensitive
-    #   matcher = RegexMatcher.build(/foo/i)
-    #   matcher.match?("FOOBAR")   #=> true
+    # @example Match via DefaultMatcher fallback
+    #   DefaultMatcher.new(/admin/i).match("ADMIN") # => true
     #
-    # @note Strings are converted to Regexp during initialization
-    # @see AbstractOperatorMatcher
+    # @see DefaultMatcher
+    # @see Mongory::Matchers::AbstractOperatorMatcher
     class RegexMatcher < AbstractOperatorMatcher
       # Uses `:match?` as the operator to invoke on the record string.
       #
