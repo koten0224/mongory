@@ -29,6 +29,7 @@ module Mongory
       # @param record [Object] the value to be tested
       # @return [Boolean] whether the record is disjoint from the condition array
       def match(record)
+        record = normalize(record)
         if record.is_a?(Array)
           is_blank?(@condition & record)
         else
