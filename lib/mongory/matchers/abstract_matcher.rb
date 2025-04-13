@@ -49,7 +49,7 @@ module Mongory
       #
       # @param record [Object] the input record to test
       # @return [Boolean] whether the record matches the condition
-      def match(*); end
+      def match(record); end
 
       # Matches the given record against the condition.
       #

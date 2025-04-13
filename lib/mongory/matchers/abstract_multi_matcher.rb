@@ -74,7 +74,7 @@ module Mongory
       #
       # @param args [Array] the inputs needed to construct a matcher
       # @return [AbstractMatcher] a matcher instance for the subcondition
-      def build_sub_matcher(*); end
+      def build_sub_matcher(*args); end
 
       # Abstract method to specify the combining operator for sub-matchers.
       # Must return a valid enumerable method name (e.g., :all?, :any?).

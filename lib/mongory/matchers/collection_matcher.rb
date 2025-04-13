@@ -93,7 +93,7 @@ module Mongory
       # @param prefix [String]
       # @param is_last [Boolean]
       # @return [void]
-      def render_tree(*)
+      def render_tree(pp, prefix = '', is_last: true)
         super do
           return unless @condition_is_hash
         end
