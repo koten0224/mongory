@@ -1,0 +1,3 @@
+- Removed support for `field: /pattern/` syntax
+- Require `Regexp` to be passed via `:"field.regex" => /pattern/`
+- Regex flags like `/i` are now respected
