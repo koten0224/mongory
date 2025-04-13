@@ -43,6 +43,8 @@ module Mongory
       # @param record [Object] the record to match
       # @return [Boolean] whether the extracted value matches the condition
       def match(record)
+        return false if record == KEY_NOT_FOUND
+
         super(Mongory.data_converter.convert(dig_value(record)))
       end
 

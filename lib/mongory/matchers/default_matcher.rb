@@ -34,7 +34,7 @@ module Mongory
       # @param record [Object] the record to be matched
       # @return [Boolean] whether the record satisfies the condition
       def match(record)
-        if @condition == record
+        if @condition == normalize(record)
           true
         elsif record.is_a?(Array)
           collection_matcher.match?(record)
