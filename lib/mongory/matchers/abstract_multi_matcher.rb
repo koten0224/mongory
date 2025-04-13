@@ -16,22 +16,25 @@ module Mongory
     # @abstract
     # @see AbstractMatcher
     class AbstractMultiMatcher < AbstractMatcher
-      # Enables auto-dispatch logic.
+      # Enables auto-unwrap logic.
       # When used, `.build` may unwrap to first matcher if only one is present.
       #
+      # @private
       # @return [void]
-      def self.dispatch!
-        @dispatch = true
-        singleton_class.alias_method :build, :dispatch
+      def self.enable_unwrap!
+        @enable_unwrap = true
+        singleton_class.alias_method :build, :build_or_unwrap
       end
+
+      private_class_method :enable_unwrap!
 
       # Builds a matcher and conditionally unwraps it.
       #
       # @param args [Array] arguments passed to the constructor
       # @return [AbstractMatcher]
-      def self.dispatch(*args)
+      def self.build_or_unwrap(*args)
         matcher = new(*args)
-        return matcher unless @dispatch
+        return matcher unless @enable_unwrap
 
         matcher = matcher.matchers.first if matcher.matchers.count == 1
         matcher

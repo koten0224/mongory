@@ -22,7 +22,7 @@ module Mongory
     #
     # @see AbstractMultiMatcher
     class OrMatcher < AbstractMultiMatcher
-      dispatch!
+      enable_unwrap!
       # Constructs a ConditionMatcher for each subcondition.
       # Conversion is disabled to avoid double-processing.
 

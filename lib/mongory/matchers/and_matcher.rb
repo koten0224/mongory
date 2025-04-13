@@ -23,7 +23,7 @@ module Mongory
     class AndMatcher < AbstractMultiMatcher
       # Constructs a ConditionMatcher for each subcondition.
       # Conversion is disabled to avoid double-processing.
-      dispatch!
+      enable_unwrap!
 
       # Builds a matcher for each subcondition using ConditionMatcher.
       #

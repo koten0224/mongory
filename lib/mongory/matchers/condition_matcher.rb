@@ -19,7 +19,7 @@ module Mongory
     #
     # @see AbstractMultiMatcher
     class ConditionMatcher < AbstractMultiMatcher
-      dispatch!
+      enable_unwrap!
       # Constructs the appropriate submatcher for a key-value pair.
       # If the key is a registered operator, dispatches to the corresponding matcher.
       # Otherwise, assumes the key is a field path and uses FieldMatcher.
