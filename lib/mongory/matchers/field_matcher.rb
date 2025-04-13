@@ -46,10 +46,10 @@ module Mongory
         super(Mongory.data_converter.convert(dig_value(record)))
       end
 
-      # @return [Object] a deduplication field used for matchers inside multi-match constructs
+      # @return [String] a deduplication field used for matchers inside multi-match constructs
       # @see AbstractMultiMatcher#matchers
       def uniq_key
-        { @field => @condition }
+        super + "field:#{@field}"
       end
 
       private
