@@ -8,10 +8,14 @@ module Mongory
     # of the given condition and record.
     #
     # The dispatching rules are:
-    #   - If the condition equals the record (`==`), it's an exact match.
-    #   - If the record is an Array, delegate to CollectionMatcher.
-    #   - If the condition is a Hash, delegate to ConditionMatcher.
-    #   - Otherwise, return false.
+    # - If condition == record, returns true (exact match)
+    # - If record is an Array, dispatches to CollectionMatcher
+    # - If condition is a Hash, dispatches to ConditionMatcher
+    # - If condition is a Regexp, applies `Regexp#match?` to the record
+    # - Otherwise, returns false
+    #
+    # This allows support for queries like `{ name: /admin/i }` or `$not => /regex/`
+    # to be handled naturally without needing operator dispatch.
     # @example
     #   matcher = DefaultMatcher.build({ age: { :$gte => 30 } })
     #   matcher.match(record) #=> true or false
@@ -23,6 +27,7 @@ module Mongory
       # @param condition [Object] the raw condition
       def initialize(condition, *)
         @condition_is_hash = condition.is_a?(Hash)
+        @condition_is_regex = condition.is_a?(Regexp)
         super
       end
 
@@ -37,6 +42,10 @@ module Mongory
           collection_matcher.match?(record)
         elsif @condition_is_hash
           condition_matcher.match?(record)
+        elsif @condition_is_regex
+          return false unless record.is_a?(String)
+
+          @condition.match?(record)
         else
           false
         end

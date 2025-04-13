@@ -4,22 +4,23 @@ module Mongory
   module Matchers
     # RegexMatcher implements the `$regex` operator.
     #
-    # It returns true if the record string matches the given pattern string.
+    # It matches the given string against a regular expression pattern.
+    # The condition may be a String or a Regexp.
+    # If given a String, it is converted to a Regexp via `Regexp.new`.
     #
-    # Although `@condition` is passed as a string (due to ValueConverter converting
-    # Regexp into its `source`), Ruby's `String#match?(String)` internally treats it
-    # as a regular expression pattern. This allows direct use without explicit Regexp.new.
+    # This allows both case-sensitive and case-insensitive usage:
     #
-    # This matcher ensures the record is a String before attempting the match.
+    # @example Case-sensitive
+    #   matcher = RegexMatcher.build("foo")
+    #   matcher.match?("foobar")   #=> true
+    #   matcher.match?("FOOBAR")   #=> false
     #
-    # @example
-    #   matcher = RegexMatcher.build('^foo')
-    #   matcher.match?('foobar')   #=> true
-    #   matcher.match?('barfoo')   #=> false
+    # @example Case-insensitive
+    #   matcher = RegexMatcher.build(/foo/i)
+    #   matcher.match?("FOOBAR")   #=> true
     #
-    # @note `@condition` is a pattern string, not a full Regexp object.
+    # @note Strings are converted to Regexp during initialization
     # @see AbstractOperatorMatcher
-    # @see Mongory::Converters::ValueConverter
     class RegexMatcher < AbstractOperatorMatcher
       # Uses `:match?` as the operator to invoke on the record string.
       #
@@ -39,12 +40,15 @@ module Mongory
         record
       end
 
-      # Ensures the condition is a valid string (not a Regexp).
+      # Ensures the condition is a Regexp (strings are converted during initialization).
       #
       # @raise [TypeError] if condition is not a string
       # @return [void]
       def check_validity!
-        raise TypeError, '$regex needs a string' unless @condition.is_a?(String)
+        return if @condition.is_a?(Regexp)
+        return if @condition.is_a?(String)
+
+        raise TypeError, '$regex needs a Regexp or string'
       end
     end
   end
