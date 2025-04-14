@@ -22,6 +22,7 @@ module Mongory
       # @return [Boolean] whether all element matches
       def match(collection)
         return false unless collection.is_a?(Array)
+        return false if collection.empty?
 
         collection.all? do |record|
           super(Mongory.data_converter.convert(record))

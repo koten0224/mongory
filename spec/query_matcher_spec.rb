@@ -871,7 +871,7 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
     context 'use operator $every' do
       shared_examples_for 'every behavior' do
         it { is_expected.to be_match(abilities: [{ name: 'attack', power: 10 }, { name: 'attack', power: 59 }]) }
-        it { is_expected.to be_match(abilities: []) }
+        it { is_expected.not_to be_match(abilities: []) }
         it { is_expected.not_to be_match(abilities: [{ name: 'attack', power: 10 }, { name: 'eat', power: 59 }]) }
         it { is_expected.not_to be_match(abilities: [{ name: 'eat', power: 59 }]) }
         it { is_expected.not_to be_match(abilities: [{ name: 'run', power: 40 }]) }
