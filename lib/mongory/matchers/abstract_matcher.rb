@@ -31,9 +31,11 @@ module Mongory
       # @return [Object] the raw condition this matcher was initialized with
       attr_reader :condition
 
-      # @return [Object] a unique key representing this matcher instance, used for deduplication
+      # @return [String] a unique key representing this matcher instance, used for deduplication
       # @see AbstractMultiMatcher#matchers
-      alias_method :uniq_key, :condition
+      def uniq_key
+        "#{self.class}:condition:#{@condition.class}:#{@condition}"
+      end
 
       # Initializes the matcher with a raw condition.
       #
@@ -49,7 +51,7 @@ module Mongory
       #
       # @param record [Object] the input record to test
       # @return [Boolean] whether the record matches the condition
-      def match(*); end
+      def match(record); end
 
       # Matches the given record against the condition.
       #
@@ -114,11 +116,15 @@ module Mongory
         "#{matcher_name}: #{@condition.inspect}"
       end
 
-      # Normalizes a potentially missing record value.
-      # Converts sentinel `KEY_NOT_FOUND` to nil.
+      # Normalizes the record before matching.
       #
-      # @param record [Object] the input value
-      # @return [Object, nil] the normalized value
+      # If the record is the KEY_NOT_FOUND sentinel (representing a missing field),
+      # it is converted to `nil` so matchers can interpret it consistently.
+      # Other values are returned as-is.
+      #
+      # @param record [Object] the record value to normalize
+      # @return [Object, nil] the normalized record
+      # @see Mongory::KEY_NOT_FOUND
       def normalize(record)
         record == KEY_NOT_FOUND ? nil : record
       end

@@ -48,12 +48,12 @@ module Mongory
       end
 
       # Builds sub-matchers depending on the key:
-      #   - Integer or numeric string: treated as array index (DigValueMatcher)
+      #   - Integer or numeric string: treated as array index (FieldMatcher)
       #   - Operator: resolved via Matchers.lookup
       #   - Else: merged into ElemMatchMatcher condition
       #
       # @see ElemMatchMatcher
-      # @see DigValueMatcher
+      # @see FieldMatcher
       # @see Matchers.lookup
       # @param key [Object] the key from the condition hash
       # @param value [Object] the associated condition value
@@ -61,13 +61,13 @@ module Mongory
       def build_sub_matcher(key, value)
         case key
         when Integer
-          DigValueMatcher.build(key, value)
+          FieldMatcher.build(key, value)
         when /^-?\d+$/
-          DigValueMatcher.build(key.to_i, value)
+          FieldMatcher.build(key.to_i, value)
         when *Matchers::OPERATOR_TO_CLASS_MAPPING.keys
           Matchers.lookup(key).build(value)
         else
-          elem_matcher.condition.merge!(key => value)
+          elem_matcher.condition[key] = value
           elem_matcher
         end
       end
@@ -93,7 +93,7 @@ module Mongory
       # @param prefix [String]
       # @param is_last [Boolean]
       # @return [void]
-      def render_tree(*)
+      def render_tree(pp, prefix = '', is_last: true)
         super do
           return unless @condition_is_hash
         end

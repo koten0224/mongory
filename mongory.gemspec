@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
 
   spec.summary = 'Mongory'
   spec.description = 'A Mongo-like in-memory query DSL for Ruby'
-  spec.homepage = 'https://github.com/koten0224/mongory'
+  spec.homepage = 'https://koten0224.github.io/mongory/'
   spec.license = 'MIT'
   spec.required_ruby_version = '>= 2.6.0'
 

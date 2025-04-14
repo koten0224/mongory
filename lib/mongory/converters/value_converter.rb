@@ -23,10 +23,6 @@ module Mongory
         ConditionConverter.convert(self)
       end
 
-      register(Regexp) do
-        { '$regex' => source }
-      end
-
       [String, Integer].each do |klass|
         register(klass) { self }
       end

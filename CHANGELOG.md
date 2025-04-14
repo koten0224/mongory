@@ -1,3 +1,27 @@
+## [1.8.0] - 2025-04-14
+
+### Changed
+
+- **Refactored Matcher Architecture**
+  - `DigValueMatcher` has been renamed to `FieldMatcher` to better reflect its behavior.
+  - All matchers now use `enable_unwrap!` to explicitly control matcher flattening logic in multi-match contexts.
+  - `ConditionMatcher`, `CollectionMatcher`, and `DefaultMatcher` routing logic now reflects the new matcher structure.
+
+- **Improved Matcher Trace & Tree Introspection**
+  - All matchers now support `.render_tree` and `.tree_title` to integrate with `QueryBuilder#explain`.
+  - `FieldMatcher`, `RegexMatcher`, `InMatcher`, and `NinMatcher` now display accurate introspection trees.
+  - Enhanced `uniq_key` implementations across matchers to prevent duplication and support correct tree merging.
+
+- **Operator Behavior Refinement**
+  - `InMatcher` and `NinMatcher` now clearly distinguish between single value vs. array inputs.
+  - `RegexMatcher` now accepts both literal `/regex/` and `"$regex"` formats; fallback from `DefaultMatcher` is supported.
+
+### Documentation
+
+- Added or improved YARD documentation across all matchers.
+- All public APIs, including `render_tree`, `match`, `uniq_key`, and `tree_title` are now documented with examples and usage notes.
+- `matchers/README.md` updated to reflect renames and structural clarity.
+
 ## [1.7.0] - 2025-04-13
 
 ### Added

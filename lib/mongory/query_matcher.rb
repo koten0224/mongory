@@ -24,6 +24,10 @@ module Mongory
       super(Mongory.condition_converter.convert(condition))
     end
 
+    # Matches the given record against the condition.
+    #
+    # @param record [Object] the record to be matched
+    # @return [Boolean] whether the record satisfies the condition
     def match(record)
       super(Mongory.data_converter.convert(record))
     end

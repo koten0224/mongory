@@ -278,6 +278,25 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
           it { is_expected.not_to be_match(model) }
         end
       end
+
+      context 'should match string by regexp' do
+        let(:condition) do
+          {
+            email: /^[^@]+@mongory(app)?\.com$/
+          }
+        end
+
+        it { is_expected.to be_match(email: 'bruno_mars@mongory.com') }
+        it { is_expected.to be_match(email: 'bruno.mars@mongoryapp.com') }
+        it { is_expected.to be_match(email: 'vocano@mongory.com') }
+        it { is_expected.not_to be_match(email: 'vocano@@mongory.com') }
+        it { is_expected.not_to be_match(email: 'anyone@mongoryppap.com') }
+        it { is_expected.not_to be_match(email: 'anyone@mongory.com.tw') }
+        it { is_expected.not_to be_match(email: 'anyone#mongory.com') }
+        it { is_expected.not_to be_match(email: nil) }
+        it { is_expected.not_to be_match(nil) }
+        it { is_expected.not_to be_match(anything) }
+      end
     end
 
     context 'use operator $present' do
@@ -450,12 +469,8 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
         it_behaves_like 'regex behaviors'
       end
 
-      context 'should match string by regexp as regular regexp' do
-        let(:condition) do
-          {
-            email: /^[^@]+@mongory(app)?\.com$/
-          }
-        end
+      context 'should match string by regexp' do
+        let(:regex) { /^[^@]+@mongory(app)?\.com$/ }
 
         it_behaves_like 'regex behaviors'
       end

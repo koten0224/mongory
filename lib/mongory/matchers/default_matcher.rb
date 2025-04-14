@@ -8,10 +8,12 @@ module Mongory
     # of the given condition and record.
     #
     # The dispatching rules are:
-    #   - If the condition equals the record (`==`), it's an exact match.
-    #   - If the record is an Array, delegate to CollectionMatcher.
-    #   - If the condition is a Hash, delegate to ConditionMatcher.
-    #   - Otherwise, return false.
+    # - If condition == record, returns true (exact match)
+    # - If record is an Array, dispatches to CollectionMatcher
+    # - If condition is a Hash, dispatches to ConditionMatcher
+    # - If condition is a Regexp, dispatches to RegexMatcher
+    # - Otherwise, returns false
+    #
     # @example
     #   matcher = DefaultMatcher.build({ age: { :$gte => 30 } })
     #   matcher.match(record) #=> true or false
@@ -23,6 +25,7 @@ module Mongory
       # @param condition [Object] the raw condition
       def initialize(condition, *)
         @condition_is_hash = condition.is_a?(Hash)
+        @condition_is_regex = condition.is_a?(Regexp)
         super
       end
 
@@ -37,6 +40,10 @@ module Mongory
           collection_matcher.match?(record)
         elsif @condition_is_hash
           condition_matcher.match?(record)
+        elsif @condition_is_regex
+          # If the condition is a Regexp, delegate to RegexMatcher for consistent matching logic.
+          # This supports features like case-insensitive matching and .explain tracing.
+          regex_matcher.match?(record)
         else
           false
         end
@@ -61,6 +68,19 @@ module Mongory
         ConditionMatcher.build(@condition)
       end
 
+      # Lazily defines the regex matcher for Regexp conditions.
+      # Used to delegate matching logic to RegexMatcher when @condition is a Regexp.
+      #
+      # This allows `DefaultMatcher` to handle queries like `{ field: /abc/i }`
+      # by dispatching to a proper matcher class that supports explain and trace output.
+      #
+      # @see RegexMatcher
+      # @return [RegexMatcher] the matcher used for regular expression comparison
+      # @!method regex_matcher
+      define_matcher(:regex) do
+        RegexMatcher.build(@condition)
+      end
+
       # Validates the nested condition matcher, if applicable.
       #
       # @return [void]
@@ -83,6 +103,8 @@ module Mongory
           @collection_matcher.render_tree(pp, new_prefix, is_last: true)
         elsif @condition_is_hash
           condition_matcher.render_tree(pp, new_prefix, is_last: true)
+        elsif @condition_is_regex
+          regex_matcher.render_tree(pp, new_prefix, is_last: true)
         end
       end
     end

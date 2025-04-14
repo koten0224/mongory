@@ -2,24 +2,29 @@
 
 module Mongory
   module Matchers
-    # RegexMatcher implements the `$regex` operator.
+    # RegexMatcher implements the `$regex` operator and also handles raw Regexp values.
     #
-    # It returns true if the record string matches the given pattern string.
+    # This matcher checks whether a string record matches a regular expression.
+    # It supports both:
+    # - Explicit queries using `:field.regex => /pattern/i`
+    # - Implicit literal Regexp values like `{ field: /pattern/i }`
     #
-    # Although `@condition` is passed as a string (due to ValueConverter converting
-    # Regexp into its `source`), Ruby's `String#match?(String)` internally treats it
-    # as a regular expression pattern. This allows direct use without explicit Regexp.new.
-    #
-    # This matcher ensures the record is a String before attempting the match.
+    # If a string is provided instead of a Regexp, it will be converted via `Regexp.new(...)`.
+    # This ensures consistent behavior for queries like `:field.regex => "foo"` and `:field.regex => /foo/`.
     #
     # @example
     #   matcher = RegexMatcher.build('^foo')
     #   matcher.match?('foobar')   #=> true
     #   matcher.match?('barfoo')   #=> false
     #
-    # @note `@condition` is a pattern string, not a full Regexp object.
-    # @see AbstractOperatorMatcher
-    # @see Mongory::Converters::ValueConverter
+    # @example Match with explicit regex
+    #   RegexMatcher.build(/admin/i).match?("ADMIN") # => true
+    #
+    # @example Match via DefaultMatcher fallback
+    #   DefaultMatcher.new(/admin/i).match("ADMIN") # => true
+    #
+    # @see DefaultMatcher
+    # @see Mongory::Matchers::AbstractOperatorMatcher
     class RegexMatcher < AbstractOperatorMatcher
       # Uses `:match?` as the operator to invoke on the record string.
       #
@@ -39,12 +44,15 @@ module Mongory
         record
       end
 
-      # Ensures the condition is a valid string (not a Regexp).
+      # Ensures the condition is a Regexp (strings are converted during initialization).
       #
       # @raise [TypeError] if condition is not a string
       # @return [void]
       def check_validity!
-        raise TypeError, '$regex needs a string' unless @condition.is_a?(String)
+        return if @condition.is_a?(Regexp)
+        return if @condition.is_a?(String)
+
+        raise TypeError, '$regex needs a Regexp or string'
       end
     end
   end
