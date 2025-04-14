@@ -46,12 +46,11 @@ module Mongory
       # @param record [Object] the record to be matched
       # @return [Boolean] whether the record satisfies the condition
       def match(record)
-        if @condition == record
-          true
-        elsif record.is_a?(Array)
+        case record
+        when Array
           collection_matcher.match?(record)
         else
-          dispatched_matcher&.match?(record)
+          dispatched_matcher.match?(record)
         end
       end
 
@@ -69,17 +68,25 @@ module Mongory
       # This matcher is cached after the first invocation using `define_instance_cache_method`
       # to avoid unnecessary re-instantiation.
       #
-      # @return [AbstractMatcher, nil] the matcher used for non-array literal values
       # @see Mongory::Matchers::ConditionMatcher
       # @see Mongory::Matchers::RegexMatcher
       # @see Mongory::Matchers::OrMatcher
-      define_instance_cache_method(:dispatched_matcher) do
-        if @condition.is_a?(Hash)      then ConditionMatcher.build(@condition)
-        elsif @condition.is_a?(Regexp) then RegexMatcher.build(@condition)
-        elsif @condition.nil?          then OrMatcher.build([
-                                              { '$exists' => false },
-                                              { '$eq' => nil }
-                                            ])
+      # @see Mongory::Matchers::EqMatcher
+      # @return [AbstractMatcher, nil] the matcher used for non-array literal values
+      # @!method dispatched_matcher
+      define_matcher(:dispatched) do
+        case @condition
+        when Hash
+          ConditionMatcher.build(@condition)
+        when Regexp
+          RegexMatcher.build(@condition)
+        when nil
+          OrMatcher.build([
+            { '$exists' => false },
+            { '$eq' => nil }
+          ])
+        else
+          EqMatcher.build(@condition)
         end
       end
 
@@ -110,7 +117,7 @@ module Mongory
         super
 
         target_matcher = @collection_matcher || dispatched_matcher
-        target_matcher&.render_tree(pp, "#{prefix}#{is_last ? '   ' : '│  '}", is_last: true)
+        target_matcher.render_tree(pp, "#{prefix}#{is_last ? '   ' : '│  '}", is_last: true)
       end
     end
   end

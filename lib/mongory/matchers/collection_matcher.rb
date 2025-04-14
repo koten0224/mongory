@@ -33,6 +33,7 @@ module Mongory
       # @param collection [Object]
       # @return [Boolean]
       def match(collection)
+        return true if @condition == collection
         return super if @condition_is_hash
 
         collection.include?(@condition)
