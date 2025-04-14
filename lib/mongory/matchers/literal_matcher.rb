@@ -142,16 +142,15 @@ module Mongory
       def render_tree(pp, prefix = '', is_last: true)
         super
 
-        new_prefix = "#{prefix}#{is_last ? '   ' : '│  '}"
-        if @collection_matcher
-          @collection_matcher.render_tree(pp, new_prefix, is_last: true)
-        elsif @condition_is_hash
-          condition_matcher.render_tree(pp, new_prefix, is_last: true)
-        elsif @condition_is_regex
-          regex_matcher.render_tree(pp, new_prefix, is_last: true)
-        elsif @condition_is_nil
-          nil_matcher.render_tree(pp, new_prefix, is_last: true)
-        end
+        target_matcher =  if @collection_matcher then @collection_matcher
+                          elsif @condition_is_hash then condition_matcher
+                          elsif @condition_is_regex then regex_matcher
+                          elsif @condition_is_nil then nil_matcher
+                          end
+
+        return unless target_matcher
+
+        target_matcher.render_tree(pp, "#{prefix}#{is_last ? '   ' : '│  '}", is_last: true)
       end
     end
   end
