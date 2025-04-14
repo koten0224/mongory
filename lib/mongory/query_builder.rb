@@ -91,6 +91,14 @@ module Mongory
       self.and('$or' => conditions)
     end
 
+    def in(condition)
+      self.and(wrap_values_with_key(condition, '$in'))
+    end
+
+    def nin(condition)
+      self.and(wrap_values_with_key(condition, '$nin'))
+    end
+
     # @deprecated Will be removed in v2.0.0. Sort externally instead.
     # Sorts the records by the given keys in ascending order.
     #
@@ -157,7 +165,7 @@ module Mongory
     alias_method :selector, :condition
 
     # Prints the internal matcher tree structure for the current query.
-    # Uses `PP` to output a human-readable visual tree of matchers.
+    # Will output a human-readable visual tree of matchers.
     # This is useful for debugging and visualizing complex conditions.
     #
     # @return [void]
@@ -212,6 +220,12 @@ module Mongory
       sort do |a, b|
         yield sort_keys.map { |key| a[key] },
               sort_keys.map { |key| b[key] }
+      end
+    end
+
+    def wrap_values_with_key(condition, key)
+      condition.transform_values do |sub_condition|
+        { key => sub_condition }
       end
     end
   end
