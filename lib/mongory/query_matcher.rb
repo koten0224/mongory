@@ -31,5 +31,19 @@ module Mongory
     def match(record)
       super(Mongory.data_converter.convert(record))
     end
+
+    # Renders the full matcher tree for the current query.
+    #
+    # This method is intended to be the public entry point for rendering
+    # the matcher tree. It does not accept any arguments and internally
+    # handles rendering via the configured pretty-print logic.
+    #
+    # Subclasses or internal matchers should implement their own
+    # `#render_tree(prefix, is_last:)` for internal recursion.
+    #
+    # @return [void]
+    def render_tree
+      super
+    end
   end
 end

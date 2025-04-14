@@ -95,11 +95,10 @@ module Mongory
       # Outputs the tree representation of this matcher.
       # Can optionally yield to allow conditional delegation to submatchers.
       #
-      # @param pp [PP]
       # @param prefix [String]
       # @param is_last [Boolean]
       # @return [void]
-      def render_tree(pp, prefix = '', is_last: true)
+      def render_tree(prefix = '', is_last: true)
         super do
           return unless @condition_is_hash
         end

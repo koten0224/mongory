@@ -109,15 +109,14 @@ module Mongory
       # Outputs the matcher tree by selecting either collection or condition matcher.
       # Delegates `render_tree` to whichever submatcher was active.
       #
-      # @param pp [PP]
       # @param prefix [String]
       # @param is_last [Boolean]
       # @return [void]
-      def render_tree(pp, prefix = '', is_last: true)
+      def render_tree(prefix = '', is_last: true)
         super
 
         target_matcher = @array_record_matcher || dispatched_matcher
-        target_matcher.render_tree(pp, "#{prefix}#{is_last ? '   ' : '│  '}", is_last: true)
+        target_matcher.render_tree("#{prefix}#{is_last ? '   ' : '│  '}", is_last: true)
       end
     end
   end

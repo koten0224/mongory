@@ -97,12 +97,11 @@ module Mongory
       # Recursively prints the matcher structure into a formatted tree.
       # Supports indentation and branching layout using prefix symbols.
       #
-      # @param pp [PP] the pretty-printer instance
       # @param prefix [String] tree prefix (indentation + lines)
       # @param is_last [Boolean] whether this node is the last among siblings
       # @return [void]
-      def render_tree(pp, prefix = '', is_last: true)
-        pp.text("#{prefix}#{is_last ? '└─ ' : '├─ '}#{tree_title}\n")
+      def render_tree(prefix = '', is_last: true)
+        puts "#{prefix}#{is_last ? '└─ ' : '├─ '}#{tree_title}\n"
       end
 
       private

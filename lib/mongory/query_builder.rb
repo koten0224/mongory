@@ -163,9 +163,8 @@ module Mongory
     # @return [void]
     def explain
       @matcher.match(@records.first)
-      pp = PP.new($stdout)
-      @matcher.render_tree(pp)
-      pp.flush
+      @matcher.render_tree
+      nil
     end
 
     private

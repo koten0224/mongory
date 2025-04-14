@@ -2,7 +2,6 @@
 
 require 'time'
 require 'date'
-require 'pp'
 require_relative 'mongory/version'
 require_relative 'mongory/utils'
 require_relative 'mongory/matchers'
