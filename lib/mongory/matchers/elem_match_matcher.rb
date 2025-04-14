@@ -9,7 +9,7 @@ module Mongory
     # This matcher delegates element-wise comparison to HashConditionMatcher,
     # allowing nested conditions to be applied recursively.
     #
-    # Typically used internally by CollectionMatcher when dealing with
+    # Typically used internally by ArrayRecordMatcher when dealing with
     # non-indexed hash-style subconditions.
     #
     # @example

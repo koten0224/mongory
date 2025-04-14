@@ -13,7 +13,7 @@ module Mongory
     #   { name: "Alice" }         # String literal
     #   { age: 18 }               # Numeric literal
     #   { active: true }          # Boolean literal
-    #   { tags: [1, 2, 3] }       # Array literal → CollectionMatcher
+    #   { tags: [1, 2, 3] }       # Array literal → ArrayRecordMatcher
     #   { email: /@gmail\\.com/i } # Regexp literal → RegexMatcher
     #   { info: nil }             # nil literal → nil_matcher (matches null or missing)
     #
@@ -27,7 +27,7 @@ module Mongory
     # - TrueClass / FalseClass
     # - NilClass → delegates to nil_matcher
     # - Regexp → delegates to RegexMatcher
-    # - Array → delegates to CollectionMatcher
+    # - Array → delegates to ArrayRecordMatcher
     # - Hash → delegates to HashConditionMatcher (if treated as sub-query)
     # - Other unrecognized values → fallback to equality match (==)
     #
@@ -38,7 +38,7 @@ module Mongory
     #
     # @see Mongory::Matchers::RegexMatcher
     # @see Mongory::Matchers::OrMatcher
-    # @see Mongory::Matchers::CollectionMatcher
+    # @see Mongory::Matchers::ArrayRecordMatcher
     # @see Mongory::Matchers::HashConditionMatcher
     class LiteralMatcher < AbstractMatcher
       # Matches the given record against the condition.
@@ -48,7 +48,7 @@ module Mongory
       def match(record)
         case record
         when Array
-          collection_matcher.match?(record)
+          array_record_matcher.match?(record)
         else
           dispatched_matcher.match?(record)
         end
@@ -92,11 +92,11 @@ module Mongory
 
       # Lazily defines the collection matcher for array records.
       #
-      # @see CollectionMatcher
-      # @return [CollectionMatcher] the matcher used to match array-type records
-      # @!method collection_matcher
-      define_matcher(:collection) do
-        CollectionMatcher.build(@condition)
+      # @see ArrayRecordMatcher
+      # @return [ArrayRecordMatcher] the matcher used to match array-type records
+      # @!method array_record_matcher
+      define_matcher(:array_record) do
+        ArrayRecordMatcher.build(@condition)
       end
 
       # Validates the nested condition matcher, if applicable.
@@ -116,7 +116,7 @@ module Mongory
       def render_tree(pp, prefix = '', is_last: true)
         super
 
-        target_matcher = @collection_matcher || dispatched_matcher
+        target_matcher = @array_record_matcher || dispatched_matcher
         target_matcher.render_tree(pp, "#{prefix}#{is_last ? '   ' : '│  '}", is_last: true)
       end
     end

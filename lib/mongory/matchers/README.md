@@ -24,7 +24,7 @@ graph TD
     F[HashConditionMatcher]
     I[AndMatcher]
     J[OrMatcher]
-    W[CollectionMatcher]
+    W[ArrayRecordMatcher]
   end
 
   subgraph SimpleCompare

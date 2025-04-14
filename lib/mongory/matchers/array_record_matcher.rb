@@ -2,23 +2,28 @@
 
 module Mongory
   module Matchers
-    # CollectionMatcher is responsible for matching an array (or array-like object)
-    # against a given condition. It supports both exact element matching and
-    # more complex nested logic using an `ElemMatchMatcher`.
+    # ArrayRecordMatcher matches records where the record itself is an Array.
     #
-    # If the condition is not a Hash, it falls back to simple inclusion check (`Array#include?`).
+    # This matcher checks whether any element of the record array satisfies the expected condition.
+    # It is typically used when the record is a collection of values, and the query condition
+    # is either a scalar value or a subcondition matcher.
     #
-    # If the condition is a Hash, each key/value is used to build an appropriate matcher.
+    # @example Match when any element equals the expected value
+    #   matcher = ArrayRecordMatcher.build(42)
+    #   matcher.match?([10, 42, 99])    #=> true
     #
-    # Submatchers are built dynamically depending on whether the key is an integer index,
-    # numeric string, operator, or a regular hash field.
+    # @example Match using a nested matcher (e.g. condition is a hash)
+    #   matcher = ArrayRecordMatcher.build({ '$gt' => 10 })
+    #   matcher.match?([5, 20, 3])      #=> true
     #
-    # @example
-    #   matcher = CollectionMatcher.build({ 0 => { :$gt => 5 }, status: "active" })
-    #   matcher.match?([10, { status: "active" }]) #=> true if all conditions are satisfied
+    # This matcher is automatically invoked by LiteralMatcher when the record value is an array.
     #
-    # @see AbstractMultiMatcher
-    class CollectionMatcher < AbstractMultiMatcher
+    # @note This is distinct from `$in` or `$nin`, where the **condition** is an array.
+    #       Here, the **record** is the array being matched against.
+    #
+    # @see Mongory::Matchers::InMatcher
+    # @see Mongory::Matchers::LiteralMatcher
+    class ArrayRecordMatcher < AbstractMultiMatcher
       # Initializes the collection matcher with a condition.
       #
       # @param condition [Object] the condition to match
