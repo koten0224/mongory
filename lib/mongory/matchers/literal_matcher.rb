@@ -40,7 +40,7 @@ module Mongory
     # @see Mongory::Matchers::OrMatcher
     # @see Mongory::Matchers::CollectionMatcher
     # @see Mongory::Matchers::ConditionMatcher
-    class DefaultMatcher < AbstractMatcher
+    class LiteralMatcher < AbstractMatcher
       # Matches the given record against the stored condition.
       # The logic dynamically chooses the appropriate sub-matcher.
       # @param condition [Object] the raw condition
@@ -95,7 +95,7 @@ module Mongory
       # Lazily defines the regex matcher for Regexp conditions.
       # Used to delegate matching logic to RegexMatcher when @condition is a Regexp.
       #
-      # This allows `DefaultMatcher` to handle queries like `{ field: /abc/i }`
+      # This allows `LiteralMatcher` to handle queries like `{ field: /abc/i }`
       # by dispatching to a proper matcher class that supports explain and trace output.
       #
       # @see RegexMatcher
@@ -115,7 +115,7 @@ module Mongory
       # - `{ "$eq" => nil }`
       #
       # @return [OrMatcher] the matcher that handles `nil` equivalence in MongoDB
-      # @see DefaultMatcher
+      # @see LiteralMatcher
       # @see Mongory::Matchers::OrMatcher
       # @!method nil_matcher
       define_matcher(:nil) do

@@ -3,7 +3,7 @@
 module Mongory
   module Matchers
     # FieldMatcher is responsible for extracting a value from a record
-    # using a field (or index) and then delegating the match to DefaultMatcher logic.
+    # using a field (or index) and then delegating the match to LiteralMatcher logic.
     #
     # It handles nested access in structures like Hashes or Arrays, and guards
     # against types that should not be dig into (e.g., String, Symbol, Proc).
@@ -15,8 +15,8 @@ module Mongory
     #   matcher = FieldMatcher.build(:age, { :$gte => 18 })
     #   matcher.match?({ age: 20 }) #=> true
     #
-    # @see DefaultMatcher
-    class FieldMatcher < DefaultMatcher
+    # @see LiteralMatcher
+    class FieldMatcher < LiteralMatcher
       # A list of classes that should never be used for value digging.
       # These typically respond to `#[]` but are semantically invalid for this context.
       CLASSES_NOT_ALLOW_TO_DIG = [

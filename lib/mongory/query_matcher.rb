@@ -5,7 +5,7 @@ require_relative 'utils'
 module Mongory
   # The top-level matcher for compiled query conditions.
   #
-  # Delegates to {Matchers::DefaultMatcher} after transforming input
+  # Delegates to {Matchers::LiteralMatcher} after transforming input
   # via {Converters::ConditionConverter}.
   #
   # Typically used internally by `QueryBuilder`.
@@ -16,9 +16,9 @@ module Mongory
   #   matcher = QueryMatcher.build({ :age.gte => 18 })
   #   matcher.match?(record)
   #
-  # @see Matchers::DefaultMatcher
+  # @see Matchers::LiteralMatcher
   # @see Converters::ConditionConverter
-  class QueryMatcher < Matchers::DefaultMatcher
+  class QueryMatcher < Matchers::LiteralMatcher
     # @param condition [Hash] the raw user query
     def initialize(condition)
       super(Mongory.condition_converter.convert(condition))
