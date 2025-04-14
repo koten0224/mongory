@@ -11,7 +11,7 @@ module Mongory
     # - Strings and Integers are passed through as-is
     #
     # This converter is typically applied to raw query values.
-    DataConverter = ConverterBuilder.new('DataConverter') do
+    DataConverter = ConverterBuilder.new('Mongory::Converters::DataConverter') do
       register(Hash) do
         transform_keys(&:to_s)
       end

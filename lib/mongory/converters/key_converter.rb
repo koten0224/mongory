@@ -9,7 +9,7 @@ module Mongory
     # - `"a.b.c" => v` becomes `{ "a" => { "b" => { "c" => v } } }`
     # - Symbols are stringified and delegated to String logic
     # - QueryOperator dispatches to internal DSL hook
-    KeyConverter = ConverterBuilder.new('KeyConverter') do |c|
+    KeyConverter = ConverterBuilder.new('Mongory::Converters::KeyConverter') do |c|
       # fallback if key type is unknown — returns { self => value }
       @fallback = ->(x) { { self => x } }
 
