@@ -70,15 +70,15 @@ module Mongory
       # @param record [Object] the input record to test
       # @return [Boolean] whether the match succeeded
       def debug_match(record)
-        Debugger.indent_level += 1
+        Debugger.indent_level += 2
         result = match(record)
-        puts (' ' * Debugger.indent_level * 2) + display(record, result)
+        puts (' ' * Debugger.indent_level) + display(record, result)
         result
       rescue Exception
-        Debugger.indent_level = 1
+        Debugger.indent_level = 2
         raise
       ensure
-        Debugger.indent_level -= 1
+        Debugger.indent_level -= 2
       end
 
       # Validates the condition (no-op by default).
