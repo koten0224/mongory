@@ -41,16 +41,6 @@ module Mongory
     # @see Mongory::Matchers::CollectionMatcher
     # @see Mongory::Matchers::ConditionMatcher
     class LiteralMatcher < AbstractMatcher
-      # Matches the given record against the stored condition.
-      # The logic dynamically chooses the appropriate sub-matcher.
-      # @param condition [Object] the raw condition
-      def initialize(condition, *)
-        @condition_is_hash = condition.is_a?(Hash)
-        @condition_is_regex = condition.is_a?(Regexp)
-        @condition_is_nil = condition.nil?
-        super
-      end
-
       # Matches the given record against the condition.
       #
       # @param record [Object] the record to be matched
@@ -60,16 +50,36 @@ module Mongory
           true
         elsif record.is_a?(Array)
           collection_matcher.match?(record)
-        elsif @condition_is_hash
-          condition_matcher.match?(record)
-        elsif @condition_is_regex
-          # If the condition is a Regexp, delegate to RegexMatcher for consistent matching logic.
-          # This supports features like case-insensitive matching and .explain tracing.
-          regex_matcher.match?(record)
-        elsif @condition_is_nil
-          nil_matcher.match?(record)
         else
-          false
+          dispatched_matcher&.match?(record)
+        end
+      end
+
+      # Selects and returns the appropriate matcher instance for a given literal condition.
+      #
+      # This method analyzes the type of the raw condition (e.g., Hash, Regexp, nil)
+      # and returns a dedicated matcher instance accordingly:
+      #
+      # - Hash → dispatches to `ConditionMatcher`
+      # - Regexp → dispatches to `RegexMatcher`
+      # - nil → dispatches to an `OrMatcher` that emulates MongoDB's `{ field: nil }` behavior
+      #
+      # For all other literal types, this method returns `nil`, and fallback equality matching will be used.
+      #
+      # This matcher is cached after the first invocation using `define_instance_cache_method`
+      # to avoid unnecessary re-instantiation.
+      #
+      # @return [AbstractMatcher, nil] the matcher used for non-array literal values
+      # @see Mongory::Matchers::ConditionMatcher
+      # @see Mongory::Matchers::RegexMatcher
+      # @see Mongory::Matchers::OrMatcher
+      define_instance_cache_method(:dispatched_matcher) do
+        if @condition.is_a?(Hash)      then ConditionMatcher.build(@condition)
+        elsif @condition.is_a?(Regexp) then RegexMatcher.build(@condition)
+        elsif @condition.nil?          then OrMatcher.build([
+                                              { '$exists' => false },
+                                              { '$eq' => nil }
+                                            ])
         end
       end
 
@@ -82,54 +92,11 @@ module Mongory
         CollectionMatcher.build(@condition)
       end
 
-      # Lazily defines the condition matcher for hash conditions.
-      # Conversion is disabled here to avoid redundant processing.
-      #
-      # @see ConditionMatcher
-      # @return [ConditionMatcher] the matcher used for hash-based logic
-      # @!method condition_matcher
-      define_matcher(:condition) do
-        ConditionMatcher.build(@condition)
-      end
-
-      # Lazily defines the regex matcher for Regexp conditions.
-      # Used to delegate matching logic to RegexMatcher when @condition is a Regexp.
-      #
-      # This allows `LiteralMatcher` to handle queries like `{ field: /abc/i }`
-      # by dispatching to a proper matcher class that supports explain and trace output.
-      #
-      # @see RegexMatcher
-      # @return [RegexMatcher] the matcher used for regular expression comparison
-      # @!method regex_matcher
-      define_matcher(:regex) do
-        RegexMatcher.build(@condition)
-      end
-
-      # Defines a matcher that checks if a field is either `nil` or does not exist.
-      #
-      # This matcher reflects MongoDB's behavior when querying with `{ field: nil }`,
-      # which matches documents where the field value is explicitly `null` or the field is missing.
-      #
-      # Internally implemented as an `OrMatcher` that combines:
-      # - `{ "$exists" => false }`
-      # - `{ "$eq" => nil }`
-      #
-      # @return [OrMatcher] the matcher that handles `nil` equivalence in MongoDB
-      # @see LiteralMatcher
-      # @see Mongory::Matchers::OrMatcher
-      # @!method nil_matcher
-      define_matcher(:nil) do
-        OrMatcher.build([
-          { '$exists' => false },
-          { '$eq' => nil }
-        ])
-      end
-
       # Validates the nested condition matcher, if applicable.
       #
       # @return [void]
       def deep_check_validity!
-        condition_matcher.deep_check_validity! if @condition_is_hash
+        dispatched_matcher&.deep_check_validity!
       end
 
       # Outputs the matcher tree by selecting either collection or condition matcher.
@@ -142,15 +109,8 @@ module Mongory
       def render_tree(pp, prefix = '', is_last: true)
         super
 
-        target_matcher =  if @collection_matcher then @collection_matcher
-                          elsif @condition_is_hash then condition_matcher
-                          elsif @condition_is_regex then regex_matcher
-                          elsif @condition_is_nil then nil_matcher
-                          end
-
-        return unless target_matcher
-
-        target_matcher.render_tree(pp, "#{prefix}#{is_last ? '   ' : '│  '}", is_last: true)
+        target_matcher = @collection_matcher || dispatched_matcher
+        target_matcher&.render_tree(pp, "#{prefix}#{is_last ? '   ' : '│  '}", is_last: true)
       end
     end
   end
