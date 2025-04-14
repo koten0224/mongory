@@ -4,7 +4,7 @@ require_relative 'matchers/abstract_matcher'
 require_relative 'matchers/abstract_multi_matcher'
 require_relative 'matchers/abstract_operator_matcher'
 require_relative 'matchers/literal_matcher'
-require_relative 'matchers/condition_matcher'
+require_relative 'matchers/hash_condition_matcher'
 require_relative 'matchers/and_matcher'
 require_relative 'matchers/collection_matcher'
 require_relative 'matchers/elem_match_matcher'
@@ -32,7 +32,7 @@ module Mongory
   # Matcher lookup and operator dispatch mapping.
   #
   # This module contains the `$operator => MatcherClass` mapping used
-  # by `ConditionMatcher` to find the correct matcher for a condition.
+  # by `HashConditionMatcher` to find the correct matcher for a condition.
   #
   # Matchers are loaded from the `matchers/` directory.
   module Matchers

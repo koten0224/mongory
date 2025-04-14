@@ -17,7 +17,7 @@ module Mongory
     #   { email: /@gmail\\.com/i } # Regexp literal → RegexMatcher
     #   { info: nil }             # nil literal → nil_matcher (matches null or missing)
     #
-    # @note This matcher is commonly dispatched from ConditionMatcher or FieldMatcher
+    # @note This matcher is commonly dispatched from HashConditionMatcher or FieldMatcher
     #       when the condition is a simple literal value, not an operator hash.
     #
     # === Supported literal types:
@@ -28,7 +28,7 @@ module Mongory
     # - NilClass → delegates to nil_matcher
     # - Regexp → delegates to RegexMatcher
     # - Array → delegates to CollectionMatcher
-    # - Hash → delegates to ConditionMatcher (if treated as sub-query)
+    # - Hash → delegates to HashConditionMatcher (if treated as sub-query)
     # - Other unrecognized values → fallback to equality match (==)
     #
     # === Excluded types (handled by other matchers):
@@ -39,7 +39,7 @@ module Mongory
     # @see Mongory::Matchers::RegexMatcher
     # @see Mongory::Matchers::OrMatcher
     # @see Mongory::Matchers::CollectionMatcher
-    # @see Mongory::Matchers::ConditionMatcher
+    # @see Mongory::Matchers::HashConditionMatcher
     class LiteralMatcher < AbstractMatcher
       # Matches the given record against the condition.
       #
@@ -59,7 +59,7 @@ module Mongory
       # This method analyzes the type of the raw condition (e.g., Hash, Regexp, nil)
       # and returns a dedicated matcher instance accordingly:
       #
-      # - Hash → dispatches to `ConditionMatcher`
+      # - Hash → dispatches to `HashConditionMatcher`
       # - Regexp → dispatches to `RegexMatcher`
       # - nil → dispatches to an `OrMatcher` that emulates MongoDB's `{ field: nil }` behavior
       #
@@ -68,7 +68,7 @@ module Mongory
       # This matcher is cached after the first invocation using `define_instance_cache_method`
       # to avoid unnecessary re-instantiation.
       #
-      # @see Mongory::Matchers::ConditionMatcher
+      # @see Mongory::Matchers::HashConditionMatcher
       # @see Mongory::Matchers::RegexMatcher
       # @see Mongory::Matchers::OrMatcher
       # @see Mongory::Matchers::EqMatcher
@@ -77,7 +77,7 @@ module Mongory
       define_matcher(:dispatched) do
         case @condition
         when Hash
-          ConditionMatcher.build(@condition)
+          HashConditionMatcher.build(@condition)
         when Regexp
           RegexMatcher.build(@condition)
         when nil
