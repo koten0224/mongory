@@ -68,3 +68,6 @@ Naming/AccessorMethodName:
 
 Naming/PredicateName:
   Enabled: false
+
+Lint/UselessMethodDefinition:
+  Enabled: false

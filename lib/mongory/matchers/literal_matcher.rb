@@ -63,7 +63,7 @@ module Mongory
       # - Regexp → dispatches to `RegexMatcher`
       # - nil → dispatches to an `OrMatcher` that emulates MongoDB's `{ field: nil }` behavior
       #
-      # For all other literal types, this method returns `nil`, and fallback equality matching will be used.
+      # For all other literal types, this method returns `EqMatcher`, and fallback equality matching will be used.
       #
       # This matcher is cached after the first invocation using `define_instance_cache_method`
       # to avoid unnecessary re-instantiation.
@@ -72,7 +72,7 @@ module Mongory
       # @see Mongory::Matchers::RegexMatcher
       # @see Mongory::Matchers::OrMatcher
       # @see Mongory::Matchers::EqMatcher
-      # @return [AbstractMatcher, nil] the matcher used for non-array literal values
+      # @return [AbstractMatcher] the matcher used for non-array literal values
       # @!method dispatched_matcher
       define_matcher(:dispatched) do
         case @condition
@@ -103,7 +103,7 @@ module Mongory
       #
       # @return [void]
       def deep_check_validity!
-        dispatched_matcher&.deep_check_validity!
+        dispatched_matcher.deep_check_validity!
       end
 
       # Outputs the matcher tree by selecting either collection or condition matcher.
