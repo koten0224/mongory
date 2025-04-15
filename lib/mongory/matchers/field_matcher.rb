@@ -63,14 +63,19 @@ module Mongory
         "Field: #{@field.inspect} to match: #{@condition.inspect}"
       end
 
-      # Attempts to extract the value from the given record using @field.
-      # Guards against unsupported types and returns KEY_NOT_FOUND if extraction fails.
+      # Extracts a field value from the given record.
+      # Supports fallback access for both string and symbol keys in hashes.
+      # Returns `KEY_NOT_FOUND` if the key is missing or extraction fails.
       #
-      # @param record [Object] the input record
+      # @param record [Object] the input document or array
       # @return [Object] the extracted value or KEY_NOT_FOUND
       def dig_value(record)
         case record
-        when Hash, Array
+        when Hash
+          record.fetch(@field) do
+            record.fetch(@field.to_sym, KEY_NOT_FOUND)
+          end
+        when Array
           record.fetch(@field, KEY_NOT_FOUND)
         when KEY_NOT_FOUND, *CLASSES_NOT_ALLOW_TO_DIG
           KEY_NOT_FOUND
