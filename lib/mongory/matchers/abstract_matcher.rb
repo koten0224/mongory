@@ -70,15 +70,12 @@ module Mongory
       # @param record [Object] the input record to test
       # @return [Boolean] whether the match succeeded
       def debug_match(record)
-        Debugger.indent_level += 2
-        result = match(record)
-        puts (' ' * Debugger.indent_level) + display(record, result)
+        result = nil
+        Debugger.with_indent do
+          result = match(record)
+          debug_display(record, result)
+        end
         result
-      rescue Exception
-        Debugger.indent_level = 2
-        raise
-      ensure
-        Debugger.indent_level -= 2
       end
 
       # Validates the condition (no-op by default).
@@ -134,11 +131,10 @@ module Mongory
       # @param record [Object] the record being tested
       # @param result [Boolean] whether the match succeeded
       # @return [String] the formatted output string
-      def display(record, result)
+      def debug_display(record, result)
         result = result ? "\e[30;42mMatched\e[0m" : "\e[30;41mDismatch\e[0m"
 
-        "#{self.class} => " \
-          "result: #{result}, " \
+        "#{self.class.name.split('::').last} #{result}, " \
           "condition: #{@condition.inspect}, " \
           "record: #{record.inspect}"
       end

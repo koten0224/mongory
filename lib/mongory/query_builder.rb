@@ -170,7 +170,7 @@ module Mongory
     #
     # @return [void]
     def explain
-      @matcher.match(@records.first)
+      @matcher.match?(@records.first)
       @matcher.render_tree
       nil
     end

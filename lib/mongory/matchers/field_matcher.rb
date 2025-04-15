@@ -91,13 +91,12 @@ module Mongory
       # @param record [Object] the input record
       # @param result [Boolean] match result
       # @return [String] formatted debug string
-      def display(record, result)
+      def debug_display(record, result)
         result = result ? "\e[30;42mMatched\e[0m" : "\e[30;41mDismatch\e[0m"
 
-        "#{self.class} => " \
-          "result: #{result}, " \
+        "#{self.class.name.split('::').last} #{result}, " \
           "condition: #{@condition.inspect}, " \
-          "\e[30;47mkey: #{@field.inspect}\e[0m, " \
+          "\e[30;47mfield: #{@field.inspect}\e[0m, " \
           "record: #{record.inspect.gsub(@field.inspect, "\e[30;47m#{@field.inspect}\e[0m")}"
       end
     end
