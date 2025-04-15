@@ -70,15 +70,12 @@ module Mongory
       # @param record [Object] the input record to test
       # @return [Boolean] whether the match succeeded
       def debug_match(record)
-        Debugger.indent_level += 1
-        result = match(record)
-        puts (' ' * Debugger.indent_level * 2) + display(record, result)
+        result = nil
+        Debugger.with_indent do
+          result = match(record)
+          debug_display(record, result)
+        end
         result
-      rescue Exception
-        Debugger.indent_level = 1
-        raise
-      ensure
-        Debugger.indent_level -= 1
       end
 
       # Validates the condition (no-op by default).
@@ -97,12 +94,11 @@ module Mongory
       # Recursively prints the matcher structure into a formatted tree.
       # Supports indentation and branching layout using prefix symbols.
       #
-      # @param pp [PP] the pretty-printer instance
       # @param prefix [String] tree prefix (indentation + lines)
       # @param is_last [Boolean] whether this node is the last among siblings
       # @return [void]
-      def render_tree(pp, prefix = '', is_last: true)
-        pp.text("#{prefix}#{is_last ? '└─ ' : '├─ '}#{tree_title}\n")
+      def render_tree(prefix = '', is_last: true)
+        puts "#{prefix}#{is_last ? '└─ ' : '├─ '}#{tree_title}\n"
       end
 
       private
@@ -135,11 +131,10 @@ module Mongory
       # @param record [Object] the record being tested
       # @param result [Boolean] whether the match succeeded
       # @return [String] the formatted output string
-      def display(record, result)
+      def debug_display(record, result)
         result = result ? "\e[30;42mMatched\e[0m" : "\e[30;41mDismatch\e[0m"
 
-        "#{self.class} => " \
-          "result: #{result}, " \
+        "#{self.class.name.split('::').last} #{result}, " \
           "condition: #{@condition.inspect}, " \
           "record: #{record.inspect}"
       end

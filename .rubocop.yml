@@ -1,5 +1,7 @@
 AllCops:
   NewCops: enable
+  Exclude:
+    - 'pre_release/**/*'
   TargetRubyVersion: 2.6
 
 Style/StringLiterals:
@@ -65,4 +67,7 @@ Naming/AccessorMethodName:
   Enabled: false
 
 Naming/PredicateName:
+  Enabled: false
+
+Lint/UselessMethodDefinition:
   Enabled: false

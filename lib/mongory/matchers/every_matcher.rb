@@ -6,15 +6,15 @@ module Mongory
     #
     # It is used to determine if *all* element in an array matches the given condition.
     #
-    # This matcher delegates element-wise comparison to ConditionMatcher,
+    # This matcher delegates element-wise comparison to HashConditionMatcher,
     # allowing nested conditions to be applied recursively.
     #
     # @example
     #   matcher = EveryMatcher.build({ status: 'active' })
     #   matcher.match?([{ status: 'inactive' }, { status: 'active' }]) #=> false
     #
-    # @see ConditionMatcher
-    class EveryMatcher < ConditionMatcher
+    # @see HashConditionMatcher
+    class EveryMatcher < HashConditionMatcher
       # Matches true if all element in the array satisfies the condition.
       # Falls back to false if the input is not an array.
 
@@ -22,6 +22,7 @@ module Mongory
       # @return [Boolean] whether all element matches
       def match(collection)
         return false unless collection.is_a?(Array)
+        return false if collection.empty?
 
         collection.all? do |record|
           super(Mongory.data_converter.convert(record))

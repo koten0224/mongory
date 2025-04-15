@@ -3,7 +3,7 @@
 module Mongory
   module Matchers
     # FieldMatcher is responsible for extracting a value from a record
-    # using a field (or index) and then delegating the match to DefaultMatcher logic.
+    # using a field (or index) and then delegating the match to LiteralMatcher logic.
     #
     # It handles nested access in structures like Hashes or Arrays, and guards
     # against types that should not be dig into (e.g., String, Symbol, Proc).
@@ -15,8 +15,8 @@ module Mongory
     #   matcher = FieldMatcher.build(:age, { :$gte => 18 })
     #   matcher.match?({ age: 20 }) #=> true
     #
-    # @see DefaultMatcher
-    class FieldMatcher < DefaultMatcher
+    # @see LiteralMatcher
+    class FieldMatcher < LiteralMatcher
       # A list of classes that should never be used for value digging.
       # These typically respond to `#[]` but are semantically invalid for this context.
       CLASSES_NOT_ALLOW_TO_DIG = [
@@ -38,12 +38,58 @@ module Mongory
         super(condition)
       end
 
-      # Matches the record by extracting the value via field and applying the condition.
+      # Performs field-based matching against the given record.
       #
-      # @param record [Object] the record to match
-      # @return [Boolean] whether the extracted value matches the condition
+      # This method first ensures the record is structurally eligible for field extraction—
+      # it must be a Hash, Array, or respond to `[]`. If the structure does not allow for
+      # field access (e.g., nil, primitive values, or unsupported types), the match returns false.
+      #
+      # The field value is then extracted using the following rules:
+      # - If the record is a Hash, it attempts to fetch using the field key,
+      #   falling back to symbolized key if needed.
+      # - If the record is an Array, it fetches by index.
+      # - If the record does not support `[]` or is disallowed for dig operations,
+      #   the match returns false immediately.
+      #
+      # Once the value is extracted, it is passed through the data converter
+      # and matched against the condition via the superclass.
+      #
+      # @param record [Object] the input data structure to be matched
+      # @return [Boolean] true if the extracted field value matches the condition; false otherwise
+      #
+      # @example Matching a Hash with a nil field value
+      #   matcher = Mongory::QueryMatcher.new(a: nil)
+      #   matcher.match?({ a: nil }) # => true
+      #
+      # @example Record is nil (structure not diggable)
+      #   matcher = Mongory::QueryMatcher.new(a: nil)
+      #   matcher.match?(nil) # => false
+      #
+      # @example Matching against an Array by index
+      #   matcher = Mongory::QueryMatcher.new(0 => /abc/)
+      #   matcher.match?(['abcdef']) # => true
+      #
+      # @example Hash with symbol key, matcher uses string key
+      #   matcher = Mongory::QueryMatcher.new('a' => 123)
+      #   matcher.match?({ a: 123 }) # => true
       def match(record)
-        super(Mongory.data_converter.convert(dig_value(record)))
+        sub_record =
+          case record
+          when Hash
+            record.fetch(@field) do
+              record.fetch(@field.to_sym, KEY_NOT_FOUND)
+            end
+          when Array
+            record.fetch(@field, KEY_NOT_FOUND)
+          when KEY_NOT_FOUND, *CLASSES_NOT_ALLOW_TO_DIG
+            return false
+          else
+            return false unless record.respond_to?(:[])
+
+            record[@field]
+          end
+
+        super(Mongory.data_converter.convert(sub_record))
       end
 
       # @return [String] a deduplication field used for matchers inside multi-match constructs
@@ -61,36 +107,17 @@ module Mongory
         "Field: #{@field.inspect} to match: #{@condition.inspect}"
       end
 
-      # Attempts to extract the value from the given record using @field.
-      # Guards against unsupported types and returns KEY_NOT_FOUND if extraction fails.
-      #
-      # @param record [Object] the input record
-      # @return [Object] the extracted value or KEY_NOT_FOUND
-      def dig_value(record)
-        case record
-        when Hash, Array
-          record.fetch(@field, KEY_NOT_FOUND)
-        when KEY_NOT_FOUND, *CLASSES_NOT_ALLOW_TO_DIG
-          KEY_NOT_FOUND
-        else
-          return KEY_NOT_FOUND unless record.respond_to?(:[])
-
-          record[@field]
-        end
-      end
-
       # Custom display logic for debugging, including colored field highlighting.
       #
       # @param record [Object] the input record
       # @param result [Boolean] match result
       # @return [String] formatted debug string
-      def display(record, result)
+      def debug_display(record, result)
         result = result ? "\e[30;42mMatched\e[0m" : "\e[30;41mDismatch\e[0m"
 
-        "#{self.class} => " \
-          "result: #{result}, " \
+        "#{self.class.name.split('::').last} #{result}, " \
           "condition: #{@condition.inspect}, " \
-          "\e[30;47mkey: #{@field.inspect}\e[0m, " \
+          "\e[30;47mfield: #{@field.inspect}\e[0m, " \
           "record: #{record.inspect.gsub(@field.inspect, "\e[30;47m#{@field.inspect}\e[0m")}"
       end
     end

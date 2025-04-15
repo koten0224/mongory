@@ -2,23 +2,23 @@
 
 module Mongory
   module Matchers
-    # ConditionMatcher is responsible for handling field-level query conditions.
+    # HashConditionMatcher is responsible for handling field-level query conditions.
     #
     # It receives a Hash of key-value pairs and delegates each one to an appropriate matcher
     # based on whether the key is a recognized operator or a data field path.
     #
     # Each subcondition is matched independently using the `:all?` strategy, meaning
-    # all subconditions must match for the entire ConditionMatcher to succeed.
+    # all subconditions must match for the entire HashConditionMatcher to succeed.
     #
     # This matcher plays a central role in dispatching symbolic query conditions
     # to the appropriate field or operator matcher.
     #
     # @example
-    #   matcher = ConditionMatcher.build({ age: { :$gt => 30 }, active: true })
+    #   matcher = HashConditionMatcher.build({ age: { :$gt => 30 }, active: true })
     #   matcher.match?(record) #=> true only if all subconditions match
     #
     # @see AbstractMultiMatcher
-    class ConditionMatcher < AbstractMultiMatcher
+    class HashConditionMatcher < AbstractMultiMatcher
       enable_unwrap!
       # Constructs the appropriate submatcher for a key-value pair.
       # If the key is a registered operator, dispatches to the corresponding matcher.

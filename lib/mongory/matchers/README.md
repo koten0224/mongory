@@ -21,10 +21,10 @@ graph TD
   D[AbstractOperatorMatcher]
 
   subgraph MultipleConditions
-    F[ConditionMatcher]
+    F[HashConditionMatcher]
     I[AndMatcher]
     J[OrMatcher]
-    W[CollectionMatcher]
+    W[ArrayRecordMatcher]
   end
 
   subgraph SimpleCompare
@@ -39,7 +39,7 @@ graph TD
     T[LteMatcher]
   end
 
-  A --> B[DefaultMatcher]
+  A --> B[LiteralMatcher]
   A --> U[InMatcher]
   A --> V[NinMatcher]
   A --> C --> MultipleConditions

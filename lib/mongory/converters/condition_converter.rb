@@ -12,7 +12,7 @@ module Mongory
     # @example
     #   ConditionConverter.convert({ "foo.bar" => 1, "foo.baz" => 2 })
     #   # => { "foo" => { "bar" => 1, "baz" => 2 } }
-    ConditionConverter = Utils::SingletonBuilder.new('ConditionConverter') do
+    ConditionConverter = Utils::SingletonBuilder.new('Mongory::Converters::ConditionConverter') do
       # Converts a flat condition hash into a nested structure.
       #
       # @param condition [Hash]

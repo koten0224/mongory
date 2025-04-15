@@ -20,10 +20,10 @@ module Mongory
     # @example Match with explicit regex
     #   RegexMatcher.build(/admin/i).match?("ADMIN") # => true
     #
-    # @example Match via DefaultMatcher fallback
-    #   DefaultMatcher.new(/admin/i).match("ADMIN") # => true
+    # @example Match via LiteralMatcher fallback
+    #   LiteralMatcher.new(/admin/i).match("ADMIN") # => true
     #
-    # @see DefaultMatcher
+    # @see LiteralMatcher
     # @see Mongory::Matchers::AbstractOperatorMatcher
     class RegexMatcher < AbstractOperatorMatcher
       # Uses `:match?` as the operator to invoke on the record string.
