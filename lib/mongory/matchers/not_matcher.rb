@@ -6,7 +6,7 @@ module Mongory
     #
     # It returns true if the wrapped matcher fails, effectively inverting the result.
     #
-    # It delegates to DefaultMatcher and simply negates the outcome.
+    # It delegates to LiteralMatcher and simply negates the outcome.
     #
     # This allows constructs like:
     #   { age: { :$not => { :$gte => 30 } } }
@@ -16,9 +16,9 @@ module Mongory
     #   matcher.match?(5)    #=> true
     #   matcher.match?(15)   #=> false
     #
-    # @see DefaultMatcher
-    class NotMatcher < DefaultMatcher
-      # Inverts the result of DefaultMatcher#match.
+    # @see LiteralMatcher
+    class NotMatcher < LiteralMatcher
+      # Inverts the result of LiteralMatcher#match.
       #
       # @param record [Object] the value to test
       # @return [Boolean] whether the negated condition is satisfied

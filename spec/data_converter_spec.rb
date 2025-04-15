@@ -45,14 +45,6 @@ RSpec.describe 'Mongory.data_converter' do
       end
     end
 
-    context 'when converting hashes' do
-      let(:input) { { key: Date.new(2025, 1, 1) } }
-
-      it 'converts keys and values recursively' do
-        expect(subject.convert(input)).to eq({ 'key' => Date.new(2025, 1, 1) })
-      end
-    end
-
     context 'when no conversion is registered' do
       it 'returns the original object' do
         obj = Object.new

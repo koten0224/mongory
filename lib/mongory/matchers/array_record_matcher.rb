@@ -2,23 +2,28 @@
 
 module Mongory
   module Matchers
-    # CollectionMatcher is responsible for matching an array (or array-like object)
-    # against a given condition. It supports both exact element matching and
-    # more complex nested logic using an `ElemMatchMatcher`.
+    # ArrayRecordMatcher matches records where the record itself is an Array.
     #
-    # If the condition is not a Hash, it falls back to simple inclusion check (`Array#include?`).
+    # This matcher checks whether any element of the record array satisfies the expected condition.
+    # It is typically used when the record is a collection of values, and the query condition
+    # is either a scalar value or a subcondition matcher.
     #
-    # If the condition is a Hash, each key/value is used to build an appropriate matcher.
+    # @example Match when any element equals the expected value
+    #   matcher = ArrayRecordMatcher.build(42)
+    #   matcher.match?([10, 42, 99])    #=> true
     #
-    # Submatchers are built dynamically depending on whether the key is an integer index,
-    # numeric string, operator, or a regular hash field.
+    # @example Match using a nested matcher (e.g. condition is a hash)
+    #   matcher = ArrayRecordMatcher.build({ '$gt' => 10 })
+    #   matcher.match?([5, 20, 3])      #=> true
     #
-    # @example
-    #   matcher = CollectionMatcher.build({ 0 => { :$gt => 5 }, status: "active" })
-    #   matcher.match?([10, { status: "active" }]) #=> true if all conditions are satisfied
+    # This matcher is automatically invoked by LiteralMatcher when the record value is an array.
     #
-    # @see AbstractMultiMatcher
-    class CollectionMatcher < AbstractMultiMatcher
+    # @note This is distinct from `$in` or `$nin`, where the **condition** is an array.
+    #       Here, the **record** is the array being matched against.
+    #
+    # @see Mongory::Matchers::InMatcher
+    # @see Mongory::Matchers::LiteralMatcher
+    class ArrayRecordMatcher < AbstractMultiMatcher
       # Initializes the collection matcher with a condition.
       #
       # @param condition [Object] the condition to match
@@ -33,6 +38,7 @@ module Mongory
       # @param collection [Object]
       # @return [Boolean]
       def match(collection)
+        return true if @condition == collection
         return super if @condition_is_hash
 
         collection.include?(@condition)
@@ -89,11 +95,10 @@ module Mongory
       # Outputs the tree representation of this matcher.
       # Can optionally yield to allow conditional delegation to submatchers.
       #
-      # @param pp [PP]
       # @param prefix [String]
       # @param is_last [Boolean]
       # @return [void]
-      def render_tree(pp, prefix = '', is_last: true)
+      def render_tree(prefix = '', is_last: true)
         super do
           return unless @condition_is_hash
         end

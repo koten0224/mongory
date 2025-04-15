@@ -14,13 +14,11 @@ module Mongory
     #   end
     #   converter.convert("hello") #=> "HELLO"
     class ConverterBuilder < Utils::SingletonBuilder
-      include Utils
-
       # @private
       Registry = Struct.new(:klass, :exec)
 
       # @private
-      NOTHING = SingletonBuilder.new('NOTHING')
+      NOTHING = Utils::SingletonBuilder.new('NOTHING')
 
       # Initializes the builder with a label and optional configuration block.
       #

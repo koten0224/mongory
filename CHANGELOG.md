@@ -1,3 +1,41 @@
+## [2.0.0-beta.1] - Unreleased - 2025-4-16
+
+### ⚠️ Breaking Changes
+- Renamed `DefaultMatcher` to `LiteralMatcher`
+- Renamed `ConditionMatcher` to `HashConditionMatcher`
+- Renamed `CollectionMatcher` to `ArrayRecordMatcher`
+- Matcher behavior now enforces diggable structure for field access
+- Query no longer matches `nil` as a valid document; field conditions (like `a: nil`) require diggable structure
+
+### ✨ Features
+- Support for `$in` and `$nin` operators in query conditions
+- Delegated `nil` conditions to `OrMatcher` to improve MongoDB compatibility
+
+### 🧠 Debugger & Trace
+- Introduced structured matcher trace logging for better debugging
+- Tree-based trace visualization implemented
+- Removed dependency on Ruby’s PrettyPrint module
+
+### 🛠 Refactors
+- Unified matcher dispatch logic in `dispatched_matcher`
+- Simplified `render_tree` logic
+- Improved fallback handling for symbol/string keys in field matchers
+- Improved trace indent level calculation logic
+- Removed all internal sort helpers: `#asc`, `#desc`, and `#sort_by_key`
+- Sorting is no longer supported in Mongory query builder
+- If needed, use `query.sort_by { |record| ... }` instead
+
+### ✅ Fixes
+- `$every => []` now correctly returns `false` instead of `true`
+
+### 🧪 Test & Docs
+- Refined RSpec matcher test coverage
+- Updated YARD documentation across matchers
+- Matcher converter display now includes full namespace
+
+### 📄 Planning
+- Added draft design notes for the upcoming `aggregate` system
+
 ## [1.8.0] - 2025-04-14
 
 ### Changed
@@ -95,7 +133,7 @@
 - **Centralized Matcher Responsibility**
   `ConditionMatcher` replaces `DefaultMatcher` as the default dispatcher for query conditions.
 - **Consistent Data Conversion**
-  All nested matchers (e.g. `DigValueMatcher`, `ElemMatchMatcher`) now apply `data_converter` at match-time.
+  All nested matchers (e.g. `FieldMatcher`, `ElemMatchMatcher`) now apply `data_converter` at match-time.
 
 ### Fixed
 - **Validation Improvements**

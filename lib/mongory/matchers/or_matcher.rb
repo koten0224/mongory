@@ -7,7 +7,7 @@ module Mongory
     # It evaluates an array of subconditions and returns true
     # if *any one* of them matches.
     #
-    # Each subcondition is handled by a ConditionMatcher with conversion disabled,
+    # Each subcondition is handled by a HashConditionMatcher with conversion disabled,
     # since the parent matcher already manages data conversion.
     #
     # This matcher inherits submatcher dispatch and evaluation logic
@@ -23,14 +23,14 @@ module Mongory
     # @see AbstractMultiMatcher
     class OrMatcher < AbstractMultiMatcher
       enable_unwrap!
-      # Constructs a ConditionMatcher for each subcondition.
+      # Constructs a HashConditionMatcher for each subcondition.
       # Conversion is disabled to avoid double-processing.
 
-      # @see ConditionMatcher
+      # @see HashConditionMatcher
       # @param condition [Object] a subcondition to be wrapped
-      # @return [ConditionMatcher] a matcher for this condition
+      # @return [HashConditionMatcher] a matcher for this condition
       def build_sub_matcher(condition)
-        ConditionMatcher.build(condition)
+        HashConditionMatcher.build(condition)
       end
 
       # Uses `:any?` to return true if any submatcher passes.

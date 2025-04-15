@@ -116,20 +116,20 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
             }
           end
 
-          it {
+          it do
             is_expected.to be_match(name: anything,
                                     do: { you: { want: { to: { build: { a: { snow: { man: nil } } } } } } })
-          }
+          end
 
-          it {
+          it do
+            is_expected.to be_match(name: anything,
+                                    do: { you: { want: { to: { build: { a: { snow: {} } } } } } })
+          end
+
+          it do
             is_expected.not_to be_match(name: anything,
                                         do: { you: { want: { to: { build: { a: { snow: { man: anything } } } } } } })
-          }
-
-          it {
-            is_expected.not_to be_match(name: anything,
-                                        do: { you: { want: { to: { build: { a: { snow: {} } } } } } })
-          }
+          end
 
           it { is_expected.not_to be_match(anything) }
           it { is_expected.not_to be_match(nil) }
@@ -157,8 +157,8 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
         end
 
         it { is_expected.to be_match([anything, anything, nil]) }
-        it { is_expected.not_to be_match([anything, nil]) }
-        it { is_expected.not_to be_match([]) }
+        it { is_expected.to be_match([anything, nil]) }
+        it { is_expected.to be_match([]) }
         it { is_expected.not_to be_match([anything, nil, anything]) }
       end
 
@@ -313,7 +313,7 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
       context 'will raise error when condition value is not boolean' do
         let(:presence) { anything }
 
-        it { expect { subject.match?(anything) }.to raise_error(Mongory::TypeError) }
+        it { expect { subject.deep_check_validity! }.to raise_error(Mongory::TypeError) }
       end
 
       context 'with true' do
@@ -331,13 +331,13 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
       context 'with false' do
         let(:presence) { false }
 
-        it { is_expected.to be_match(nil) }
-        it { is_expected.to be_match({}) }
         it { is_expected.to be_match(profile: { address: {} }) }
         it { is_expected.to be_match(profile: {}) }
         it { is_expected.to be_match(DummyModel.new(profile: {})) }
         it { is_expected.not_to be_match(profile: { address: { key: anything } }) }
         it { is_expected.not_to be_match(DummyModel.new(profile: { address: { key: anything } })) }
+        it { is_expected.not_to be_match({}) }
+        it { is_expected.not_to be_match(nil) }
       end
     end
 
@@ -350,6 +350,7 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
         let(:exists) { true }
 
         it { is_expected.to be_match(a: 123, b: nil, c: anything) }
+        it { is_expected.to be_match(a: 123, c: anything) }
         it { is_expected.to be_match(DummyModel.new(a: 123, b: nil, c: anything)) }
         it { is_expected.not_to be_match(a: 123, b: nil) }
         it { is_expected.not_to be_match(DummyModel.new(a: 123, b: nil)) }
@@ -377,7 +378,7 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
       context 'will raise error when condition value not an array' do
         let(:conditions) { anything }
 
-        it { expect { subject.match?(anything) }.to raise_error(Mongory::TypeError) }
+        it { expect { subject.deep_check_validity! }.to raise_error(Mongory::TypeError) }
       end
 
       context 'will matched if any of conditions is match document' do
@@ -413,7 +414,7 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
       context 'will raise error when condition value not an array' do
         let(:conditions) { anything }
 
-        it { expect { subject.match?(anything) }.to raise_error(Mongory::TypeError) }
+        it { expect { subject.deep_check_validity! }.to raise_error(Mongory::TypeError) }
       end
 
       context 'will matched if all of conditions is match document' do
@@ -460,7 +461,7 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
       context 'will raise error when condition value is not a string' do
         let(:regex) { anything }
 
-        it { expect { subject.match?(anything) }.to raise_error(Mongory::TypeError) }
+        it { expect { subject.deep_check_validity! }.to raise_error(Mongory::TypeError) }
       end
 
       context 'should match string by regexp as string' do
@@ -546,7 +547,7 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
         it { is_expected.to be_match(profile: { name: 'Oreo' }) }
         it { is_expected.to be_match(profile: { name: nil }) }
         it { is_expected.to be_match({}) }
-        it { is_expected.to be_match(anything) }
+        it { is_expected.not_to be_match(anything) }
         it { is_expected.not_to be_match(profile: { name: 'Frank' }) }
         it { is_expected.not_to be_match(profile: { name: 'angular' }) }
       end
@@ -733,7 +734,7 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
           }
         end
 
-        it { expect { subject.match?(anything) }.to raise_error(Mongory::TypeError) }
+        it { expect { subject.deep_check_validity! }.to raise_error(Mongory::TypeError) }
       end
 
       context 'will matched' do
@@ -763,7 +764,7 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
       shared_examples_for 'nin behaviors' do
         it { is_expected.to be_match(name: 'ann') }
         it { is_expected.to be_match(name: nil) }
-        it { is_expected.to be_match(anything) }
+        it { is_expected.not_to be_match(anything) }
         it { is_expected.not_to be_match(name: 'foo') }
         it { is_expected.not_to be_match(name: 'bar') }
       end
@@ -775,7 +776,7 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
           }
         end
 
-        it { expect { subject.match?(anything) }.to raise_error(Mongory::TypeError) }
+        it { expect { subject.deep_check_validity! }.to raise_error(Mongory::TypeError) }
       end
 
       context 'will matched' do
@@ -870,7 +871,7 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
     context 'use operator $every' do
       shared_examples_for 'every behavior' do
         it { is_expected.to be_match(abilities: [{ name: 'attack', power: 10 }, { name: 'attack', power: 59 }]) }
-        it { is_expected.to be_match(abilities: []) }
+        it { is_expected.not_to be_match(abilities: []) }
         it { is_expected.not_to be_match(abilities: [{ name: 'attack', power: 10 }, { name: 'eat', power: 59 }]) }
         it { is_expected.not_to be_match(abilities: [{ name: 'eat', power: 59 }]) }
         it { is_expected.not_to be_match(abilities: [{ name: 'run', power: 40 }]) }

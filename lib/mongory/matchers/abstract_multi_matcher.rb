@@ -93,18 +93,17 @@ module Mongory
       # Overrides base render_tree to recursively print all submatchers.
       # Each child matcher will be displayed under this multi-matcher node.
       #
-      # @param pp [PP] pretty-printer instance
       # @param prefix [String] current line prefix for tree alignment
       # @param is_last [Boolean] whether this node is the last sibling
       # @return [void]
-      def render_tree(pp, prefix = '', is_last: true)
+      def render_tree(prefix = '', is_last: true)
         super
         yield if block_given?
 
         new_prefix = "#{prefix}#{is_last ? '   ' : '│  '}"
         last_index = matchers.count - 1
         matchers.each_with_index do |matcher, index|
-          matcher.render_tree(pp, new_prefix, is_last: index == last_index)
+          matcher.render_tree(new_prefix, is_last: index == last_index)
         end
       end
     end
