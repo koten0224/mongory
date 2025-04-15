@@ -10,7 +10,6 @@ RSpec.describe Mongory::QueryBuilder do
         .where(:tags.in => ['ruby', 'qa'])
         .and(:age.gte => 25)
         .any_of({ name: /e/ }, { :tags.present => true })
-        .asc(:age)
         .limit(3)
         .pluck(:name)
     end
@@ -26,7 +25,7 @@ RSpec.describe Mongory::QueryBuilder do
     end
 
     it 'returns expected chained result' do
-      expect(subject).to eq(['Bob', 'Alice', 'Eve'])
+      expect(subject).to eq(['Alice', 'Bob', 'Carol'])
     end
   end
 
@@ -268,62 +267,6 @@ RSpec.describe Mongory::QueryBuilder do
           include('name' => 'Carol'),
           include('name' => 'Dave')
         )
-      end
-    end
-  end
-
-  describe '#asc' do
-    subject { described_class.new(records).asc(order_key) }
-    let(:records) do
-      [
-        { name: 'Alice', age: 30 },
-        { name: 'Bob', age: 25 },
-        { name: 'Carol', age: 35 },
-        { name: 'Dave', age: 20 }
-      ]
-    end
-
-    context 'when ordering by age ascending' do
-      let(:order_key) { :age }
-
-      it 'sorts records from youngest to oldest' do
-        expect(subject.pluck(:name)).to eq(['Dave', 'Bob', 'Alice', 'Carol'])
-      end
-    end
-
-    context 'when ordering by name ascending' do
-      let(:order_key) { :name }
-
-      it 'sorts records alphabetically' do
-        expect(subject.pluck(:name)).to eq(['Alice', 'Bob', 'Carol', 'Dave'])
-      end
-    end
-  end
-
-  describe '#desc' do
-    subject { described_class.new(records).desc(order_key) }
-    let(:records) do
-      [
-        { name: 'Alice', age: 30 },
-        { name: 'Bob', age: 25 },
-        { name: 'Carol', age: 35 },
-        { name: 'Dave', age: 20 }
-      ]
-    end
-
-    context 'when ordering by age descending' do
-      let(:order_key) { :age }
-
-      it 'sorts records from oldest to youngest' do
-        expect(subject.pluck(:name)).to eq(['Carol', 'Alice', 'Bob', 'Dave'])
-      end
-    end
-
-    context 'when ordering by name descending' do
-      let(:order_key) { :name }
-
-      it 'sorts records in reverse alphabetical order' do
-        expect(subject.pluck(:name)).to eq(['Dave', 'Carol', 'Bob', 'Alice'])
       end
     end
   end

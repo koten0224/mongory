@@ -99,38 +99,6 @@ module Mongory
       self.and(wrap_values_with_key(condition, '$nin'))
     end
 
-    # @deprecated Will be removed in v2.0.0. Sort externally instead.
-    # Sorts the records by the given keys in ascending order.
-    #
-    # @param sort_keys [Array<Symbol, String>]
-    # @return [QueryBuilder]
-    def asc(*sort_keys)
-      warn '[Mongory] `Mongory::QueryBuilder#asc` is deprecated and will be removed in v2.0.0.' \
-           'Please sort outside Mongory.'
-
-      dup_instance_exec do
-        @records = sort_by_keys(sort_keys) do |a, b|
-          a <=> b
-        end
-      end
-    end
-
-    # @deprecated Will be removed in v2.0.0. Sort externally instead.
-    # Sorts the records by the given keys in descending order.
-    #
-    # @param sort_keys [Array<Symbol, String>]
-    # @return [QueryBuilder]
-    def desc(*sort_keys)
-      warn '[Mongory] `Mongory::QueryBuilder#desc` is deprecated and will be removed in v2.0.0.' \
-           'Please sort outside Mongory.'
-
-      dup_instance_exec do
-        @records = sort_by_keys(sort_keys) do |a, b|
-          b <=> a
-        end
-      end
-    end
-
     # Limits the number of records returned by the query.
     #
     # @param count [Integer]
@@ -208,19 +176,6 @@ module Mongory
       condition_dup[key] ||= []
       condition_dup[key] += conditions
       set_matcher(condition_dup)
-    end
-
-    # @private
-    # Sorts a list of records by one or more keys.
-    #
-    # @param sort_keys [Array]
-    # @yield [a, b] comparison block
-    # @return [Array]
-    def sort_by_keys(sort_keys)
-      sort do |a, b|
-        yield sort_keys.map { |key| a[key] },
-              sort_keys.map { |key| b[key] }
-      end
     end
 
     def wrap_values_with_key(condition, key)
