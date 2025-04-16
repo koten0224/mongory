@@ -24,84 +24,60 @@ module Mongory
     # @see Mongory::Matchers::InMatcher
     # @see Mongory::Matchers::LiteralMatcher
     class ArrayRecordMatcher < AbstractMultiMatcher
-      # Initializes the collection matcher with a condition.
+      # Builds an array of matchers to evaluate the given condition against an array record.
       #
-      # @param condition [Object] the condition to match
-      def initialize(condition, *)
-        @condition_is_hash = condition.is_a?(Hash)
-        super
+      # This method returns multiple matchers that will be evaluated using `:any?` logic:
+      # - An equality matcher for exact array match
+      # - A hash condition matcher if the condition is a hash
+      # - An `$elemMatch` matcher for element-wise comparison
+      #
+      # @return [Array<Mongory::Matchers::AbstractMatcher>] an array of matcher instances
+      define_instance_cache_method(:matchers) do
+        result = []
+        result << EqMatcher.build(@condition)
+        result << if @condition.is_a?(Hash)
+                    HashConditionMatcher.build(parsed_condition)
+                  else
+                    ElemMatchMatcher.build('$eq' => @condition)
+                  end
+        result
       end
 
-      # Matches the input collection.
-      # Falls back to include? check unless condition is a Hash.
-      #
-      # @param collection [Object]
-      # @return [Boolean]
-      def match(collection)
-        return true if @condition == collection
-        return super if @condition_is_hash
-
-        collection.include?(@condition)
-      end
-
-      # Lazily builds a shared ElemMatchMatcher used for complex field matching.
-      #
-      # @see ElemMatchMatcher
-      # @return [ElemMatchMatcher] shared matcher instance for field conditions
-      # @!method elem_matcher
-      define_matcher(:elem) do
-        ElemMatchMatcher.build({})
-      end
-
-      # Builds sub-matchers depending on the key:
-      #   - Integer or numeric string: treated as array index (FieldMatcher)
-      #   - Operator: resolved via Matchers.lookup
-      #   - Else: merged into ElemMatchMatcher condition
-      #
-      # @see ElemMatchMatcher
-      # @see FieldMatcher
-      # @see Matchers.lookup
-      # @param key [Object] the key from the condition hash
-      # @param value [Object] the associated condition value
-      # @return [AbstractMatcher] matcher instance for this field/operator
-      def build_sub_matcher(key, value)
-        case key
-        when Integer
-          FieldMatcher.build(key, value)
-        when /^-?\d+$/
-          FieldMatcher.build(key.to_i, value)
-        when *Matchers::OPERATOR_TO_CLASS_MAPPING.keys
-          Matchers.lookup(key).build(value)
-        else
-          elem_matcher.condition[key] = value
-          elem_matcher
-        end
-      end
-
-      # Combines results using `:all?` for multi-match logic.
+      # Combines results using `:any?` for multi-match logic.
       #
       # @return [Symbol]
       def operator
-        :all?
+        :any?
       end
 
-      # Performs recursive validity checks on nested matchers if condition is a Hash.
-      #
-      # @return [void]
-      def deep_check_validity!
-        super if @condition_is_hash
-      end
+      private
 
-      # Outputs the tree representation of this matcher.
-      # Can optionally yield to allow conditional delegation to submatchers.
+      # Parses the original condition hash into a normalized structure suitable for HashConditionMatcher.
       #
-      # @param prefix [String]
-      # @param is_last [Boolean]
-      # @return [void]
-      def render_tree(prefix = '', is_last: true)
-        super do
-          return unless @condition_is_hash
+      # This method classifies keys in the condition hash as:
+      # - Numeric (integers or numeric strings): treated as index-based field matchers
+      # - Operator keys (e.g., `$size`, `$type`): retained at the top level
+      # - All other keys: grouped under a `$elemMatch` clause for element-wise comparison
+      #
+      # @return [Hash] a normalized condition hash, potentially containing `$elemMatch`
+      def parsed_condition
+        h_parsed = {}
+        h_elem_match = {}
+        @condition.each_pair do |key, value|
+          case key
+          when Integer, /^-?\d+$/
+            h_parsed[key.to_i] = value
+          when '$elemMatch'
+            h_elem_match.merge!(value)
+          when *Matchers::OPERATOR_TO_CLASS_MAPPING.keys
+            h_parsed[key] = value
+          else
+            h_elem_match[key] = value
+          end
         end
+
+        h_parsed['$elemMatch'] = h_elem_match if is_present?(h_elem_match)
+        h_parsed
       end
     end
   end

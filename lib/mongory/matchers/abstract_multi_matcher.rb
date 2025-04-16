@@ -98,7 +98,6 @@ module Mongory
       # @return [void]
       def render_tree(prefix = '', is_last: true)
         super
-        yield if block_given?
 
         new_prefix = "#{prefix}#{is_last ? '   ' : '│  '}"
         last_index = matchers.count - 1
