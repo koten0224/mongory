@@ -25,8 +25,6 @@ module Mongory
       # @return [Boolean] the result of record <operator> condition
       def match(record)
         preprocess(record).send(operator, @condition)
-      rescue StandardError
-        false
       end
 
       # Hook for subclasses to transform the record before comparison.

@@ -59,6 +59,8 @@ module Mongory
       # @return [Boolean]
       def match?(record)
         match(record)
+      rescue StandardError
+        false
       end
 
       # Provides an alias to `#match?` for internal delegation.
