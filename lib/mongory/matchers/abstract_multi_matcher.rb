@@ -85,9 +85,8 @@ module Mongory
       # Recursively checks all submatchers for validity.
       #
       # @return [void]
-      def deep_check_validity!
-        super
-        matchers.each(&:deep_check_validity!)
+      def check_validity!
+        matchers.each(&:check_validity!)
       end
 
       # Overrides base render_tree to recursively print all submatchers.

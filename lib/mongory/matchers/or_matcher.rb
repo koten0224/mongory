@@ -50,6 +50,8 @@ module Mongory
         @condition.each do |sub_condition|
           raise TypeError, '$or needs an array of hash' unless sub_condition.is_a?(Hash)
         end
+
+        super
       end
     end
   end

@@ -37,6 +37,8 @@ module Mongory
       # @return [void]
       def check_validity!
         raise TypeError, '$elemMatch needs a Hash.' unless @condition.is_a?(Hash)
+
+        super
       end
     end
   end

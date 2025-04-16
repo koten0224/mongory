@@ -45,14 +45,6 @@ RSpec.describe Mongory::Matchers::AbstractMultiMatcher do
     end
   end
 
-  describe '#deep_check_validity!' do
-    subject(:matcher) { MockMultiMatcher.new(['a']) }
-
-    it 'calls deep_check_validity! on all submatchers' do
-      expect { matcher.deep_check_validity! }.not_to raise_error
-    end
-  end
-
   describe '.enable_unwrap!' do
     it 'returns the inner matcher when only one subcondition is given' do
       result = UnwrappedMatcher.build(['a'])

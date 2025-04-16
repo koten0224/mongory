@@ -93,13 +93,6 @@ module Mongory
       # @return [void]
       def check_validity!; end
 
-      # Recursively checks validity (calls `check_validity!`).
-      #
-      # @return [void]
-      def deep_check_validity!
-        check_validity!
-      end
-
       # Recursively prints the matcher structure into a formatted tree.
       # Supports indentation and branching layout using prefix symbols.
       #

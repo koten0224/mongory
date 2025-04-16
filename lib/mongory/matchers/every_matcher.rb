@@ -31,6 +31,8 @@ module Mongory
 
       def check_validity!
         raise TypeError, '$every needs a Hash.' unless @condition.is_a?(Hash)
+
+        super
       end
     end
   end

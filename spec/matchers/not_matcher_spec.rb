@@ -31,7 +31,7 @@ RSpec.describe Mongory::Matchers::NotMatcher do
       let(:condition) { { '$regex' => anything } }
 
       it 'raises Mongory::TypeError' do
-        expect { subject.deep_check_validity! }.to raise_error(Mongory::TypeError)
+        expect { subject }.to raise_error(Mongory::TypeError)
       end
     end
   end

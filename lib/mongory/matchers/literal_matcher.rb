@@ -102,8 +102,8 @@ module Mongory
       # Validates the nested condition matcher, if applicable.
       #
       # @return [void]
-      def deep_check_validity!
-        dispatched_matcher.deep_check_validity!
+      def check_validity!
+        dispatched_matcher.check_validity!
       end
 
       # Outputs the matcher tree by selecting either collection or condition matcher.

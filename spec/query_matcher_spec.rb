@@ -313,7 +313,7 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
       context 'will raise error when condition value is not boolean' do
         let(:presence) { anything }
 
-        it { expect { subject.deep_check_validity! }.to raise_error(Mongory::TypeError) }
+        it { expect { subject }.to raise_error(Mongory::TypeError) }
       end
 
       context 'with true' do
@@ -378,7 +378,7 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
       context 'will raise error when condition value not an array' do
         let(:conditions) { anything }
 
-        it { expect { subject.deep_check_validity! }.to raise_error(Mongory::TypeError) }
+        it { expect { subject }.to raise_error(Mongory::TypeError) }
       end
 
       context 'will matched if any of conditions is match document' do
@@ -414,7 +414,7 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
       context 'will raise error when condition value not an array' do
         let(:conditions) { anything }
 
-        it { expect { subject.deep_check_validity! }.to raise_error(Mongory::TypeError) }
+        it { expect { subject }.to raise_error(Mongory::TypeError) }
       end
 
       context 'will matched if all of conditions is match document' do
@@ -461,7 +461,7 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
       context 'will raise error when condition value is not a string' do
         let(:regex) { anything }
 
-        it { expect { subject.deep_check_validity! }.to raise_error(Mongory::TypeError) }
+        it { expect { subject }.to raise_error(Mongory::TypeError) }
       end
 
       context 'should match string by regexp as string' do
@@ -734,7 +734,7 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
           }
         end
 
-        it { expect { subject.deep_check_validity! }.to raise_error(Mongory::TypeError) }
+        it { expect { subject }.to raise_error(Mongory::TypeError) }
       end
 
       context 'will matched' do
@@ -776,7 +776,7 @@ RSpec.describe Mongory::QueryMatcher, type: :model do
           }
         end
 
-        it { expect { subject.deep_check_validity! }.to raise_error(Mongory::TypeError) }
+        it { expect { subject }.to raise_error(Mongory::TypeError) }
       end
 
       context 'will matched' do
