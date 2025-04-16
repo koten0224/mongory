@@ -71,7 +71,7 @@ module Mongory
   #
   # @return [Utils::Debugger]
   def self.debugger
-    Utils::Debugger
+    Utils::Debugger.instance
   end
 
   # Builds a new query over the given record set.
