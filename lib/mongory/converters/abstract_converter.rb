@@ -9,11 +9,13 @@ module Mongory
     # with optional fallback behavior.
     #
     # @example Basic usage
-    #   converter = AbstractConverter.new do
-    #     register(String) { |v| v.upcase }
-    #   end
+    #   converter = AbstractConverter.instance
+    #   converter.register(String) { |v| v.upcase }
     #   converter.convert("hello") #=> "HELLO"
+    #
     class AbstractConverter < Utils::SingletonBuilder
+      include Singleton
+
       # @private
       Registry = Struct.new(:klass, :exec)
 
@@ -21,13 +23,11 @@ module Mongory
       NOTHING = Utils::SingletonBuilder.new('NOTHING')
 
       # Initializes the builder with a label and optional configuration block.
-      #
-      # @param label [String] a name for the converter
-      # @yield [block] optional configuration block
-      def initialize(label, &block)
+      def initialize
+        super(self.class.to_s)
         @registries = []
         @fallback = Proc.new { |*| self }
-        super
+        default_registrations
       end
 
       # Applies the registered conversion to the given target object.
@@ -95,6 +95,8 @@ module Mongory
           raise 'Support Symbol and block only.'
         end
       end
+
+      def default_registrations; end
     end
   end
 end

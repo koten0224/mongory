@@ -2,8 +2,9 @@
 
 module Mongory
   module Converters
-    # Converts query values into normalized matcher-friendly format.
-    #
+    # ValueConverter transforms query values into a standardized form.
+    # It handles arrays, hashes, regex, and basic types, and delegates
+    # fallback logic to DataConverter.
     # Used by ConditionConverter to prepare values in nested queries.
     #
     # - Arrays are recursively converted
@@ -11,20 +12,31 @@ module Mongory
     # - Regex becomes a Mongo-style `$regex` hash
     # - Strings and Integers are passed through
     # - Everything else falls back to DataConverter
-    ValueConverter = AbstractConverter.new('Mongory::Converters::ValueConverter') do |c|
-      # fallback for unrecognized types
-      @fallback = -> { DataConverter.convert(self) }
-
-      register(Array) do
-        map { |x| c.convert(x) }
+    #
+    # @example Convert a regex
+    #   ValueConverter.instance.convert(/foo/) #=> { "$regex" => "foo" }
+    #
+    class ValueConverter < AbstractConverter
+      def initialize
+        super
+        # fallback for unrecognized types
+        d_convert = DataConverter.instance.method(:convert)
+        @fallback = -> { d_convert.call(self) }
       end
 
-      register(Hash) do
-        ConditionConverter.convert(self)
-      end
+      def default_registrations
+        v_convert = method(:convert)
+        register(Array) do
+          map { |x| v_convert.call(x) }
+        end
 
-      [String, Integer].each do |klass|
-        register(klass) { self }
+        c_convert = ConditionConverter.instance.method(:convert)
+        register(Hash) do
+          c_convert.call(self)
+        end
+
+        register(String, :itself)
+        register(Integer, :itself)
       end
     end
   end

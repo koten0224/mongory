@@ -41,7 +41,7 @@ module Mongory
     # @param other [Object] the value to match against
     # @return [Hash] converted query condition
     def __expr_part__(other, *)
-      Converters::KeyConverter.convert(@name, @operator => other)
+      Converters::KeyConverter.instance.convert(@name, @operator => other)
     end
   end
 end

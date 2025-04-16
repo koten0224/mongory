@@ -2,6 +2,7 @@
 
 require 'time'
 require 'date'
+require 'singleton'
 require_relative 'mongory/version'
 require_relative 'mongory/utils'
 require_relative 'mongory/matchers'
@@ -56,14 +57,14 @@ module Mongory
   #
   # @return [Converters::DataConverter]
   def self.data_converter
-    Converters::DataConverter
+    Converters::DataConverter.instance
   end
 
   # Returns the condition converter instance.
   #
   # @return [Converters::ConditionConverter]
   def self.condition_converter
-    Converters::ConditionConverter
+    Converters::ConditionConverter.instance
   end
 
   # Returns the debugger instance.

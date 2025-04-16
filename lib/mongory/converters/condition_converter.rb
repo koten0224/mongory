@@ -2,17 +2,19 @@
 
 module Mongory
   module Converters
-    # Converts flat query conditions into nested hash structure.
-    #
-    # Used by QueryBuilder to normalize condition input for internal matching.
+    # ConditionConverter transforms a flat condition hash into nested hash form.
+    # This is used internally by ValueConverter to normalize condition structures
+    # like { "foo.bar" => 1, "foo.baz" => 2 } into nested Mongo-style conditions.
+    # Used by QueryMatcher to normalize condition input for internal matching.
     #
     # Combines key transformation (via KeyConverter) and
     # value normalization (via ValueConverter), and merges overlapping keys.
     #
-    # @example
-    #   ConditionConverter.convert({ "foo.bar" => 1, "foo.baz" => 2 })
-    #   # => { "foo" => { "bar" => 1, "baz" => 2 } }
-    ConditionConverter = Utils::SingletonBuilder.new('Mongory::Converters::ConditionConverter') do
+    # @example Convert condition hash
+    #   ConditionConverter.instance.convert({ "a.b" => 1, "a.c" => 2 })
+    #   # => { "a" => { "b" => 1, "c" => 2 } }
+    #
+    class ConditionConverter < AbstractConverter
       # Converts a flat condition hash into a nested structure.
       #
       # @param condition [Hash]
@@ -25,15 +27,6 @@ module Mongory
           result.merge!(converted_pair, &deep_merge_block)
         end
         result
-      end
-
-      # Opens a configuration block to register more converters.
-      #
-      # @yield DSL block to configure more rules
-      # @return [void]
-      def configure
-        yield self
-        freeze
       end
 
       # Provides a block that merges values for overlapping keys in a deep way.
@@ -53,14 +46,14 @@ module Mongory
       #
       # @return [AbstractConverter]
       def key_converter
-        KeyConverter
+        KeyConverter.instance
       end
 
       # Returns the value converter used to transform condition values.
       #
       # @return [AbstractConverter]
       def value_converter
-        ValueConverter
+        ValueConverter.instance
       end
 
       # Freezes internal converters to prevent further modification.
@@ -72,6 +65,8 @@ module Mongory
         key_converter.freeze
         value_converter.freeze
       end
+
+      undef_method :register, :exec_convert
     end
   end
 end

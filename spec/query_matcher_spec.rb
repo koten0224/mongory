@@ -5,13 +5,13 @@ require 'spec_helper'
 DummyModel = Struct.new(:as_json)
 FakeBsonId = Struct.new(:to_s)
 
-Mongory.data_converter.configure do |c|
-  c.register(DummyModel) do
-    c.convert(as_json)
-  end
+converter = Mongory.data_converter
 
-  c.register(FakeBsonId, :to_s)
+converter.register(DummyModel) do
+  converter.convert(as_json)
 end
+
+converter.register(FakeBsonId, :to_s)
 
 RSpec.describe Mongory::QueryMatcher, type: :model do
   subject { described_class.new(condition) }
