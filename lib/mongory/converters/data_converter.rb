@@ -10,7 +10,7 @@ module Mongory
     # - Strings and Integers are passed through as-is
     #
     # This converter is typically applied to raw query values.
-    DataConverter = ConverterBuilder.new('Mongory::Converters::DataConverter') do
+    DataConverter = AbstractConverter.new('Mongory::Converters::DataConverter') do
       [Symbol, Date].each do |klass|
         register(klass, :to_s)
       end

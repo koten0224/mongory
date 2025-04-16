@@ -11,7 +11,7 @@ module Mongory
     # - Regex becomes a Mongo-style `$regex` hash
     # - Strings and Integers are passed through
     # - Everything else falls back to DataConverter
-    ValueConverter = ConverterBuilder.new('Mongory::Converters::ValueConverter') do |c|
+    ValueConverter = AbstractConverter.new('Mongory::Converters::ValueConverter') do |c|
       # fallback for unrecognized types
       @fallback = -> { DataConverter.convert(self) }
 

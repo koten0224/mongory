@@ -2,18 +2,18 @@
 
 module Mongory
   module Converters
-    # ConverterBuilder provides a flexible DSL-style mechanism
+    # AbstractConverter provides a flexible DSL-style mechanism
     # for dynamically converting objects based on their class.
     #
     # It allows you to register conversion rules for specific classes,
     # with optional fallback behavior.
     #
     # @example Basic usage
-    #   converter = ConverterBuilder.new do
+    #   converter = AbstractConverter.new do
     #     register(String) { |v| v.upcase }
     #   end
     #   converter.convert("hello") #=> "HELLO"
-    class ConverterBuilder < Utils::SingletonBuilder
+    class AbstractConverter < Utils::SingletonBuilder
       # @private
       Registry = Struct.new(:klass, :exec)
 

@@ -51,14 +51,14 @@ module Mongory
 
       # Returns the key converter used to transform condition keys.
       #
-      # @return [ConverterBuilder]
+      # @return [AbstractConverter]
       def key_converter
         KeyConverter
       end
 
       # Returns the value converter used to transform condition values.
       #
-      # @return [ConverterBuilder]
+      # @return [AbstractConverter]
       def value_converter
         ValueConverter
       end
