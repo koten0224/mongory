@@ -27,7 +27,7 @@ module Mongory
         super(self.class.to_s)
         @registries = []
         @fallback = Proc.new { |*| self }
-        default_registrations
+        execute_once_only!(:default_registrations)
       end
 
       # Applies the registered conversion to the given target object.
@@ -94,6 +94,11 @@ module Mongory
         else
           raise 'Support Symbol and block only.'
         end
+      end
+
+      def execute_once_only!(method_sym)
+        send(method_sym)
+        singleton_class.undef_method(method_sym)
       end
 
       def default_registrations; end

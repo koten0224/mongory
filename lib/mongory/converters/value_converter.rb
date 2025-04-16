@@ -17,11 +17,14 @@ module Mongory
     #   ValueConverter.instance.convert(/foo/) #=> { "$regex" => "foo" }
     #
     class ValueConverter < AbstractConverter
+      # fallback for unrecognized types
       def initialize
         super
-        # fallback for unrecognized types
-        d_convert = DataConverter.instance.method(:convert)
-        @fallback = -> { d_convert.call(self) }
+        d_convert = nil
+        @fallback = Proc.new do
+          d_convert ||= DataConverter.instance.method(:convert)
+          d_convert.call(self)
+        end
       end
 
       def default_registrations
@@ -30,8 +33,9 @@ module Mongory
           map { |x| v_convert.call(x) }
         end
 
-        c_convert = ConditionConverter.instance.method(:convert)
+        c_convert = nil
         register(Hash) do
+          c_convert ||= ConditionConverter.instance.method(:convert)
           c_convert.call(self)
         end
 

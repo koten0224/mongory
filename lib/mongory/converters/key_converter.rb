@@ -18,9 +18,9 @@ module Mongory
     #   KeyConverter.instance.convert("user.name") #=> { "user" => { "name" => value } }
     #
     class KeyConverter < AbstractConverter
+      # fallback if key type is unknown — returns { self => value }
       def initialize
         super
-        # fallback if key type is unknown — returns { self => value }
         @fallback = ->(x) { { self => x } }
       end
 
