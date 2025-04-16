@@ -13,19 +13,6 @@ RSpec.configure do |config|
     c.syntax = :expect
   end
 
-  def converter_deep_dup(converter)
-    converter = converter.dup
-    converter.instance_exec do
-      @registries = @registries.dup
-      @fallback = @fallback.dup
-    end
-    converter
-  end
-
-  def enforce_reset_converter(method, converter)
-    Mongory.define_singleton_method(method) { converter }
-  end
-
   Mongory.enable_symbol_snippets!
   Mongory.register(Array)
 end

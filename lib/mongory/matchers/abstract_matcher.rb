@@ -71,7 +71,7 @@ module Mongory
       # @return [Boolean] whether the match succeeded
       def debug_match(record)
         result = nil
-        Debugger.with_indent do
+        Debugger.instance.with_indent do
           result = match(record)
           debug_display(record, result)
         end

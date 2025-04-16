@@ -2,28 +2,35 @@
 
 module Mongory
   module Utils
-    # Debugger is a singleton utility for tracing matcher execution in a tree-like format.
+    # Debugger provides an internal tracing system for query matching.
+    # It tracks matcher evaluation in a tree structure and provides tree-like format output.
     #
     # It captures each matcher evaluation with indentation and visualizes the hierarchy,
     # helping developers understand nested matcher flows (e.g. `$and`, `$or`, etc).
     #
     # Usage:
-    #   Debugger.with_indent { ... } # wraps around matcher logic
-    #   Debugger.display        # prints trace tree after execution
+    #   Debugger.instance.with_indent { ... } # wraps around matcher logic
+    #   Debugger.instance.display        # prints trace tree after execution
     #
     # Note:
     # The trace is recorded in post-order (leaf nodes enter first),
     # and `reorder_traces_for_display` is used to transform it into a
     # pre-order format suitable for display.
-    TraceEntry = Struct.new(:text, :level) do
-      def formatted
-        "#{'  ' * level}#{text}"
-      end
-    end
+    #
+    # This class is a singleton and should be accessed via `Debugger.instance`.
+    #
+    # @example Enable debugging
+    #   Debugger.instance.enable
+    #   Mongory::QueryBuilder.new(...).filter(...)
+    #
+    class Debugger < SingletonBuilder
+      include Singleton
 
-    Debugger = SingletonBuilder.new('Mongory::Debugger') do
-      @indent_level = -1
-      @trace_entries = []
+      def initialize
+        super(self.class.name)
+        @indent_level = -1
+        @trace_entries = []
+      end
 
       # Enables debug mode by aliasing `match?` to `debug_match`.
       def enable
@@ -92,6 +99,13 @@ module Mongory
 
       def clear
         @trace_entries.clear
+      end
+
+      # @private
+      TraceEntry = Struct.new(:text, :level) do
+        def formatted
+          "#{'  ' * level}#{text}"
+        end
       end
     end
   end
