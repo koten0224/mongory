@@ -71,11 +71,18 @@ module Mongory
       # @return [Boolean] whether the match succeeded
       def debug_match(record)
         result = nil
+
         Debugger.instance.with_indent do
-          result = match(record)
+          result = begin
+            match(record)
+          rescue StandardError => e
+            e
+          end
+
           debug_display(record, result)
         end
-        result
+
+        result.is_a?(Exception) ? false : result
       end
 
       # Validates the condition (no-op by default).
@@ -132,11 +139,19 @@ module Mongory
       # @param result [Boolean] whether the match succeeded
       # @return [String] the formatted output string
       def debug_display(record, result)
-        result = result ? "\e[30;42mMatched\e[0m" : "\e[30;41mDismatch\e[0m"
-
-        "#{self.class.name.split('::').last} #{result}, " \
+        "#{self.class.name.split('::').last} #{colored_result(result)}, " \
           "condition: #{@condition.inspect}, " \
           "record: #{record.inspect}"
+      end
+
+      def colored_result(result)
+        if result.is_a?(Exception)
+          "\e[45;97m#{result}\e[0m"
+        elsif result
+          "\e[30;42mMatched\e[0m"
+        else
+          "\e[30;41mDismatch\e[0m"
+        end
       end
     end
   end
