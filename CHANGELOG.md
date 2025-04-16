@@ -1,3 +1,19 @@
+## [2.0.0-beta.2] - 2025-04-16
+
+### Changed
+- Refactored all converter classes (`DataConverter`, `KeyConverter`, `ValueConverter`, `ConditionConverter`) into singleton classes inheriting from `AbstractConverter`
+- Introduced `default_registrations` hook method to encapsulate converter setup logic internally
+- Migrated fallback logic into `initialize`, removed reliance on `instance_eval`
+- Renamed `converter_builder.rb` to `abstract_converter.rb`
+- Refactored `Debugger` into a singleton class with `include Singleton`
+- Moved `Debugger`'s setup logic into `initialize`
+- All references to converters and debugger updated to use `.instance`
+
+### Breaking Changes
+- Removed support for direct `.convert(...)` calls on converter constants (e.g., `KeyConverter.convert`); use `.instance.convert(...)` instead
+- Removed `.configure` DSL on `ConditionConverter`; use `default_registrations` override instead
+- Replaced `Debugger.method` access with `Debugger.instance.method`
+
 ## [2.0.0-beta.1] - Unreleased - 2025-4-16
 
 ### ⚠️ Breaking Changes
