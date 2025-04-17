@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+warn "[DEPRECATION] 'mongory' gem is renamed to 'mongory-rb'. Please update your Gemfile."
+
 require 'time'
 require 'date'
 require 'pp'
